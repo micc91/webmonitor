@@ -6,6 +6,7 @@ import com.example.duws.proxy.*;
 import org.apache.log4j.Logger;
 
 import java.net.URL;
+import java.util.List;
 
 public class Client {
     private static final Logger logger = Logger.getLogger(Login.class);
@@ -21,7 +22,6 @@ public class Client {
     }
 
     public String login(UvmsConnection connection) throws Exception {
-
         URL duwsUrl = new URL("http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI?wsdl");
         DuWebService_Service ss = new DuWebService_Service();//duwsUrl);
         DuWebService service = ss.getDuWebServicePort();
@@ -47,24 +47,47 @@ public class Client {
 //            logger.error("Exception: ",duwse);
         }
 
-
         return(token);
     }
 
-    public boolean getDUEnvironmentList() {
+    public List<Envir> getDUEnvironmentList(UvmsConnection connection) throws Exception {
+        URL duwsUrl = new URL("http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI?wsdl");
+        DuWebService_Service ss = new DuWebService_Service();//duwsUrl);
+        DuWebService service = ss.getDuWebServicePort();
+
+        String token = connection.getToken();
+        errorMessage = "Successful";
+        errorCode = 0;
+
         // Setting up the context
-//        ContextHolder ctxHolder = new ContextHolder();
-//        ctxHolder.setToken(token);
-//        List<Envir> duEnvironmentList = service.getDUEnvironmentList(token,new UvmsNodeFilter());
-
+        ContextHolder ctxHolder = new ContextHolder();
+        ctxHolder.setToken(connection.getToken());
+        List<Envir> duEnvironmentList = service.getDUEnvironmentList(token,new UvmsNodeFilter());
+        return duEnvironmentList;
     }
 
-    public boolean getListExecution() {
-
+    public boolean getListExecution() throws Exception {
+        return false;
     }
 
-    public boolean logout() {
-//        service.logout(token);
+    public boolean logout(UvmsConnection connection) throws Exception {
+        URL duwsUrl = new URL("http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI?wsdl");
+        DuWebService_Service ss = new DuWebService_Service();//duwsUrl);
+        DuWebService service = ss.getDuWebServicePort();
+        errorMessage = "Successful";
+        errorCode = 0;
+        boolean ret = true;
 
+        try {
+            service.logout(connection.getToken());
+        } catch (DuwsException_Exception duwse) {
+            errorCode = duwse.getFaultInfo().getErrorCode();
+            errorMessage = duwse.getFaultInfo().getMessage();
+            logger.error("Login failed: "+errorMessage+" ("+errorCode+")");
+//            logger.error("Exception: ",duwse);
+            ret = false;
+        }
+
+        return ret;
     }
 }

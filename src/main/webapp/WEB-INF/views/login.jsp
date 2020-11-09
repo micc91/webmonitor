@@ -1,6 +1,5 @@
 <%@ page pageEncoding="UTF-8" isELIgnored ="false" %>
-<%--<jsp:useBean id="uvmsConnection" scope="request" type="com.example.duas.UvmsConnection"/>
---%>
+<jsp:useBean id="uvmsConnection" scope="request" type="com.example.duas.UvmsConnection"/>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -88,14 +87,7 @@
                 </form>
 
         </main>
-        <footer class="fixed-bottom bg-dark footer mt-auto py-3">
-            <div class="container">
-                <span class="text-muted">
-                    <p class="mt-5 mb-3 text-muted">&copy; Michaël Checler 2020</p>
-                </span>
-            </div>
-        </footer>
-
+        <%@ include file="footer.jsp" %>
     </body>
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

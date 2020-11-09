@@ -1,0 +1,39 @@
+html,
+body {
+    height: 100%;
+}
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+    }
+}
+.bg {
+    background-image: url("./media/nuages.jpg");
+    height: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.bg2 {
+    background-image: url("./media/Vue_du_mont_ventoux.jpg");
+    height: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.bg3 {
+    background-image: url("../media/Massif_Mont_Blanc.jpg");
+    height: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}

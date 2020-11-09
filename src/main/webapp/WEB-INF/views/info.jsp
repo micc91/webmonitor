@@ -18,37 +18,7 @@
 
         <!-- Custom styles for this template -->
         <link href="./styles/signin.css" rel="stylesheet" type="text/css">
-        <style>
-            .bd-placeholder-img {
-                font-size: 1.125rem;
-                text-anchor: middle;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                -ms-user-select: none;
-                user-select: none;
-            }
-
-            @media (min-width: 768px) {
-                .bd-placeholder-img-lg {
-                    font-size: 3.5rem;
-                }
-            }
-            .bg {
-                background-image: url("./media/nuages.jpg");
-                height: 90%;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
-            .bg2 {
-                background-image: url("./media/Vue_du_mont_ventoux.jpg");
-                height: 90%;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
-
-        </style>
+        <link href="./styles/custom.css" rel="stylesheet" type="text/css">
     </head>
 	<body>
         <header>
@@ -57,13 +27,7 @@
         <main role="main" class="container-fluid text-center bg2">
     		<h1>Welcome on board !</h1>
         </main>
-        <footer class="fixed-bottom bg-dark footer mt-auto py-3">
-            <div class="container">
-                <span class="text-muted">
-                    <c:if test="${ !empty sessionScope.uvmsConnection.login }"><h2><c:out value="Connection string:${uvmsConnection.login}:####@${uvmsConnection.uvmsHost}:${uvmsConnection.uvmsPort} => ${uvmsConnection.token}" /></h2></c:if>
-                </span>
-            </div>
-        </footer>
+        <%@ include file="footer.jsp" %>
     </body>
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
