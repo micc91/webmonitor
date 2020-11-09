@@ -14,6 +14,7 @@
         <sourceRoots>
           <root url="file://$MODULE_DIR$/src/main/java" />
           <root url="file://$MODULE_DIR$/src/main/resources" />
+          <root url="file://$MODULE_DIR$/target/generated-sources/wsimport" />
         </sourceRoots>
       </configuration>
     </facet>
@@ -25,12 +26,14 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/target/generated-sources/wsimport" isTestSource="false" generated="true" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/webapp/WEB-INF/lib" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jstl-1.2" level="project" />
     <orderEntry type="library" name="javax.servlet.jsp.jstl:javax.servlet.jsp.jstl-api:1.2.2" level="project" />
+    <orderEntry type="library" name="jstl-1.2" level="project" />
     <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:servlet-api:2.5" level="project" />

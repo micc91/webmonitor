@@ -14,14 +14,14 @@ import javax.servlet.http.HttpSession;
  * Servlet implementation class Page
  */
 //@WebServlet("/test")
-public class Page extends HttpServlet {
+public class Info extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(Page.class);
+	private static final Logger logger = Logger.getLogger(Info.class);
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Page() {
+    public Info() {
         super();
         // TODO Auto-generated constructor stub
 
@@ -33,7 +33,7 @@ public class Page extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 		HttpSession session = request.getSession();
-		UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("user");
+		UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");
 		if(uvmsConnection == null) {
 			logger.info(this.getServletName()+"/doGet: No user stored yet in session");
 			this.getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
@@ -44,7 +44,7 @@ public class Page extends HttpServlet {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 
-		this.getServletContext().getRequestDispatcher("/WEB-INF/views/page.jsp").forward(request, response);
+		this.getServletContext().getRequestDispatcher("/WEB-INF/views/info.jsp").forward(request, response);
 	}
 
 	/**

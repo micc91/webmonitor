@@ -10,6 +10,8 @@ public class UvmsConnection {
     public UvmsConnection() {
         this.uvmsPort = "4184";
         this.login = "admin";
+        this.password = "Lmdpqt1";
+        this.uvmsHost = "localhost";
         this.token = "disconnected";
     }
     public String getLogin() {
