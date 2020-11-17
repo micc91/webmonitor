@@ -1,15 +1,12 @@
 package com.example.webmonitor;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.duws.Client;
+import com.duws.JobRuns;
 import com.example.duas.UvmsConnection;
-import com.example.duws.proxy.Envir;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -113,18 +110,13 @@ public class Login extends HttpServlet {
 		session.setAttribute("uvmsConnection", uvmsConnection);
 		request.setAttribute("uvmsConnection", uvmsConnection);
 
-		List<Envir> duasList = new ArrayList<Envir>();
-		List<String> companyList = new ArrayList<String>();
-		List<String> nodeList = new ArrayList<String>();
-		List<String> areaList = new ArrayList<String>();
-		List<String> versionList = new ArrayList<String>();
-		List<String> statusList = new ArrayList<String>();
-		request.setAttribute("duasList", duasList);
-		request.setAttribute("companyList", companyList);
-		request.setAttribute("nodeList", nodeList);
-		request.setAttribute("areaList", areaList);
-		request.setAttribute("versionList", versionList);
-		request.setAttribute("statusList", statusList);
+		JobRuns jobRuns = new JobRuns(request);
+		boolean ret = false;
+
+		ret = jobRuns.getDUEnvironmentList(request, uvmsConnection);
+		if(!ret) {
+			request.setAttribute("error", "Failed to get list of nodes");
+		}
 
 		logger.info(this.getServletName()+"/doPost: received from Jsp="+ uvmsConnection.toString()+" => "+result);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/"+nextPage).forward(request, response);

@@ -10,7 +10,7 @@
         <meta name="author" content="Michael Checler, adapted from Mark Otto, Jacob Thornton, and Bootstrap contributors">
         <meta name="generator" content="Jekyll v4.1.1">
 
-        <title>Main page</title>
+        <title>Information</title>
 
         <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
         <!-- Bootstrap CSS -->
@@ -24,8 +24,8 @@
         <header>
             <%@ include file="menu.jsp" %>
         </header>
-        <main role="main" class="container-fluid text-center bg2">
-    		<h1>Welcome on board !</h1>
+        <main role="main" class="container-fluid text-center bg-other">
+    		<h1>Job Information</h1>
         </main>
         <%@ include file="footer.jsp" %>
     </body>

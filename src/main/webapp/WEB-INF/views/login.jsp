@@ -17,41 +17,8 @@
         <link rel="stylesheet" href="./styles/bootstrap.min.css" crossorigin="anonymous" type="text/css" >
 
         <!-- Custom styles for this template -->
+        <link rel="stylesheet" href="./styles/custom.css" crossorigin="anonymous" type="text/css" >
         <link href="./styles/signin.css" rel="stylesheet" type="text/css">
-        <style>
-            .bd-placeholder-img {
-                font-size: 1.125rem;
-                text-anchor: middle;
-                -webkit-uvmsConnection-select: none;
-                -moz-uvmsConnection-select: none;
-                -ms-uvmsConnection-select: none;
-                uvmsConnection-select: none;
-            }
-
-            @media (min-width: 768px) {
-                .bd-placeholder-img-lg {
-                    font-size: 3.5rem;
-                }
-            }
-            .bg {
-                background-image: url("./media/nuages.jpg");
-                height: 90%;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
-            .bg2 {
-                background-image: url("./media/Vue_du_mont_ventoux.jpg");
-                height: 90%;
-                background-position: center;
-                background-repeat: no-repeat;
-                background-size: cover;
-            }
-            .error-msg {
-                color: red;
-            }
-
-        </style>
 <!--        <link href="./styles/sticky-footer-navbar.css" rel="stylesheet">
 -->
     </head>
@@ -60,7 +27,7 @@
         <header>
             <%@ include file="menu.jsp" %>
         </header>
-        <main role="main" class="container-fluid text-center bg">
+        <main role="main" class="container-fluid text-center bg-login">
             <c:set var="welcome_msg" value="You are not yet connected" scope="page"></c:set>
             <c:if test="${ !empty uvmsConnection.login}"><c:set var="welcome_msg" value="Welcome ${uvmsConnection.login}" scope="page" /></c:if>
                 <h1><c:out value="${welcome_msg}!" /></h1>

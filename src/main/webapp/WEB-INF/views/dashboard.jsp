@@ -7,13 +7,27 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <jsp:useBean id="uvmsConnection" scope="request" type="com.example.duas.UvmsConnection"/>
+
 <jsp:useBean id="statusList" scope="request" type="java.util.List"/>
 <jsp:useBean id="companyList" scope="request" type="java.util.List"/>
 <jsp:useBean id="areaList" scope="request" type="java.util.List"/>
 <jsp:useBean id="versionList" scope="request" type="java.util.List"/>
 <jsp:useBean id="nodeList" scope="request" type="java.util.List"/>
-<jsp:useBean id="duasList" scope="request" type="java.util.List"/>
+
+<jsp:useBean id="jobNodeList" scope="request" type="java.util.List"/>
+<jsp:useBean id="jobIdList" scope="request" type="java.util.List"/>
+<jsp:useBean id="jobStatusList" scope="request" type="java.util.List"/>
+<jsp:useBean id="beginList" scope="request" type="java.util.List"/>
+<jsp:useBean id="endList" scope="request" type="java.util.List"/>
+<jsp:useBean id="infoList" scope="request" type="java.util.List"/>
+<jsp:useBean id="otherList" scope="request" type="java.util.List"/>
+
+<jsp:useBean id="duasMap" scope="request" type="java.util.Map"/>
+<jsp:useBean id="jobsMap" scope="request" type="java.util.Map"/>
+
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
@@ -44,61 +58,119 @@
             <!--<header>-->
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
                 <div class="sidebar-sticky pt-3">
-                    <ul class="nav flex-column">
+
+                    <form class="nav flex-column" action="./dashboard" method="post" >
+                        <h2>Context</h2>
                         <c:forEach var="node" items="${nodeList}" varStatus="status">
                             <c:choose>
-                                <c:when test="${statusList[status.count-1] == 'CONNECTED'}"><c:set var="color" value="green" /></c:when>
-                                <c:otherwise><c:set var="color" value="red" /></c:otherwise>
+                                <c:when test="${statusList[status.count-1] == 'CONNECTED'}"><c:set var="activation" value="" /></c:when>
+                                <c:otherwise><c:set var="activation" value="disabled" /></c:otherwise>
                             </c:choose>
-                            <li class="nav-item" style="color:${color}">
-                                    <c:out value="${companyList[status.count-1]}:${node}:${areaList[status.count-1]}" />
-                            </li>
+                            <c:set var="current" value="${status.count-1}" />
+                            <div class="checkbox ${activation}">
+                            <label for="${current}" class="nav-item ${activation}">
+                                <input id="${current}" value="${current}" class="nav-item ${activation}" type="checkbox" name="nodesList" ${activation}>
+                                    ${companyList[status.count-1]}:${node}:${areaList[status.count-1]}
+                                </input>
+                            </label>
+                            </div>
                         </c:forEach>
-                    </ul>
+                        <button class="btn btn-sm btn-default btn-block btn-outline-secondary" type="submit">Select</button>
+                    </form>
                 </div>
             </nav>
 
             <!--</header>-->
             <!--<h1>to be fixed...</h1>-->
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 bg-dashboard">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                     <h1 class="h2">Job runs</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group mr-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Refresh</button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary"><a href="./dashboard">Refresh</a></button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">New Run</button>
                         </div>
-                        <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <span data-feather="calendar"></span>
-                            This week
-                        </button>
+                        <select class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                            <option>H - 5 min</option>
+                            <option>H - 1 hour</option>
+                            <option>H - 6 hours</option>
+                            <option>H - 12 hours</option>
+                            <option>D - 1 day</option>
+                            <option>D - 2 days</option>
+                            <option>Any Time</option>
+                        </select>
                     </div>
                 </div>
 
                 <!--            <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>-->
 
-                <h2>Section title</h2>
                 <div class="table-responsive">
                     <table class="table table-striped table-sm">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Header</th>
-                            <th>Header</th>
-                            <th>Header</th>
-                            <th>Header</th>
+                            <th>Company|Node|Area</th>
+                            <th>Task|Session|Uproc@MU</th>
+                            <th>Status</th>
+                            <th>Begin Date/Time</th>
+                            <th>End Date/Time</th>
+                            <th>Information</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>1,001</td>
-                            <td>Lorem</td>
-                            <td>ipsum</td>
-                            <td>dolor</td>
-                            <td>sit</td>
-                        </tr>
+                            <c:forEach var="job" items="${jobIdList}" varStatus="status">
+                                <c:set var="idx" value="${status.count-1}" />
+
+                                <c:set var="nodeid" value="${fn:split(jobNodeList[idx],'|')}" />
+                                <c:set var="company" value="${nodeid[0]}" />
+                                <c:set var="node" value="${nodeid[0]}" />
+                                <c:set var="area" value="${nodeid[0]}" />
+
+                                <c:set var="jobid1" value="${fn:replace(job,'|',';')}" />
+                                <c:set var="jobid2" value="${fn:replace(job,'@',';')}" />
+                                <c:set var="jobid" value="${fn:split(jobid2,';')}" />
+                                <c:set var="task" value="${jobid[0]}" />
+                                <c:set var="session" value="${jobid[1]}" />
+                                <c:set var="uproc" value="${jobid[2]}" />
+                                <c:set var="mu" value="${jobid[3]}" />
+
+                                <c:choose>
+                                    <c:when test="${jobStatusList[idx] == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                    <c:when test="${jobStatusList[idx] == 'COMPLETED'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                    <c:when test="${jobStatusList[idx] == 'ABORTED'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                    <c:when test="${jobStatusList[idx] == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                    <c:otherwise><c:set var="jobtype" value="fla" /></c:otherwise>
+                                </c:choose>
+                                <c:set var="other" value="${fn:split(otherList[idx],';')}" />
+                                <c:choose>
+                                    <c:when test="${jobtype == 'ctl'}">
+                                        <c:set var="numsess" value="${other[0]}" />
+                                        <c:set var="numproc" value="${other[1]}" />
+                                        <c:set var="pdate" value="${other[2]}" />
+                                        <c:set var="queue" value="${other[3]}" />
+                                        <c:set var="priority" value="${other[4]}" />
+                                        <c:set var="infolink" value="./info?company=${company}&node=${node}&area=${area}&task=${task}&session=${session}&uproc=${uproc}&mu=${mu}&numsess=${numsess}&numproc=${numproc}&pdate=${pdate}&queue=${queue}&priority=${priority}&status=${jobStatusList[idx]}&info=${infoList[idx]}&begin=${beginList[idx]}&end=${endList[idx]}" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="numlanc" value="${other[0]}" />
+                                        <c:set var="pdate" value="${other[1]}" />
+                                        <c:set var="queue" value="${other[2]}" />
+                                        <c:set var="priority" value="${other[3]}" />
+                                        <c:set var="step" value="${other[4]}" />
+                                        <c:set var="infolink" value="#" />
+                                    </c:otherwise>
+                                </c:choose>
+                                <tr>
+                                    <td>${jobNodeList[idx]}</td>
+                                    <td>${job}</td>
+                                    <td class="status-${jobStatusList[idx]}">${jobStatusList[idx]}</td>
+                                    <td>${beginList[idx]}</td>
+                                    <td>${endList[idx]}</td>
+                                    <td>${infoList[idx]}</td>
+                                </tr>
+                            </c:forEach>
                         </tbody>
                     </table>
+                    <h1>End...</h1>
                 </div>
             </main>
     </div>
