@@ -4,7 +4,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 import org.apache.log4j.PropertyConfigurator;
 import java.io.*;
@@ -19,9 +18,7 @@ public class InitApp extends HttpServlet {
         File logPathDir = new File( cheminLog );
         System.setProperty( "log.chemin", cheminLog );
 
-        if (cheminLogConfig != null) {
-            PropertyConfigurator.configure(cheminLogConfig);
-        }
+        PropertyConfigurator.configure(cheminLogConfig);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

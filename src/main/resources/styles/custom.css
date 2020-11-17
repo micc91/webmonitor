@@ -37,3 +37,83 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
 }
+
+.bg-welcome {
+    background-image: url("../media/Reseau_Mondial.jpg");
+    height: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bg-login {
+    background-image: url("./media/Serrure.jpg");
+    height: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bg-logout {
+    background-image: url("./media/Serrure.jpg");
+    height: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bg-dashboard {
+    background-image: url("./media/Fond_degrade_bleu_alphanum.jpg");
+    height: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.bg-other {
+    background-image: url("./media/Colonnes_binaires.jpg");
+    height: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.error-msg {
+    color: red;
+}
+
+.status-WATCHING {
+    color: deepskyblue;
+}
+
+.status-RUNNING {
+    color: blue;
+}
+
+.status-COMPLETED {
+    color: green;
+}
+
+.status-ABORTED {
+    color: red;
+}
+
+.status-LAUNCH_WAIT {
+    color: lightgreen;
+}
+
+.status-DISABLED {
+    color: dimgrey;
+}
+
+.status-TIME_OVERRUN {
+    color: orangered;
+}
+
+.status-REFUSED {
+    color: darkred;
+}
+
+.status-PENDING {
+    color: deeppink;
+}

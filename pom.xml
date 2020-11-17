@@ -59,17 +59,23 @@
       <artifactId>org.eclipse.persistence.moxy</artifactId>
       <version>2.7.7</version>
     </dependency>
-    <!--
-    Error:
-    java.lang.ClassNotFoundException: com/sun/xml/stream/buffer/XMLStreamBuffer
-    java.lang.ClassNotFoundException: com/sun/xml/ws/policy/PolicyException
-    Solution:
-    The JAX-WS dependency library “streambuffer.jar” is missing.
-    Go here http://jax-ws.java.net/.
-    Download JAX-WS RI distribution.
-    Unzip it and copy “streambuffer.jar” and policy.jar to Tomcat library folder “{$TOMCAT}/lib“.
-    Restart Tomcat.
-    -->
+      <dependency>
+          <groupId>org.jetbrains</groupId>
+          <artifactId>annotations</artifactId>
+          <version>RELEASE</version>
+          <scope>compile</scope>
+      </dependency>
+      <!--
+      Error:
+      java.lang.ClassNotFoundException: com/sun/xml/stream/buffer/XMLStreamBuffer
+      java.lang.ClassNotFoundException: com/sun/xml/ws/policy/PolicyException
+      Solution:
+      The JAX-WS dependency library “streambuffer.jar” is missing.
+      Go here http://jax-ws.java.net/.
+      Download JAX-WS RI distribution.
+      Unzip it and copy “streambuffer.jar” and policy.jar to Tomcat library folder “{$TOMCAT}/lib“.
+      Restart Tomcat.
+      -->
   </dependencies>
   <build>
     <finalName>webmonitor</finalName>

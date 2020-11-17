@@ -23,13 +23,13 @@
 <header>
         <%@ include file="/WEB-INF/views/static-menu.jsp" %>
 </header>
-<main role="main" class="container-fluid text-center bg3">
-        <h2>Hello World!</h2>
+<main role="main" class="container-fluid text-center bg3" style="padding-top: 60px;">
+        <h1>Please log in to Management Server to start</h1>
 </main>
 <footer class="fixed-bottom bg-dark footer mt-auto py-3">
         <div class="container">
         <span class="text-muted">
-            <p class="mt-5 mb-3 text-muted">&copy; Michaël Checler 2020</p>
+            <p class="mt-5 mb-3 text-muted">Dollar Universe Web Ops 1.0 - 11/2020</p>
         </span>
         </div>
 </footer>
