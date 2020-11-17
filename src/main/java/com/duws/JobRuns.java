@@ -19,8 +19,8 @@ public class JobRuns {
     }
 
     private Map<String, List<String>> resetJobsMap(HttpServletRequest request) {
-//        List<String> empty = new ArrayList<>();
-//        empty.add("");
+        List<String> empty = new ArrayList<>();
+        empty.add("");
         logger.info(this.getClass().getName()+": initialize Jobs lists and maps");
 
         Map<String, List<String>> jobsMap = new HashMap<>();
@@ -40,13 +40,13 @@ public class JobRuns {
         jobsMap.get("otherList").add("");
 
         request.setAttribute("jobsMap", jobsMap);
-        request.setAttribute("jobNodeList", jobsMap.get("nodeList"));
-        request.setAttribute("jobIdList", jobsMap.get("jobIdList"));
-        request.setAttribute("jobStatusList", jobsMap.get("statusList"));
-        request.setAttribute("beginList", jobsMap.get("beginList"));
-        request.setAttribute("endList", jobsMap.get("endList"));
-        request.setAttribute("infoList", jobsMap.get("infoList"));
-        request.setAttribute("otherList", jobsMap.get("otherList"));
+        request.setAttribute("jobNodeList", empty);
+        request.setAttribute("jobIdList", empty);
+        request.setAttribute("jobStatusList", empty);
+        request.setAttribute("beginList", empty);
+        request.setAttribute("endList", empty);
+        request.setAttribute("infoList", empty);
+        request.setAttribute("otherList", empty);
 
         return jobsMap;
     }
@@ -57,15 +57,15 @@ public class JobRuns {
         logger.info(this.getClass().getName()+": initialize Nodes lists and maps");
 
         Map<String, List<String>> duasMap = new HashMap<>();
-        duasMap.put("company", new ArrayList<String>());
+        duasMap.put("company", new ArrayList<>());
         duasMap.get("company").add("");
-        duasMap.put("node", new ArrayList<String>());
+        duasMap.put("node", new ArrayList<>());
         duasMap.get("node").add("");
-        duasMap.put("area", new ArrayList<String>());
+        duasMap.put("area", new ArrayList<>());
         duasMap.get("area").add("");
-        duasMap.put("version", new ArrayList<String>());
+        duasMap.put("version", new ArrayList<>());
         duasMap.get("version").add("");
-        duasMap.put("status", new ArrayList<String>());
+        duasMap.put("status", new ArrayList<>());
 
         duasMap.get("status").add("");
         request.setAttribute("duasMap", duasMap);
@@ -127,7 +127,7 @@ public class JobRuns {
         return ret;
     }
 
-    public boolean getListExecution(HttpServletRequest request, UvmsConnection uvmsConnection) {
+    public boolean getListExecution(HttpServletRequest request, UvmsConnection uvmsConnection, List<String> selectedNodes) {
         Client duwsClient = null;
         try {
             duwsClient = new Client();
@@ -151,9 +151,25 @@ public class JobRuns {
             logger.error(this.getClass().getName()+"/getListExecution: areaList null or empty");
         }
 
-        if(request.getParameterValues("nodesList") != null) {
+        String[] currentNodesList;
+        if(request.getParameterValues("selectedNodes") == null) {
+            if(selectedNodes != null) {
+                int ii = 0;
+                currentNodesList = new String[selectedNodes.size()];
+                for(String nodenum : selectedNodes) {
+                    currentNodesList[ii] = nodenum;
+                    ii++;
+                }
+            } else {
+                currentNodesList = null;
+            }
+        } else {
+            currentNodesList = request.getParameterValues("selectedNodes");
+        }
+
+        if(currentNodesList != null) {
             logger.info(this.getClass().getName()+"/getListExecution: Nodes selected by form:");
-            for (String idx : request.getParameterValues("nodesList")) {
+            for (String idx : currentNodesList) {
                 logger.info(this.getClass().getName() + "/getListExecution: node " + idx + "=" + companyList.get(Integer.parseInt(idx)) + "|" + nodeList.get(Integer.parseInt(idx)) + "|" + areaList.get(Integer.parseInt(idx)));
                 try {
                     ret = duwsClient.getListExecution(uvmsConnection, companyList.get(Integer.parseInt(idx)), nodeList.get(Integer.parseInt(idx)), areaList.get(Integer.parseInt(idx)), jobsMap);
@@ -163,11 +179,6 @@ public class JobRuns {
                     e.printStackTrace();
                 }
             }
-        } else {
-            logger.info(this.getClass().getName()+"/getListExecution: No nodes selected in form");
-        }
-
-        if(jobsMap != null) {
             logger.info(this.getClass().getName()+"/getListExecution: Add data to jobsMap");
             request.setAttribute("jobsMap", jobsMap);
             request.setAttribute("jobNodeList", jobsMap.get("nodeList"));
@@ -179,8 +190,9 @@ public class JobRuns {
             request.setAttribute("otherList", jobsMap.get("otherList"));
             ret = true;
         } else {
-            logger.error(this.getClass().getName()+"/getListExecution: jobsMap = null >>> resetting it");
+            logger.info(this.getClass().getName()+"/getListExecution: No nodes selected in form");
             jobsMap = resetJobsMap(request);
+            ret = false;
         }
 
         return ret;

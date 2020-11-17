@@ -52,7 +52,6 @@
 </head>
 <body>
     <%@ include file="menu.jsp" %>
-    <h1>to be fixed</h1>
     <div class="container-fluid">
         <div class="row">
             <!--<header>-->
@@ -69,7 +68,7 @@
                             <c:set var="current" value="${status.count-1}" />
                             <div class="checkbox ${activation}">
                             <label for="${current}" class="nav-item ${activation}">
-                                <input id="${current}" value="${current}" class="nav-item ${activation}" type="checkbox" name="nodesList" ${activation}>
+                                <input id="${current}" value="${current}" class="nav-item ${activation}" type="checkbox" name="selectedNodes" ${activation}>
                                     ${companyList[status.count-1]}:${node}:${areaList[status.count-1]}
                                 </input>
                             </label>
