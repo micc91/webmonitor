@@ -1,6 +1,8 @@
 html,
 body {
     height: 100%;
+    padding-top: 1.8rem;
+    padding-bottom: 5rem;
 }
 .bd-placeholder-img {
     font-size: 1.125rem;

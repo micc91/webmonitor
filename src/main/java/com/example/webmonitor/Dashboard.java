@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Dashboard extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -39,7 +41,7 @@ public class Dashboard extends HttpServlet {
             request.setAttribute("error", "Failed to get list of nodes");
         }
 
-        ret = jobRuns.getListExecution(request, uvmsConnection);
+        ret = jobRuns.getListExecution(request, uvmsConnection, null);
         if(!ret) {
             logger.error(this.getServletName()+"/doPost: Failed to get list of runs");
             request.setAttribute("error", "Failed to get list of job runs");
@@ -47,7 +49,11 @@ public class Dashboard extends HttpServlet {
         logger.info(this.getServletName()+"/doPost: got from session="+ uvmsConnection.toString());
 
         request.setAttribute("uvmsConnection", uvmsConnection);
-
+        List<String> selectedNodes = new ArrayList<>();
+        for(String nodenum : request.getParameterValues("selectedNodes")) {
+            selectedNodes.add(nodenum);
+        }
+        session.setAttribute("selectedContext", selectedNodes);
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
     }
 
@@ -57,6 +63,7 @@ public class Dashboard extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");
+        List<String> selectedNodes = (List<String>) session.getAttribute("selectedContext");
         JobRuns jobRuns = new JobRuns();
         boolean ret = false;
 
@@ -65,7 +72,7 @@ public class Dashboard extends HttpServlet {
             logger.error(this.getServletName()+"/doGet: Failed to get list of nodes");
             request.setAttribute("error", "Failed to get list of nodes");
         }
-        ret = jobRuns.getListExecution(request, uvmsConnection);
+        ret = jobRuns.getListExecution(request, uvmsConnection, selectedNodes);
         if(!ret) {
             logger.error(this.getServletName()+"/doGet: Failed to get list of runs");
             request.setAttribute("error", "Failed to get list of job runs");
