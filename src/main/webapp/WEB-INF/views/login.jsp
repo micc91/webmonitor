@@ -1,5 +1,5 @@
 <%@ page pageEncoding="UTF-8" isELIgnored ="false" %>
-<jsp:useBean id="uvmsConnection" scope="request" type="com.example.duas.UvmsConnection"/>
+<jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">

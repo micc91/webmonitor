@@ -132,7 +132,7 @@
             ${project.basedir}/src/wsdl/duws61051.wsdl
           </wsdlFile>
         </wsdlFiles>
-        <packageName>com.example.duws.proxy</packageName>
+        <packageName>com.webops.duws.proxy</packageName>
 <!--        <xjcArgs>
           <xjcArg>-Xfluent-api</xjcArg>
         </xjcArgs>

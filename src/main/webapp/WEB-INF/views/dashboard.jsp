@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<jsp:useBean id="uvmsConnection" scope="request" type="com.example.duas.UvmsConnection"/>
+<jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>
 
 <jsp:useBean id="statusList" scope="request" type="java.util.List"/>
 <jsp:useBean id="companyList" scope="request" type="java.util.List"/>
@@ -22,8 +22,7 @@
 <jsp:useBean id="infoList" scope="request" type="java.util.List"/>
 <jsp:useBean id="otherList" scope="request" type="java.util.List"/>
 
-<jsp:useBean id="duasMap" scope="request" type="java.util.Map"/>
-<jsp:useBean id="jobsMap" scope="request" type="java.util.Map"/>
+<jsp:useBean id="nodesList" scope="request" type="java.util.List"/>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -60,18 +59,18 @@
 
                     <form class="nav flex-column" action="./dashboard" method="post" >
                         <h2>Context</h2>
-                        <c:forEach var="node" items="${nodeList}" varStatus="status">
+                        <c:forEach var="item" items="${nodesList}" varStatus="status">
                             <c:choose>
-                                <c:when test="${statusList[status.count-1] == 'CONNECTED'}"><c:set var="activation" value="" /></c:when>
+                                <c:when test="${item.get('status') == 'CONNECTED'}"><c:set var="activation" value="" /></c:when>
                                 <c:otherwise><c:set var="activation" value="disabled" /></c:otherwise>
                             </c:choose>
-                            <c:set var="current" value="${status.count-1}" />
+                            <c:set var="current" value="${status.index}" />
                             <div class="checkbox ${activation}">
-                            <label for="${current}" class="nav-item ${activation}">
-                                <input id="${current}" value="${current}" class="nav-item ${activation}" type="checkbox" name="selectedNodes" ${activation}>
-                                    ${companyList[status.count-1]}:${node}:${areaList[status.count-1]}
-                                </input>
-                            </label>
+                                <label for="${current}" class="nav-item ${activation}">
+                                    <input id="${current}" value="${current}" class="nav-item ${activation}" type="checkbox" name="selectedNodes" ${activation}>
+                                        ${item.get("company")}:${item.get("node")}:${item.get("area")}
+                                    </input>
+                                </label>
                             </div>
                         </c:forEach>
                         <button class="btn btn-sm btn-default btn-block btn-outline-secondary" type="submit">Select</button>

@@ -1,6 +1,8 @@
 package com.duws;
 
-import com.example.duas.UvmsConnection;
+import com.webops.duas.NodesList;
+import com.webops.duas.UvmsConnection;
+import com.webops.duas.objectsList;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +16,11 @@ public class JobRuns {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(JobRuns.class);
 
+    private objectsList nodesList;
+
     public JobRuns() {
+        nodesList = new NodesList();
+        nodesList.init();
 
     }
 
@@ -84,6 +90,14 @@ public class JobRuns {
 
         Map<String, List<String>> duasMap = resetNodesMap(request);
         Map<String, List<String>> jobsMap = resetJobsMap(request);
+
+        nodesList = new NodesList();
+        nodesList.init();
+        nodesList.setInRequest(request);
+    }
+
+    public NodesList getNodesList() {
+        return (NodesList) nodesList;
     }
 
     public boolean getDUEnvironmentList(HttpServletRequest request, UvmsConnection uvmsConnection) {
@@ -101,7 +115,7 @@ public class JobRuns {
             uvmsConnection = new UvmsConnection();
         } else {
             try {
-                duasMap = duwsClient.getDUEnvironmentList(uvmsConnection);
+                duasMap = duwsClient.getDUEnvironmentList(uvmsConnection, (NodesList) nodesList);
             } catch (Exception e) {
                 logger.error(this.getClass().getName()+": "+duwsClient.getLastResponse()+ "("+duwsClient.getLastResult()+")");
                 logger.error("Exception: ",e);
@@ -117,6 +131,7 @@ public class JobRuns {
                 request.setAttribute("areaList", duasMap.get("area"));
                 request.setAttribute("versionList", duasMap.get("version"));
                 request.setAttribute("statusList", duasMap.get("status"));
+                nodesList.setInRequest(request);
                 ret = true;
             } else {
                 logger.error(this.getClass().getName()+"/getDUEnvironmentList: duasMap = null");
