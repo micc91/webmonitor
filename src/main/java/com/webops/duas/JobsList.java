@@ -54,13 +54,6 @@ public class JobsList extends objectsList {
         return !isCtl(status);
     }
 
-    public void reset() {
-        if( ! items.isEmpty()) {
-            items.clear();
-        }
-        init();
-    }
-
     public Map<String, String> getItem(int index) {
         if(index >= 0 && index < items.size()) {
             return(items.get(index));

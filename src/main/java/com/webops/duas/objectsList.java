@@ -30,6 +30,12 @@ public abstract class objectsList {
         }
     }
 
+    public void reset() {
+        if( ! items.isEmpty()) {
+            items.clear();
+        }
+    }
+
     public void setName(String name) {
         this.name = name;
     }

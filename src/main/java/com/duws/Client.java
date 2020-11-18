@@ -1,5 +1,6 @@
 package com.duws;
 
+import com.webops.duas.JobsList;
 import com.webops.duas.NodesList;
 import com.webops.duas.UvmsConnection;
 import com.webops.duws.proxy.*;
@@ -69,8 +70,8 @@ public class Client {
         return(token);
     }
 
-    public Map<String, List<String>> getDUEnvironmentList(UvmsConnection connection, NodesList nodesList) throws Exception {
-
+    public boolean getDUEnvironmentList(UvmsConnection connection, NodesList nodesList) throws Exception {
+        boolean ret;
         token = connection.getToken();
         errorMessage = "Successful";
         errorCode = 0;
@@ -80,29 +81,17 @@ public class Client {
         ctxHolder.setToken(token);
         List<Envir> duEnvironmentList = service.getDUEnvironmentList(token,new UvmsNodeFilter());
 
-        Map<String, List<String>> duasMap = new HashMap<>();
-        duasMap.put("company", new ArrayList<>());
-        duasMap.put("node", new ArrayList<>());
-        duasMap.put("area", new ArrayList<>());
-        duasMap.put("version", new ArrayList<>());
-        duasMap.put("status", new ArrayList<>());
-
         nodesList.reset();
-
+        ret = true;
         int idx=0;
         for(Envir item : duEnvironmentList) {
-            nodesList.addItem(item);
-
-            duasMap.get("company").add(item.getCompany());
-            duasMap.get("node").add(item.getNode());
-            duasMap.get("area").add(item.getArea().getValue());
-            duasMap.get("version").add(item.getVersion().getValue());
-            duasMap.get("status").add(item.getStatus().getValue().toString());
+            ret = ret & nodesList.addItem(item);
             idx++;
-            logger.info(this.getClass().getName()+" [Adding "+ Integer.toString(idx) +"] "+item.getNode()+":"+item.getCompany()+":"+item.getArea().getValue()+":"+item.getVersion().getValue()+":"+item.getStatus().getValue().toString()+".");
+            logger.info(this.getClass().getName()+" [Adding "+ idx +"] "+item.getNode()+":"+item.getCompany()+":"+item.getArea().getValue()+":"+item.getVersion().getValue()+":"+item.getStatus().getValue().toString()+".");
         }
 
-        return duasMap;
+        //return duasMap;
+        return ret;
     }
 
     public boolean setExecutionAndLaunchFilters() {
@@ -180,7 +169,7 @@ public class Client {
         return output;
     }
 
-    public boolean getListExecution(UvmsConnection connection, String company, String node, String iArea, Map<String, List<String>> jobsMap) throws Exception {
+    public boolean getListExecution(UvmsConnection connection, Map<String, String> node, JobsList jobsList) throws Exception {
         boolean ret;
 
         Context currentCtx = new Context();
@@ -189,17 +178,17 @@ public class Client {
         List<ExecutionItem> jobRuns;
         List<LaunchItem> jobLaunches;
 
-        JAXBElement<String> area = new JAXBElement<>(ss.getServiceName(),String.class, iArea);
+        JAXBElement<String> area = new JAXBElement<>(ss.getServiceName(),String.class, node.get("area"));
         currentEnvir.setArea(area);
-        currentEnvir.setCompany(company);
-        currentEnvir.setNode(node);
+        currentEnvir.setCompany(node.get("company"));
+        currentEnvir.setNode(node.get("node"));
         JAXBElement<EnvirStatus> status = new JAXBElement<>(ss.getServiceName(),EnvirStatus.class,EnvirStatus.fromValue("CONNECTED"));
         currentEnvir.setStatus(status);
         currentCtx.setEnvir(currentEnvir);
         logger.info(this.getClass().getName()+"/getListExecution: currentEnvir="+currentEnvir.toString());
 
         token = connection.getToken();
-        logger.info(this.getClass().getName()+"/getListExecution("+company+"|"+node+"|"+iArea+"): token="+token);
+        logger.info(this.getClass().getName()+"/getListExecution("+node.get("company")+"|"+node.get("node")+"|"+node.get("area")+"): token="+token);
 
         // Setting up the context
         ctxHolder.setContext(currentCtx);
@@ -207,17 +196,6 @@ public class Client {
 
         if(currentFilter == null || currentLFilter == null) {
             ret = setExecutionAndLaunchFilters();
-        }
-
-        try {
-            jobRuns = service.getListExecution(ctxHolder, currentFilter);
-        } catch (DuwsException_Exception duwse) {
-            errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
-            logger.error(this.getClass().getName()+"/getListExecution failed: "+errorMessage+" ("+errorCode+")");
-//            logger.error("Exception: ",duwse);
-
-            jobRuns = null;
         }
 
         try {
@@ -231,52 +209,36 @@ public class Client {
             jobLaunches = null;
         }
 
-        if(! jobsMap.containsKey("nodeList")) {
-            jobsMap.put("nodeList", new ArrayList<>());
-        }
-        if(! jobsMap.containsKey("jobIdList")) {
-            jobsMap.put("jobIdList", new ArrayList<>());
-        }
-        if(! jobsMap.containsKey("statusList")) {
-            jobsMap.put("statusList", new ArrayList<>());
-        }
-        if(! jobsMap.containsKey("beginList")) {
-            jobsMap.put("beginList", new ArrayList<>());
-        }
-        if(! jobsMap.containsKey("endList")) {
-            jobsMap.put("endList", new ArrayList<>());
-        }
-        if(! jobsMap.containsKey("infoList")) {
-            jobsMap.put("infoList", new ArrayList<>());
-        }
-        if(! jobsMap.containsKey("otherList")) {
-            jobsMap.put("otherList", new ArrayList<>());
+        try {
+            jobRuns = service.getListExecution(ctxHolder, currentFilter);
+        } catch (DuwsException_Exception duwse) {
+            errorCode = duwse.getFaultInfo().getErrorCode();
+            errorMessage = duwse.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getListExecution failed: "+errorMessage+" ("+errorCode+")");
+//            logger.error("Exception: ",duwse);
+
+            jobRuns = null;
         }
 
-        String taskField;
-        String sessionField;
-        if(jobRuns != null) {
+        if(jobLaunches != null || jobRuns != null) {
+            jobsList.reset();
+        }
 
-            logger.info(this.getClass().getName()+"/getListExecution: Adding "+ jobRuns.size() +" jobs");
-            for(ExecutionItem item : jobRuns) {
-                jobsMap.get("nodeList").add(currentEnvir.getCompany()+"|"+currentEnvir.getNode()+"|"+currentEnvir.getArea().getValue());
-
+        if(jobLaunches != null) {
+            logger.info(this.getClass().getName()+"/getListExecution: Adding "+ jobLaunches.size() +" launches");
+            for(LaunchItem item : jobLaunches) {
                 if(item.getIdent().getTask() == null) {
-                    taskField = "-";
-                } else {
-                    taskField = item.getIdent().getTask();
+                    item.getIdent().setTask("-");
                 }
                 if(item.getIdent().getSession() == null) {
-                    sessionField = "-";
-                } else {
-                    sessionField = item.getIdent().getSession();
+                    item.getIdent().setSession("-");
                 }
-                jobsMap.get("jobIdList").add(taskField+"|"+sessionField+"|"+item.getIdent().getUproc()+"@"+item.getIdent().getMu().getValue());
-                jobsMap.get("statusList").add(item.getStatus());
-                jobsMap.get("beginList").add(formatDate(item.getBeginDate())+" "+formatTime(item.getBeginHour()));
-                jobsMap.get("endList").add(formatDate(item.getEndDate())+" "+formatTime(item.getEndHour()));
-                jobsMap.get("infoList").add(item.getInfo());
-                jobsMap.get("otherList").add(item.getIdent().getNumSess()+";"+item.getIdent().getNumProc()+";"+item.getProcessingDate()+";"+item.getQueue()+";"+item.getPriority());
+                item.setBeginDate(formatDate(item.getBeginDate()));
+                item.setBeginHour(formatTime(item.getBeginHour()));
+                item.setEndDate(formatDate(item.getEndDate()));
+                item.setEndHour(formatTime(item.getEndHour()));
+                item.setProcessingDate(formatDate(item.getProcessingDate()));
+                jobsList.addItem(currentEnvir, item);
             }
             ret = true;
         } else {
@@ -284,27 +246,22 @@ public class Client {
             ret = false;
         }
 
-        if(jobLaunches != null) {
-            logger.info(this.getClass().getName()+"/getListExecution: Adding "+ jobLaunches.size() +" launches");
-            for(LaunchItem item : jobLaunches) {
-                jobsMap.get("nodeList").add(currentEnvir.getCompany()+"|"+currentEnvir.getNode()+"|"+currentEnvir.getArea().getValue());
+        if(jobRuns != null) {
+
+            logger.info(this.getClass().getName()+"/getListExecution: Adding "+ jobRuns.size() +" jobs");
+            for(ExecutionItem item : jobRuns) {
                 if(item.getIdent().getTask() == null) {
-                    taskField = "-";
-                } else {
-                    taskField = item.getIdent().getTask();
+                    item.getIdent().setTask("-");
                 }
                 if(item.getIdent().getSession() == null) {
-                    sessionField = "-";
-                } else {
-                    sessionField = item.getIdent().getSession();
+                    item.getIdent().setSession("-");
                 }
-                jobsMap.get("jobIdList").add(taskField+"|"+sessionField+"|"+item.getIdent().getUproc()+"@"+item.getIdent().getMu());
-                jobsMap.get("statusList").add(item.getStatus());
-                jobsMap.get("beginList").add(formatDate(item.getBeginDate())+" "+formatTime(item.getBeginHour()));
-                jobsMap.get("endList").add(formatDate(item.getEndDate())+" "+formatTime(item.getEndHour()));
-                jobsMap.get("infoList").add("");
-                jobsMap.get("otherList").add(item.getIdent().getNumLanc()+";"+item.getProcessingDate()+";"+item.getQueue()+";"+item.getPriority()+";"+item.getStep());
-
+                item.setBeginDate(formatDate(item.getBeginDate()));
+                item.setBeginHour(formatTime(item.getBeginHour()));
+                item.setEndDate(formatDate(item.getEndDate()));
+                item.setEndHour(formatTime(item.getEndHour()));
+                item.setProcessingDate(formatDate(item.getProcessingDate()));
+                jobsList.addItem(currentEnvir, item);
             }
             ret = true;
         } else {
@@ -347,13 +304,7 @@ public class Client {
         ctxHolder.setContext(currentCtx);
         ctxHolder.setToken(token);
 
-/*        String fields[] = jobIdent.split("[@|]");
-        String task = fields[0];
-        String session = fields[1];
-        String uproc = fields[2];
-        String mu = fields[3];
- */
-        JAXBElement<String> muElt = new JAXBElement<>(ss.getServiceName(),String.class, mu);;
+        JAXBElement<String> muElt = new JAXBElement<>(ss.getServiceName(),String.class, mu);
         if(! task.equals("-")) {
             execId.setTask(task);
         }
