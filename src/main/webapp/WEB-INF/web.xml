@@ -19,19 +19,19 @@
 	<servlet-name>Info</servlet-name>
 	  <display-name>Info</display-name>
 	  <description>Information page</description>
-	  <servlet-class>com.example.webmonitor.Info</servlet-class>
+	  <servlet-class>com.webops.webui.Info</servlet-class>
 	</servlet>
 
 	<servlet>
   	  <servlet-name>Login</servlet-name>
 	  <display-name>Login</display-name>
 	  <description>Welcome page</description>
-	  <servlet-class>com.example.webmonitor.Login</servlet-class>
+	  <servlet-class>com.webops.webui.Login</servlet-class>
 	</servlet>
 
 	<servlet>
 		<servlet-name>InitApp</servlet-name>
-		<servlet-class>com.example.webmonitor.log4j.InitApp</servlet-class>
+		<servlet-class>com.webops.webui.log4j.InitApp</servlet-class>
 		<init-param>
 			<param-name>log4j-config</param-name>
 			<param-value>WEB-INF/classes/log4j.properties</param-value>
@@ -45,16 +45,16 @@
 
     <servlet>
         <servlet-name>Dashboard</servlet-name>
-        <servlet-class>com.example.webmonitor.Dashboard</servlet-class>
+        <servlet-class>com.webops.webui.Dashboard</servlet-class>
     </servlet>
 
 	<servlet>
 		<servlet-name>Logout</servlet-name>
-		<servlet-class>com.example.webmonitor.Logout</servlet-class>
+		<servlet-class>com.webops.webui.Logout</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>Welcome</servlet-name>
-		<servlet-class>com.example.webmonitor.Welcome</servlet-class>
+		<servlet-class>com.webops.webui.Welcome</servlet-class>
 	</servlet>
 
 	<servlet-mapping>

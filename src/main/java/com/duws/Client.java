@@ -1,7 +1,8 @@
 package com.duws;
 
-import com.example.duas.UvmsConnection;
-import com.example.duws.proxy.*;
+import com.webops.duas.NodesList;
+import com.webops.duas.UvmsConnection;
+import com.webops.duws.proxy.*;
 import org.apache.log4j.Logger;
 
 import javax.xml.bind.JAXBElement;
@@ -68,7 +69,7 @@ public class Client {
         return(token);
     }
 
-    public Map<String, List<String>> getDUEnvironmentList(UvmsConnection connection) throws Exception {
+    public Map<String, List<String>> getDUEnvironmentList(UvmsConnection connection, NodesList nodesList) throws Exception {
 
         token = connection.getToken();
         errorMessage = "Successful";
@@ -86,8 +87,12 @@ public class Client {
         duasMap.put("version", new ArrayList<>());
         duasMap.put("status", new ArrayList<>());
 
+        nodesList.reset();
+
         int idx=0;
         for(Envir item : duEnvironmentList) {
+            nodesList.addItem(item);
+
             duasMap.get("company").add(item.getCompany());
             duasMap.get("node").add(item.getNode());
             duasMap.get("area").add(item.getArea().getValue());
