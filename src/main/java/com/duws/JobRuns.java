@@ -1,5 +1,6 @@
 package com.duws;
 
+import com.webops.duas.JobsList;
 import com.webops.duas.NodesList;
 import com.webops.duas.UvmsConnection;
 import com.webops.duas.objectsList;
@@ -17,11 +18,13 @@ public class JobRuns {
     private static final Logger logger = Logger.getLogger(JobRuns.class);
 
     private objectsList nodesList;
+    private objectsList jobsList;
 
     public JobRuns() {
         nodesList = new NodesList();
         nodesList.init();
-
+        jobsList = new JobsList();
+        jobsList.init();
     }
 
     private Map<String, List<String>> resetJobsMap(HttpServletRequest request) {
@@ -88,54 +91,52 @@ public class JobRuns {
 
         logger.info(this.getClass().getName()+": initialize all lists and maps");
 
-        Map<String, List<String>> duasMap = resetNodesMap(request);
+        //Map<String, List<String>> duasMap = resetNodesMap(request);
         Map<String, List<String>> jobsMap = resetJobsMap(request);
 
         nodesList = new NodesList();
         nodesList.init();
         nodesList.setInRequest(request);
+
+        jobsList = new JobsList();
+        jobsList.init();
+        jobsList.setInRequest(request);
     }
 
     public NodesList getNodesList() {
         return (NodesList) nodesList;
     }
 
+    public JobsList getJobsList() {
+        return (JobsList) jobsList;
+    }
+
     public boolean getDUEnvironmentList(HttpServletRequest request, UvmsConnection uvmsConnection) {
+        boolean ret = false;
         Client duwsClient = null;
         try {
             duwsClient = new Client();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Map<String, List<String>> duasMap;
-        boolean ret = false;
 
         if(uvmsConnection == null) {
             logger.info(this.getClass().getName()+": No user stored yet in session");
             uvmsConnection = new UvmsConnection();
         } else {
             try {
-                duasMap = duwsClient.getDUEnvironmentList(uvmsConnection, (NodesList) nodesList);
+                ret = duwsClient.getDUEnvironmentList(uvmsConnection, (NodesList) nodesList);
             } catch (Exception e) {
                 logger.error(this.getClass().getName()+": "+duwsClient.getLastResponse()+ "("+duwsClient.getLastResult()+")");
                 logger.error("Exception: ",e);
                 e.printStackTrace();
-                duasMap = null;
             }
 
-            if(duasMap != null) {
-                logger.info(this.getClass().getName()+"/getDUEnvironmentList: Add data to duasMap");
-                request.setAttribute("duasMap", duasMap);
-                request.setAttribute("companyList", duasMap.get("company"));
-                request.setAttribute("nodeList", duasMap.get("node"));
-                request.setAttribute("areaList", duasMap.get("area"));
-                request.setAttribute("versionList", duasMap.get("version"));
-                request.setAttribute("statusList", duasMap.get("status"));
+            if(ret) {
+                logger.info(this.getClass().getName()+"/getDUEnvironmentList: Add data to nodesList");
                 nodesList.setInRequest(request);
-                ret = true;
             } else {
-                logger.error(this.getClass().getName()+"/getDUEnvironmentList: duasMap = null");
-                duasMap = resetNodesMap(request);
+                logger.error(this.getClass().getName()+"/getDUEnvironmentList: nodesList = null");
             }
         }
 
@@ -149,21 +150,11 @@ public class JobRuns {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        Map<String, List<String>> jobsMap = new HashMap<>();
         boolean ret = false;
 
-        List<String> companyList = (List<String>) request.getAttribute("companyList");
-        List<String> nodeList  = (List<String>) request.getAttribute("nodeList");
-        List<String> areaList = (List<String>) request.getAttribute("areaList");
-
-        if(companyList == null || companyList.isEmpty()) {
-            logger.error(this.getClass().getName()+"/getListExecution: companyList null or empty");
-        }
-        if(nodeList == null || nodeList.isEmpty()) {
-            logger.error(this.getClass().getName()+"/getListExecution: nodeList null or empty");
-        }
-        if(areaList == null || areaList.isEmpty()) {
-            logger.error(this.getClass().getName()+"/getListExecution: areaList null or empty");
+        List<Map<String,String>> nodesList = (List<Map<String,String>>) request.getAttribute("nodesList");
+        if(nodesList == null || nodesList.isEmpty()) {
+            logger.error(this.getClass().getName()+"/getListExecution: nodesList null or empty");
         }
 
         String[] currentNodesList;
@@ -185,9 +176,10 @@ public class JobRuns {
         if(currentNodesList != null) {
             logger.info(this.getClass().getName()+"/getListExecution: Nodes selected by form:");
             for (String idx : currentNodesList) {
-                logger.info(this.getClass().getName() + "/getListExecution: node " + idx + "=" + companyList.get(Integer.parseInt(idx)) + "|" + nodeList.get(Integer.parseInt(idx)) + "|" + areaList.get(Integer.parseInt(idx)));
+                Map<String, String> item = nodesList.get(Integer.parseInt(idx));
+                logger.info(this.getClass().getName() + "/getListExecution: node " + idx + "=" + item.get("company") + "|" + item.get("node") + "|" + item.get("area"));
                 try {
-                    ret = duwsClient.getListExecution(uvmsConnection, companyList.get(Integer.parseInt(idx)), nodeList.get(Integer.parseInt(idx)), areaList.get(Integer.parseInt(idx)), jobsMap);
+                    ret = duwsClient.getListExecution(uvmsConnection, item, (JobsList) jobsList);//jobsMap);
                 } catch (Exception e) {
                     logger.error(this.getClass().getName() + ": " + duwsClient.getLastResponse() + "(" + duwsClient.getLastResult() + ")");
                     logger.error("Exception: ", e);
@@ -195,21 +187,18 @@ public class JobRuns {
                 }
             }
             logger.info(this.getClass().getName()+"/getListExecution: Add data to jobsMap");
-            request.setAttribute("jobsMap", jobsMap);
-            request.setAttribute("jobNodeList", jobsMap.get("nodeList"));
-            request.setAttribute("jobIdList", jobsMap.get("jobIdList"));
-            request.setAttribute("jobStatusList", jobsMap.get("statusList"));
-            request.setAttribute("beginList", jobsMap.get("beginList"));
-            request.setAttribute("endList", jobsMap.get("endList"));
-            request.setAttribute("infoList", jobsMap.get("infoList"));
-            request.setAttribute("otherList", jobsMap.get("otherList"));
             ret = true;
         } else {
             logger.info(this.getClass().getName()+"/getListExecution: No nodes selected in form");
-            jobsMap = resetJobsMap(request);
             ret = false;
         }
 
+        if(ret) {
+            logger.info(this.getClass().getName()+"/getListExecution: Add data to jobsList");
+            jobsList.setInRequest(request);
+        } else {
+            logger.error(this.getClass().getName()+"/getListExecution: nodesList = null");
+        }
         return ret;
     }
 

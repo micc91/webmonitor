@@ -19,14 +19,14 @@ body {
     }
 }
 .bg {
-    background-image: url("./media/nuages.jpg");
+    background-image: url("../media/nuages.jpg");
     height: 90%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 .bg2 {
-    background-image: url("./media/Vue_du_mont_ventoux.jpg");
+    background-image: url("../media/Vue_du_mont_ventoux.jpg");
     height: 90%;
     background-position: center;
     background-repeat: no-repeat;
@@ -49,7 +49,7 @@ body {
 }
 
 .bg-login {
-    background-image: url("./media/Serrure.jpg");
+    background-image: url("../media/Serrure.jpg");
     height: 90%;
     background-position: center;
     background-repeat: no-repeat;
@@ -57,7 +57,7 @@ body {
 }
 
 .bg-logout {
-    background-image: url("./media/Serrure.jpg");
+    background-image: url("../media/Serrure.jpg");
     height: 90%;
     background-position: center;
     background-repeat: no-repeat;
@@ -65,7 +65,7 @@ body {
 }
 
 .bg-dashboard {
-    background-image: url("./media/Fond_degrade_bleu_alphanum.jpg");
+    background-image: url("../media/Fond_degrade_bleu_alphanum.jpg");
     height: 90%;
     background-position: center;
     background-repeat: no-repeat;

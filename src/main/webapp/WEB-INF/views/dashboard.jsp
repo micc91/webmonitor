@@ -7,22 +7,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>
-
-<jsp:useBean id="statusList" scope="request" type="java.util.List"/>
-<jsp:useBean id="companyList" scope="request" type="java.util.List"/>
-<jsp:useBean id="areaList" scope="request" type="java.util.List"/>
-<jsp:useBean id="versionList" scope="request" type="java.util.List"/>
-<jsp:useBean id="nodeList" scope="request" type="java.util.List"/>
-
-<jsp:useBean id="jobNodeList" scope="request" type="java.util.List"/>
-<jsp:useBean id="jobIdList" scope="request" type="java.util.List"/>
-<jsp:useBean id="jobStatusList" scope="request" type="java.util.List"/>
-<jsp:useBean id="beginList" scope="request" type="java.util.List"/>
-<jsp:useBean id="endList" scope="request" type="java.util.List"/>
-<jsp:useBean id="infoList" scope="request" type="java.util.List"/>
-<jsp:useBean id="otherList" scope="request" type="java.util.List"/>
-
 <jsp:useBean id="nodesList" scope="request" type="java.util.List"/>
+<jsp:useBean id="jobsList" scope="request" type="java.util.List"/>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -80,12 +66,15 @@
 
             <!--</header>-->
             <!--<h1>to be fixed...</h1>-->
-            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 bg-dashboard">
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                     <h1 class="h2">Job runs</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group mr-2">
-                            <button type="button" class="btn btn-sm btn-outline-secondary"><a href="./dashboard">Refresh</a></button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                <img src="./media/arrow-repeat.svg" class="bi" width="32" height="32" fill="currentColor" />
+                                <a href="./dashboard"></a>
+                            </button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">New Run</button>
                         </div>
                         <select class="btn btn-sm btn-outline-secondary dropdown-toggle">
@@ -106,38 +95,62 @@
                     <table class="table table-striped table-sm">
                         <thead>
                         <tr>
-                            <th>Company|Node|Area</th>
-                            <th>Task|Session|Uproc@MU</th>
-                            <th>Status</th>
-                            <th>Begin Date/Time</th>
-                            <th>End Date/Time</th>
-                            <th>Information</th>
+                            <th><a href="/dashboard?sort=node">Company|Node|Area</a></th>
+                            <th><a href="/dashboard?sort=jobid">Task|Session|Uproc@MU</a></th>
+                            <th><a href="/dashboard?sort=status">Status</a></th>
+                            <th><a href="/dashboard?sort=begin">Begin Date/Time</a></th>
+                            <th><a href="/dashboard?sort=end">End Date/Time</a></th>
+                            <th><a href="/dashboard?sort=info">Information</a></th>
                         </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="job" items="${jobIdList}" varStatus="status">
-                                <c:set var="idx" value="${status.count-1}" />
-
-                                <c:set var="nodeid" value="${fn:split(jobNodeList[idx],'|')}" />
-                                <c:set var="company" value="${nodeid[0]}" />
-                                <c:set var="node" value="${nodeid[0]}" />
-                                <c:set var="area" value="${nodeid[0]}" />
-
-                                <c:set var="jobid1" value="${fn:replace(job,'|',';')}" />
-                                <c:set var="jobid2" value="${fn:replace(job,'@',';')}" />
-                                <c:set var="jobid" value="${fn:split(jobid2,';')}" />
-                                <c:set var="task" value="${jobid[0]}" />
-                                <c:set var="session" value="${jobid[1]}" />
-                                <c:set var="uproc" value="${jobid[2]}" />
-                                <c:set var="mu" value="${jobid[3]}" />
-
+                            <c:forEach var="item" items="${jobsList}" varStatus="status">
+                                <c:set var="idx" value="${status.index}" />
                                 <c:choose>
-                                    <c:when test="${jobStatusList[idx] == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
-                                    <c:when test="${jobStatusList[idx] == 'COMPLETED'}"><c:set var="jobtype" value="ctl" /></c:when>
-                                    <c:when test="${jobStatusList[idx] == 'ABORTED'}"><c:set var="jobtype" value="ctl" /></c:when>
-                                    <c:when test="${jobStatusList[idx] == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                    <c:when test="${item.get('status') == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                    <c:when test="${item.get('status') == 'COMPLETED'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                    <c:when test="${item.get('status') == 'ABORTED'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                    <c:when test="${item.get('status') == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
                                     <c:otherwise><c:set var="jobtype" value="fla" /></c:otherwise>
                                 </c:choose>
+                                <c:choose>
+                                    <c:when test="${jobtype == 'ctl'}">
+                                        <c:url var="infolink" value="/info">
+                                            <c:param name="company" value="${item.get('company')}" />
+                                            <c:param name="node" value="${item.get('node')}" />
+                                            <c:param name="area" value="${item.get('area')}" />
+                                            <c:param name="task" value="${item.get('task')}" />
+                                            <c:param name="session" value="${item.get('session')}" />
+                                            <c:param name="uproc" value="${item.get('uproc')}" />
+                                            <c:param name="mu" value="${item.get('mu')}" />
+                                            <c:param name="numsess" value="${item.get('numsess')}" />
+                                            <c:param name="numproc" value="${item.get('numproc')}" />
+                                            <c:param name="pdate" value="${item.get('pdate')}" />
+                                            <c:param name="queue" value="${item.get('queue')}" />
+                                            <c:param name="priority" value="${item.get('priority')}" />
+                                            <c:param name="status" value="${item.get('status')}" />
+                                            <c:param name="information" value="${item.get('information')}" />
+                                            <c:param name="begin" value="${item.get('begin')}" />
+                                            <c:param name="end" value="${item.get('end')}" />
+                                        </c:url>
+<%--                                        <c:set var="infolink" value="./info?company=${item.get('company')}&node=${item.get('node')}&area=${item.get('area')}&task=${item.get('task')}&session=${item.get('session')}&uproc=${item.get('uproc')}&mu=${item.get('mu')}&numsess=${item.get('numsess')}&numproc=${item.get('numproc')}&pdate=${item.get('pdate')}&queue=${item.get('queue')}&priority=${item.get('priority')}&status=${item.get('status')}&info=${item.get('information')}&begin=${item.get('begin_date')}_${item.get('begin_time')}&end=${item.get('end_date')}_${item.get('end_time')}" />
+--%>
+                                    </c:when>
+                                    <c:otherwise>
+                                    </c:otherwise>
+                                </c:choose>
+                                <tr>
+                                    <td>${item.get("company")}|${item.get("node")}|${item.get("area")}</td>
+                                    <td><a href="${infolink}">${item.get("task")}|${item.get("session")}|${item.get("uproc")}@${item.get("mu")}</a></td>
+                                    <td class="status-${item.get("status")}">${item.get("status")}</td>
+                                    <td>${item.get("begin_date")} ${item.get("begin_time")}</td>
+                                    <td>${item.get("end_date")} ${item.get("end_time")}</td>
+                                    <td>${item.get("information")}</td>
+                                </tr>
+
+                            </c:forEach>
+<%--
+
                                 <c:set var="other" value="${fn:split(otherList[idx],';')}" />
                                 <c:choose>
                                     <c:when test="${jobtype == 'ctl'}">
@@ -157,15 +170,8 @@
                                         <c:set var="infolink" value="#" />
                                     </c:otherwise>
                                 </c:choose>
-                                <tr>
-                                    <td>${jobNodeList[idx]}</td>
-                                    <td>${job}</td>
-                                    <td class="status-${jobStatusList[idx]}">${jobStatusList[idx]}</td>
-                                    <td>${beginList[idx]}</td>
-                                    <td>${endList[idx]}</td>
-                                    <td>${infoList[idx]}</td>
-                                </tr>
-                            </c:forEach>
+
+--%>
                         </tbody>
                     </table>
                     <h1>End...</h1>

@@ -23,7 +23,7 @@
 <header>
         <%@ include file="/WEB-INF/views/static-menu.jsp" %>
 </header>
-<main role="main" class="container-fluid text-center bg3" style="padding-top: 60px;">
+<main role="main" class="container-fluid text-center bg-welcome" style="padding-top: 60px;">
         <h1>Please log in to Management Server to start</h1>
 </main>
 <footer class="fixed-bottom bg-dark footer mt-auto py-3">

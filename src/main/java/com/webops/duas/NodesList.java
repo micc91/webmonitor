@@ -22,13 +22,6 @@ public class NodesList extends objectsList {
         name = "nodesList";
     }
 
-    public void reset() {
-        if( ! items.isEmpty()) {
-            items.clear();
-        }
-        init();
-    }
-
     public boolean addItem(Envir item) {
         Map<String, String> entry = new HashMap<>();
 
