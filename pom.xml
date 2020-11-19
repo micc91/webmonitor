@@ -176,7 +176,8 @@
             <includes>
               <include>**/*css</include>
               <include>**/*js</include>
-              <include>**/*jpg</include>
+                <include>**/*jpg</include>
+                <include>**/*svg</include>
             </includes>
           </resource>
         </webResources>

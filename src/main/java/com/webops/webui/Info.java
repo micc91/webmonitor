@@ -2,6 +2,7 @@ package com.webops.webui;
 
 import java.io.IOException;
 
+import com.duws.JobRuns;
 import com.webops.duas.UvmsConnection;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
@@ -34,15 +35,22 @@ public class Info extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");
+
 		if(uvmsConnection == null) {
 			logger.info(this.getServletName()+"/doGet: No user stored yet in session");
 			this.getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
 		}
+
+		JobRuns jobRuns = new JobRuns();
+		boolean ret = false;
+		ret = jobRuns.getJobLogs(request, uvmsConnection);
+		if(!ret) {
+			logger.error(this.getServletName()+"/doGet: Failed to get logs of job");
+			request.setAttribute("error", "Failed to get logs of job");
+		}
+
 		logger.info(this.getServletName()+"/doGet: got from session="+ uvmsConnection.toString());
 		request.setAttribute("uvmsConnection", uvmsConnection);
-
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/info.jsp").forward(request, response);
 	}

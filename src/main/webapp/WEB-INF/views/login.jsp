@@ -27,7 +27,7 @@
         <header>
             <%@ include file="menu.jsp" %>
         </header>
-        <main role="main" class="container-fluid text-center bg-login">
+        <main role="main" class="container-fluid text-center">
             <c:set var="welcome_msg" value="You are not yet connected" scope="page"></c:set>
             <c:if test="${ !empty uvmsConnection.login}"><c:set var="welcome_msg" value="Welcome ${uvmsConnection.login}" scope="page" /></c:if>
                 <h1><c:out value="${welcome_msg}!" /></h1>

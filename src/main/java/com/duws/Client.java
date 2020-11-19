@@ -298,8 +298,8 @@ public class Client {
         JAXBElement<EnvirStatus> status = new JAXBElement<>(ss.getServiceName(),EnvirStatus.class,EnvirStatus.fromValue("CONNECTED"));
         currentEnvir.setStatus(status);
         currentCtx.setEnvir(currentEnvir);
-        logger.info(this.getClass().getName()+"/getListExecution: currentEnvir="+currentEnvir.toString());
-
+        logger.info(this.getClass().getName()+"/getJobLogs: currentEnvir="+currentEnvir.toString());
+        logger.info(this.getClass().getName()+"/getJobLogs: input params="+task+":"+session+":"+uproc+":"+mu+"::"+numSess+":"+numJob+".");
         // Setting up the context
         ctxHolder.setContext(currentCtx);
         ctxHolder.setToken(token);
@@ -310,23 +310,28 @@ public class Client {
         }
         if(! session.equals("-")) {
             execId.setSession(session);
+            execId.setNumSess(numSess);
         }
         execId.setUproc(uproc);
         execId.setMu(muElt);
         execId.setNumProc(numJob);
-        execId.setNumSess(numSess);
+        logger.info(this.getClass().getName()+"/getJobLogs: execId="+execId.getTask()+":"+execId.getSession()+":"+execId.getUproc()+":"+execId.getMu().getValue()+"/"+execId.getNumLanc()+":"+execId.getNumSess()+":"+execId.getNumProc());
 
+        List<String> error4JobLogList = new ArrayList<>();
+        List<String> error4HTraceList = new ArrayList<>();
         ExecutionLog execLog = null;
         try {
             execLog = service.getExecutionLog(ctxHolder, execId);
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
             errorMessage = duwse.getFaultInfo().getMessage();
-            logger.error(this.getClass().getName()+"/getListExecution/getListLaunch failed: "+errorMessage+" ("+errorCode+")");
+            logger.error(this.getClass().getName()+"/getJobLogs/getExecutionLog failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
+            error4JobLogList.add("Job log request failed: "+errorMessage+" ("+errorCode+")");
 
         } catch (SessionTimedOutException_Exception e) {
             e.printStackTrace();
+            error4JobLogList.add("Job log request failed: timeout reached");
         }
 
         HistoryTrace hTrace = null;
@@ -335,16 +340,26 @@ public class Client {
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
             errorMessage = duwse.getFaultInfo().getMessage();
-            logger.error(this.getClass().getName()+"/getListExecution/getListLaunch failed: "+errorMessage+" ("+errorCode+")");
+            logger.error(this.getClass().getName()+"/getJobLogs/getHistoryTrace failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
+            error4HTraceList.add("History trace request failed: "+errorMessage+" ("+errorCode+")");
 
         } catch (SessionTimedOutException_Exception e) {
             e.printStackTrace();
+            error4HTraceList.add("History trace request failed: timeout reached");
         }
 
         Map<String, List<String>> logsMap = new HashMap<>();
-        logsMap.put("historyTrace", hTrace.getTrace());
-        logsMap.put("jobLog", execLog.getLog());
+        if(hTrace == null) {
+            logsMap.put("historyTrace", error4HTraceList);
+        } else {
+            logsMap.put("historyTrace", hTrace.getTrace());
+        }
+        if(execLog == null) {
+            logsMap.put("jobLog", error4JobLogList);
+        } else {
+            logsMap.put("jobLog", execLog.getLog());
+        }
 
         return logsMap;
     }

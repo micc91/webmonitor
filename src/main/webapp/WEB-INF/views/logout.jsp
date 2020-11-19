@@ -31,7 +31,7 @@
 <header>
     <%@ include file="/WEB-INF/views/menu.jsp" %>
 </header>
-<main role="main" class="container-fluid text-center bg-logout">
+<main role="main" class="container-fluid text-center">
     <c:choose>
         <c:when test="${ uvmsConnection.token == 'disconnected'}"><h1>You have been successfully logged out</h1></c:when>
         <c:otherwise><h1 style="color: red">You are still connected.</h1></c:otherwise>

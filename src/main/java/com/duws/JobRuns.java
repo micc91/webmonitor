@@ -2,14 +2,12 @@ package com.duws;
 
 import com.webops.duas.JobsList;
 import com.webops.duas.NodesList;
+import com.webops.duas.ObjectsList;
 import com.webops.duas.UvmsConnection;
-import com.webops.duas.objectsList;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +15,8 @@ public class JobRuns {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(JobRuns.class);
 
-    private objectsList nodesList;
-    private objectsList jobsList;
+    private ObjectsList nodesList;
+    private ObjectsList jobsList;
 
     public JobRuns() {
         nodesList = new NodesList();
@@ -27,72 +25,9 @@ public class JobRuns {
         jobsList.init();
     }
 
-    private Map<String, List<String>> resetJobsMap(HttpServletRequest request) {
-        List<String> empty = new ArrayList<>();
-        empty.add("");
-        logger.info(this.getClass().getName()+": initialize Jobs lists and maps");
-
-        Map<String, List<String>> jobsMap = new HashMap<>();
-        jobsMap.put("nodeList", new ArrayList<>());
-        jobsMap.get("nodeList").add("");
-        jobsMap.put("jobIdList", new ArrayList<>());
-        jobsMap.get("jobIdList").add("");
-        jobsMap.put("statusList", new ArrayList<>());
-        jobsMap.get("statusList").add("");
-        jobsMap.put("beginList", new ArrayList<>());
-        jobsMap.get("beginList").add("");
-        jobsMap.put("endList", new ArrayList<>());
-        jobsMap.get("endList").add("");
-        jobsMap.put("infoList", new ArrayList<>());
-        jobsMap.get("infoList").add("");
-        jobsMap.put("otherList", new ArrayList<>());
-        jobsMap.get("otherList").add("");
-
-        request.setAttribute("jobsMap", jobsMap);
-        request.setAttribute("jobNodeList", empty);
-        request.setAttribute("jobIdList", empty);
-        request.setAttribute("jobStatusList", empty);
-        request.setAttribute("beginList", empty);
-        request.setAttribute("endList", empty);
-        request.setAttribute("infoList", empty);
-        request.setAttribute("otherList", empty);
-
-        return jobsMap;
-    }
-
-    private Map<String, List<String>> resetNodesMap(HttpServletRequest request) {
-        List<String> empty = new ArrayList<>();
-        empty.add("");
-        logger.info(this.getClass().getName()+": initialize Nodes lists and maps");
-
-        Map<String, List<String>> duasMap = new HashMap<>();
-        duasMap.put("company", new ArrayList<>());
-        duasMap.get("company").add("");
-        duasMap.put("node", new ArrayList<>());
-        duasMap.get("node").add("");
-        duasMap.put("area", new ArrayList<>());
-        duasMap.get("area").add("");
-        duasMap.put("version", new ArrayList<>());
-        duasMap.get("version").add("");
-        duasMap.put("status", new ArrayList<>());
-
-        duasMap.get("status").add("");
-        request.setAttribute("duasMap", duasMap);
-        request.setAttribute("companyList", empty);
-        request.setAttribute("nodeList", empty);
-        request.setAttribute("areaList", empty);
-        request.setAttribute("versionList", empty);
-        request.setAttribute("statusList", empty);
-
-        return duasMap;
-    }
-
     public JobRuns(HttpServletRequest request) {
 
         logger.info(this.getClass().getName()+": initialize all lists and maps");
-
-        //Map<String, List<String>> duasMap = resetNodesMap(request);
-        Map<String, List<String>> jobsMap = resetJobsMap(request);
 
         nodesList = new NodesList();
         nodesList.init();
@@ -134,6 +69,7 @@ public class JobRuns {
 
             if(ret) {
                 logger.info(this.getClass().getName()+"/getDUEnvironmentList: Add data to nodesList");
+                //TODO: set in session ?
                 nodesList.setInRequest(request);
             } else {
                 logger.error(this.getClass().getName()+"/getDUEnvironmentList: nodesList = null");
@@ -195,6 +131,7 @@ public class JobRuns {
 
         if(ret) {
             logger.info(this.getClass().getName()+"/getListExecution: Add data to jobsList");
+            //TODO: set in session?
             jobsList.setInRequest(request);
         } else {
             logger.error(this.getClass().getName()+"/getListExecution: nodesList = null");
@@ -210,7 +147,7 @@ public class JobRuns {
             e.printStackTrace();
         }
         Map<String, List<String>> jobLogs;
-        boolean ret = false;
+        boolean ret = true;
 
         String company = request.getParameter("company");
         String node  = request.getParameter("node");
@@ -219,17 +156,17 @@ public class JobRuns {
         String session = request.getParameter("session");
         String uproc = request.getParameter("uproc");
         String mu = request.getParameter("mu");
-        String numJob = request.getParameter("numjob");
+        String numJob = request.getParameter("numproc");
         String numSess = request.getParameter("numsess");
 
         if(company == null || company.isEmpty()) {
-            logger.error(this.getClass().getName()+"/getListExecution: companyList null or empty");
+            logger.error(this.getClass().getName()+"/getJobLogs: companyList null or empty");
         }
         if(node == null || node.isEmpty()) {
-            logger.error(this.getClass().getName()+"/getListExecution: nodeList null or empty");
+            logger.error(this.getClass().getName()+"/getJobLogs: nodeList null or empty");
         }
         if(area == null || area.isEmpty()) {
-            logger.error(this.getClass().getName()+"/getListExecution: areaList null or empty");
+            logger.error(this.getClass().getName()+"/getJobLogs: areaList null or empty");
         }
 
         jobLogs = duwsClient.getJobLogs(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob);

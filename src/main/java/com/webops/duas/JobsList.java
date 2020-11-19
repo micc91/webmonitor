@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobsList extends objectsList {
+public class JobsList extends ObjectsList {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(JobsList.class);
 
