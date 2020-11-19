@@ -1,5 +1,6 @@
-package com.webops.duas;
+package com.webops.webui;
 
+import com.webops.duas.NodesList;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,30 +10,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class objectsList {
-    protected List<Map<String, String>> items = new ArrayList<>();
+public class SettingsMap {
+    private static final long serialVersionUID = 1L;
+    private static final Logger logger = Logger.getLogger(SettingsMap.class);
+
+    protected Map<String, String> items = new HashMap<>();
     protected List<String> fields = new ArrayList<>();
 
     protected String name;
 
-    protected objectsList() {
+    protected SettingsMap() {
+        fields.add("refresh");
+        fields.add("sort");
+        fields.add("order");
+        fields.add("offset");
+        fields.add("filter");
 
+        name="SettingsMap";
     }
 
     public void init() {
-        Map<String, String> empty = new HashMap<>();
         for(String field : fields) {
-            empty.put(field, "");
-        }
-
-        if(items.isEmpty()) {
-            items.add(empty);
-        }
-    }
-
-    public void reset() {
-        if( ! items.isEmpty()) {
-            items.clear();
+            items.put(field, "");
         }
     }
 
@@ -44,7 +43,7 @@ public abstract class objectsList {
         return name;
     }
 
-    public List<Map<String, String>> getItems() {
+    public Map<String, String> getItems() {
         return items;
     }
 

@@ -1,6 +1,6 @@
 html,
 body {
-    height: 100%;
+/*    height: 100%;*/
     padding-top: 1.8rem;
     padding-bottom: 5rem;
 }
@@ -41,7 +41,10 @@ body {
 }
 
 .bg-welcome {
-    background-image: url("../media/Reseau_Mondial.jpg");
+    background-image: linear-gradient(
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0.45)
+    ),url("../media/Reseau_Mondial.jpg");
     height: 90%;
     background-position: center;
     background-repeat: no-repeat;
@@ -49,7 +52,10 @@ body {
 }
 
 .bg-login {
-    background-image: url("../media/Serrure.jpg");
+    background-image: linear-gradient(
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0.45)
+    ),url("../media/Serrure.jpg");
     height: 90%;
     background-position: center;
     background-repeat: no-repeat;
@@ -57,7 +63,10 @@ body {
 }
 
 .bg-logout {
-    background-image: url("../media/Serrure.jpg");
+    background-image: linear-gradient(
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0.45)
+    ),url("../media/Serrure.jpg");
     height: 90%;
     background-position: center;
     background-repeat: no-repeat;
@@ -65,7 +74,10 @@ body {
 }
 
 .bg-dashboard {
-    background-image: url("../media/Fond_degrade_bleu_alphanum.jpg");
+    background-image: linear-gradient(
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0.45)
+    ),url("../media/Fond_degrade_bleu_alphanum.jpg");
     height: 90%;
     background-position: center;
     background-repeat: no-repeat;
@@ -73,7 +85,10 @@ body {
 }
 
 .bg-other {
-    background-image: url("./media/Colonnes_binaires.jpg");
+    background-image: linear-gradient(
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0.45)
+    ),url("./media/Colonnes_binaires.jpg");
     height: 90%;
     background-position: center;
     background-repeat: no-repeat;

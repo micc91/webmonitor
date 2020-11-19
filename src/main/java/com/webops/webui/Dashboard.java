@@ -32,6 +32,7 @@ public class Dashboard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");
+
         JobRuns jobRuns = new JobRuns();
         boolean ret = false;
 
@@ -48,11 +49,14 @@ public class Dashboard extends HttpServlet {
         }
         logger.info(this.getServletName()+"/doPost: got from session="+ uvmsConnection.toString());
 
+        //TODO: delete this line: ?
         request.setAttribute("uvmsConnection", uvmsConnection);
+
         List<String> selectedNodes = new ArrayList<>();
         for(String nodenum : request.getParameterValues("selectedNodes")) {
             selectedNodes.add(nodenum);
         }
+
         session.setAttribute("selectedContext", selectedNodes);
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
     }
@@ -64,9 +68,12 @@ public class Dashboard extends HttpServlet {
         HttpSession session = request.getSession();
         UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");
         List<String> selectedNodes = (List<String>) session.getAttribute("selectedContext");
+        //TODO: Add get from session: Audit, SettingsMap, selectedContext
+
         JobRuns jobRuns = new JobRuns();
         boolean ret = false;
 
+        //TODO: do not request data if already present in session - unless SettingsMap.refresh=true:
         ret = jobRuns.getDUEnvironmentList(request, uvmsConnection);
         if(!ret) {
             logger.error(this.getServletName()+"/doGet: Failed to get list of nodes");
@@ -79,7 +86,14 @@ public class Dashboard extends HttpServlet {
             request.setAttribute("error", "Failed to get list of job runs");
         }
 
+        //TODO: sort the lines of jobsList according to user selection : SettingsMap.sort + SettingsMap.order
+        //...
+        //TODO: restore data in session if a refresh has been done
+        //...
+
         logger.info(this.getServletName()+"/doGet: got from session="+ uvmsConnection.toString());
+
+        //TODO: delete this line: ?
         request.setAttribute("uvmsConnection", uvmsConnection);
 
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);

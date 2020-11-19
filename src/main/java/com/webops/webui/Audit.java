@@ -1,12 +1,12 @@
 package com.webops.webui;
 
-import com.webops.duas.objectsList;
+import com.webops.duas.ObjectsList;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Audit extends objectsList {
+public class Audit extends ObjectsList {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(Audit.class);
 
