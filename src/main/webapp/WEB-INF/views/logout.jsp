@@ -33,14 +33,17 @@
 </header>
 <main role="main" class="container-fluid text-center">
     <c:choose>
-        <c:when test="${ uvmsConnection.token == 'disconnected'}"><h1>You have been successfully logged out</h1></c:when>
-        <c:otherwise><h1 style="color: red">You are still connected.</h1></c:otherwise>
+        <c:when test="${ sessionScope.uvmsConnection.token == 'disconnected'}">
+            <h1>You have been successfully logged out</h1>
+        </c:when>
+        <c:otherwise>
+            <h1 style="color: red">You are still connected.</h1>
+            <form class="form-signin" action="./logout" method="post" >
+                <h1 class="h3 mb-3 font-weight-normal">Confirm logout ?</h1>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Log Out</button>
+            </form>
+        </c:otherwise>
     </c:choose>
-
-    <form class="form-signin" action="./logout" method="post" >
-        <h1 class="h3 mb-3 font-weight-normal">Confirm logout ?</h1>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Log out</button>
-    </form>
 
 </main>
 <%@ include file="/WEB-INF/views/footer.jsp" %>

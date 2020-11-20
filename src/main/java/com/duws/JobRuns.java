@@ -1,9 +1,6 @@
 package com.duws;
 
-import com.webops.duas.JobsList;
-import com.webops.duas.NodesList;
-import com.webops.duas.ObjectsList;
-import com.webops.duas.UvmsConnection;
+import com.webops.duas.*;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +14,15 @@ public class JobRuns {
 
     private ObjectsList nodesList;
     private ObjectsList jobsList;
+    private ObjectsList jobInfo;
 
     public JobRuns() {
         nodesList = new NodesList();
         nodesList.init();
         jobsList = new JobsList();
         jobsList.init();
+        jobInfo = new JobInfo();
+        jobInfo.init();
     }
 
     public JobRuns(HttpServletRequest request) {
@@ -36,6 +36,10 @@ public class JobRuns {
         jobsList = new JobsList();
         jobsList.init();
         jobsList.setInRequest(request);
+
+        jobInfo = new JobInfo();
+        jobInfo.init();
+        jobInfo.setInRequest(request);
     }
 
     public NodesList getNodesList() {
@@ -110,12 +114,14 @@ public class JobRuns {
         }
 
         if(currentNodesList != null) {
+            jobsList.reset();
+
             logger.info(this.getClass().getName()+"/getListExecution: Nodes selected by form:");
             for (String idx : currentNodesList) {
                 Map<String, String> item = nodesList.get(Integer.parseInt(idx));
                 logger.info(this.getClass().getName() + "/getListExecution: node " + idx + "=" + item.get("company") + "|" + item.get("node") + "|" + item.get("area"));
                 try {
-                    ret = duwsClient.getListExecution(uvmsConnection, item, (JobsList) jobsList);//jobsMap);
+                    ret = duwsClient.getListExecution(uvmsConnection, item, (JobsList) jobsList);;
                 } catch (Exception e) {
                     logger.error(this.getClass().getName() + ": " + duwsClient.getLastResponse() + "(" + duwsClient.getLastResult() + ")");
                     logger.error("Exception: ", e);
@@ -160,20 +166,68 @@ public class JobRuns {
         String numSess = request.getParameter("numsess");
 
         if(company == null || company.isEmpty()) {
-            logger.error(this.getClass().getName()+"/getJobLogs: companyList null or empty");
+            logger.error(this.getClass().getName()+"/getJobLogs: company null or empty");
         }
         if(node == null || node.isEmpty()) {
-            logger.error(this.getClass().getName()+"/getJobLogs: nodeList null or empty");
+            logger.error(this.getClass().getName()+"/getJobLogs: node null or empty");
         }
         if(area == null || area.isEmpty()) {
-            logger.error(this.getClass().getName()+"/getJobLogs: areaList null or empty");
+            logger.error(this.getClass().getName()+"/getJobLogs: area null or empty");
         }
 
         jobLogs = duwsClient.getJobLogs(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob);
 
         request.setAttribute("historyTrace", jobLogs.get("historyTrace"));
         request.setAttribute("jobLog", jobLogs.get("jobLog"));
+        request.setAttribute("uproclabel", jobLogs.get("uproclabel"));
+        request.setAttribute("sessionlabel", jobLogs.get("sessionlabel"));
+        request.setAttribute("mulabel", jobLogs.get("mulabel"));
+        request.setAttribute("resLog", jobLogs.get("resLog"));
 
         return ret;
     }
+
+    public boolean getExecution(HttpServletRequest request, UvmsConnection uvmsConnection) {
+        Client duwsClient = null;
+        try {
+            duwsClient = new Client();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Map<String, List<String>> jobParams;
+        boolean ret = true;
+
+        String company = request.getParameter("company");
+        String node  = request.getParameter("node");
+        String area = request.getParameter("area");
+        String task = request.getParameter("task");
+        String session = request.getParameter("session");
+        String uproc = request.getParameter("uproc");
+        String mu = request.getParameter("mu");
+        String numJob = request.getParameter("numproc");
+        String numSess = request.getParameter("numsess");
+        String numLanc = request.getParameter("numlanc");
+
+        if(company == null || company.isEmpty()) {
+            logger.error(this.getClass().getName()+"/getExecution: company null or empty");
+        }
+        if(node == null || node.isEmpty()) {
+            logger.error(this.getClass().getName()+"/getExecution: node null or empty");
+        }
+        if(area == null || area.isEmpty()) {
+            logger.error(this.getClass().getName()+"/getExecution: area null or empty");
+        }
+
+        ret = duwsClient.getExecution(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob, numLanc, (JobInfo) jobInfo);
+        if(ret) {
+            logger.info(this.getClass().getName()+"/getExecution: Add data to jobInfo");
+            //TODO: set in session?
+            jobInfo.setInRequest(request);
+        } else {
+            logger.error(this.getClass().getName()+"/getExecution: jobInfo = null");
+        }
+
+        return ret;
+    }
+
 }

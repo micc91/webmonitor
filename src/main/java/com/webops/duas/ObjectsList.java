@@ -1,7 +1,5 @@
 package com.webops.duas;
 
-import org.apache.log4j.Logger;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;

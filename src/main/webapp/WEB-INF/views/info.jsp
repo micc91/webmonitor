@@ -2,7 +2,8 @@
 <jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>
 <jsp:useBean id="historyTrace" scope="request" type="java.util.List"/>
 <jsp:useBean id="jobLog" scope="request" type="java.util.List"/>
-
+<jsp:useBean id="resLog" scope="request" type="java.util.List"/>
+<jsp:useBean id="jobInfo" scope="request" type="java.util.List" />
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
@@ -88,6 +89,8 @@
                             <div class="col-md-6 themed-grid-col">${param.numsess}</div>
                             <div class="col-md-6 themed-grid-col">Num Proc</div>
                             <div class="col-md-6 themed-grid-col">${param.numproc}</div>
+                            <div class="col-md-6 themed-grid-col">Num Entry</div>
+                            <div class="col-md-6 themed-grid-col">${numentry}</div>
                         </div>
                     </div>
                 </div>
@@ -153,12 +156,26 @@
                     </div>
                 </div>
                 <hr class="my-4">
+                <h2 class="mt-4">Variables</h2>
+                <div class="row mb-3">
+                    <div class="col-md-3 themed-grid-col">Name</div>
+                    <div class="col-md-3 themed-grid-col">Type</div>
+                    <div class="col-md-3 themed-grid-col">Value</div>
+                    <div class="col-md-3 themed-grid-col">Origin</div>
+                    <c:forEach var="idx" begin="${varbegin}" end="${varend - 1}" step="1">
+                        <div class="col-md-3 themed-grid-col">${jobInfo[idx].get('varname')}</div>
+                        <div class="col-md-3 themed-grid-col">${jobInfo[idx].get('vartype')}</div>
+                        <div class="col-md-3 themed-grid-col">${jobInfo[idx].get('varvalue')}</div>
+                        <div class="col-md-3 themed-grid-col">${jobInfo[idx].get('varorigin')}</div>
+                    </c:forEach>
+                </div>
+                <hr class="my-4">
                 <h2 class="mt-4">History Trace</h2>
                 <%-- --%>
                 <div class="container-xl themed-container">
                     <code>
                         <c:forEach var="line" items="${historyTrace}" varStatus="status">
-                            ${status.index} ${line}<br>
+                            <span id="htrace-${status.index}" >${status.index} ${line}<br></span>
                         </c:forEach>
                     </code>
                 </div>
@@ -167,7 +184,16 @@
                 <div class="container-xl themed-container">
                     <code>
                         <c:forEach var="line" items="${jobLog}" varStatus="status">
-                            ${status.index} ${line}<br>
+                            <span  id="joblog-${status.index}" >${status.index} ${line}<br></span>
+                        </c:forEach>
+                    </code>
+                </div>
+                <hr class="my-4">
+                <h2 class="mt-4">Resource Log</h2>
+                <div class="container-xl themed-container">
+                    <code>
+                        <c:forEach var="line" items="${resLog}" varStatus="status">
+                            <span  id="reslog-${status.index}" >${status.index} ${line}<br></span>
                         </c:forEach>
                     </code>
                 </div>
@@ -179,5 +205,5 @@
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="./scripts/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-
+    <script src="./scripts/custom.js"></script>
 </html>
