@@ -18,6 +18,7 @@ body {
         font-size: 3.5rem;
     }
 }
+
 .bg {
     background-image: url("../media/nuages.jpg");
     height: 90%;
@@ -133,4 +134,22 @@ body {
 
 .status-PENDING {
     color: deeppink;
+}
+
+.status-EVENT_WAIT {
+    color: yellow;
+}
+
+.filtered {
+/*    background-color: yellow;*/
+    text-shadow: 2px 2px 5px blue;
+}
+
+.filtered2 {
+    /*    background-color: yellow;*/
+    text-shadow: 2px 2px 5px white;
+}
+
+.footer-text {
+    color: white;
 }

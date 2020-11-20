@@ -1,5 +1,6 @@
 package com.duws;
 
+import com.webops.duas.JobInfo;
 import com.webops.duas.JobsList;
 import com.webops.duas.NodesList;
 import com.webops.duas.UvmsConnection;
@@ -90,7 +91,6 @@ public class Client {
             logger.info(this.getClass().getName()+" [Adding "+ idx +"] "+item.getNode()+":"+item.getCompany()+":"+item.getArea().getValue()+":"+item.getVersion().getValue()+":"+item.getStatus().getValue().toString()+".");
         }
 
-        //return duasMap;
         return ret;
     }
 
@@ -220,10 +220,6 @@ public class Client {
             jobRuns = null;
         }
 
-        if(jobLaunches != null || jobRuns != null) {
-            jobsList.reset();
-        }
-
         if(jobLaunches != null) {
             logger.info(this.getClass().getName()+"/getListExecution: Adding "+ jobLaunches.size() +" launches");
             for(LaunchItem item : jobLaunches) {
@@ -319,6 +315,7 @@ public class Client {
 
         List<String> error4JobLogList = new ArrayList<>();
         List<String> error4HTraceList = new ArrayList<>();
+        List<String> error4ResLogList = new ArrayList<>();
         ExecutionLog execLog = null;
         try {
             execLog = service.getExecutionLog(ctxHolder, execId);
@@ -349,11 +346,40 @@ public class Client {
             error4HTraceList.add("History trace request failed: timeout reached");
         }
 
+        ResourceLog resLog = null;
+        try {
+            resLog = service.getScriptResourceLog(ctxHolder, execId);
+        } catch (DuwsException_Exception duwse) {
+            errorCode = duwse.getFaultInfo().getErrorCode();
+            errorMessage = duwse.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getJobLogs/getScriptResourceLog failed: "+errorMessage+" ("+errorCode+")");
+//            logger.error("Exception: ",duwse);
+            error4ResLogList.add("Script resource log request failed: "+errorMessage+" ("+errorCode+")");
+
+        } catch (SessionTimedOutException_Exception e) {
+            e.printStackTrace();
+            error4ResLogList.add("Script resource log request failed: timeout reached");
+        }
+
         Map<String, List<String>> logsMap = new HashMap<>();
+        if(resLog == null) {
+            logsMap.put("resLog", error4ResLogList);
+        } else {
+            logsMap.put("resLog", resLog.getLog());
+        }
         if(hTrace == null) {
             logsMap.put("historyTrace", error4HTraceList);
         } else {
             logsMap.put("historyTrace", hTrace.getTrace());
+            List<String> uprlabel = new ArrayList<>();
+            uprlabel.add(hTrace.getUprocLabel());
+            List<String> seslabel = new ArrayList<>();
+            seslabel.add(hTrace.getSessionLabel());
+            List<String> mulabel = new ArrayList<>();
+            mulabel.add(hTrace.getMuLabel());
+            logsMap.put("uproclabel", uprlabel);
+            logsMap.put("sessionlabel", seslabel);
+            logsMap.put("mulabel", mulabel);
         }
         if(execLog == null) {
             logsMap.put("jobLog", error4JobLogList);
@@ -374,6 +400,105 @@ public class Client {
             errorMessage = duwse.getFaultInfo().getMessage();
             logger.error(this.getClass().getName()+"/Logout failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    public boolean getExecution(UvmsConnection connection, String company, String node, String iArea, String task, String session, String uproc, String mu, String numSess, String numJob, String numLanc, JobInfo jobInfo) {
+        boolean ret;
+        token = connection.getToken();
+        ExecutionId execId = new ExecutionId();
+        LaunchId launchId = new LaunchId();
+        Context currentCtx = new Context();
+        Envir currentEnvir = new Envir();
+        ContextHolder ctxHolder = new ContextHolder();
+
+        JAXBElement<String> area = new JAXBElement<>(ss.getServiceName(),String.class, iArea);
+        currentEnvir.setArea(area);
+        currentEnvir.setCompany(company);
+        currentEnvir.setNode(node);
+        JAXBElement<EnvirStatus> status = new JAXBElement<>(ss.getServiceName(),EnvirStatus.class,EnvirStatus.fromValue("CONNECTED"));
+        currentEnvir.setStatus(status);
+        currentCtx.setEnvir(currentEnvir);
+        logger.info(this.getClass().getName()+"/getExecution: currentEnvir="+currentEnvir.toString());
+        logger.info(this.getClass().getName()+"/getExecution: input params="+task+":"+session+":"+uproc+":"+mu+"::"+numSess+":"+numJob+".");
+        // Setting up the context
+        ctxHolder.setContext(currentCtx);
+        ctxHolder.setToken(token);
+
+        JAXBElement<String> muElt = new JAXBElement<>(ss.getServiceName(),String.class, mu);
+        if(! task.equals("-")) {
+            execId.setTask(task);
+        }
+        if(! session.equals("-")) {
+            execId.setSession(session);
+            execId.setNumSess(numSess);
+        }
+        execId.setUproc(uproc);
+        execId.setMu(muElt);
+        execId.setNumProc(numJob);
+        logger.info(this.getClass().getName()+"/getExecution: execId="+execId.getTask()+":"+execId.getSession()+":"+execId.getUproc()+":"+execId.getMu().getValue()+"/"+execId.getNumLanc()+":"+execId.getNumSess()+":"+execId.getNumProc());
+
+        List<String> errorList = new ArrayList<>();
+        Execution exec = null;
+        try {
+            exec = service.getExecution(ctxHolder, execId);
+        } catch (DuwsException_Exception duwse) {
+            errorCode = duwse.getFaultInfo().getErrorCode();
+            errorMessage = duwse.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getExecution/getExecution failed: "+errorMessage+" ("+errorCode+")");
+//            logger.error("Exception: ",duwse);
+            errorList.add("getExecution request failed: "+errorMessage+" ("+errorCode+")");
+
+        } catch (SessionTimedOutException_Exception e) {
+            e.printStackTrace();
+            errorList.add("getExecution request failed: timeout reached");
+        }
+
+        if(exec != null) {
+            logger.info(this.getClass().getName()+"/getExecution: Adding exec data");
+            jobInfo.addItems(currentEnvir, exec);
+            ret = true;
+        } else {
+            logger.error(this.getClass().getName()+"/getExecution: jobInfo = null");
+            ret = false;
+        }
+
+        if(! task.equals("-")) {
+            launchId.setTask(task);
+        }
+        if(! session.equals("-")) {
+            launchId.setSession(session);
+            launchId.setNumSess(numSess);
+        }
+        launchId.setUproc(uproc);
+        launchId.setMu(mu);
+        launchId.setNumProc(numJob);
+        launchId.setNumLanc(numLanc);
+
+        Launch launch = null;
+        try {
+            launch = service.getLaunch(ctxHolder, launchId);
+        } catch (DuwsException_Exception duwse) {
+            errorCode = duwse.getFaultInfo().getErrorCode();
+            errorMessage = duwse.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getExecution/getLaunch failed: "+errorMessage+" ("+errorCode+")");
+//            logger.error("Exception: ",duwse);
+            errorList.add("getLaunch request failed: "+errorMessage+" ("+errorCode+")");
+
+        } catch (SessionTimedOutException_Exception e) {
+            e.printStackTrace();
+            errorList.add("getLaunch request failed: timeout reached");
+        }
+
+        if(launch != null) {
+            logger.info(this.getClass().getName()+"/getLaunch: Adding exec data");
+            jobInfo.addItems(currentEnvir, launch);
+            ret = true;
+        } else {
+            logger.error(this.getClass().getName()+"/getLaunch: jobInfo = null");
             ret = false;
         }
 

@@ -1,3 +1,118 @@
+function searchInPage() {
+    var table, rows;
+    var filter;
+    var cell;
+    var eltList;
+    var found = 0;
+    tosearch = document.getElementById('searchtext');
+
+    table = document.getElementById('jobrunsTable');
+    if(table !== null) {
+        rows = table.rows;
+
+        for (ii = 1; ii < (rows.length - 1); ii++) {
+            for (ij = 1; ij < 7; ij++) {
+                //cell = rows[ii].getElementsByTagName("TD")[ij];
+                cell = rows[ii];
+                if (cell.innerText.search(tosearch.value) > 0) {
+                    rows[ii].setAttribute("class", "filtered");
+                    found++;
+                }
+            }
+        }
+    } else {
+        eltList = document.getElementsByClassName('themed-grid-col');
+        for(ii = 1; ii < (eltList.length - 1); ii++) {
+            cell = eltList[ii];
+            if(cell.innerText.search(tosearch.value) > 0) {
+                var currentStyle = cell.getAttribute("class");
+                cell.setAttribute("class", currentStyle+" filtered");
+                found++;
+            }
+        }
+        var idList = ["htrace-", "joblog-", "reslog-"];
+        var elt;
+        var eltexist;
+        var ii;
+        for(ij = 0; ij < idList.length; ij++) {
+            eltexist = true;
+            ii = 0;
+            while (eltexist) {
+                elt = document.getElementById(idList[ij] + ii);
+                if (elt === null) {
+                    eltexist = false;
+                } else {
+                    cell = elt;
+                    if (cell.innerText.search(tosearch.value) > 0) {
+                        var currentStyle = cell.getAttribute("class");
+                        cell.setAttribute("class", currentStyle + " filtered2");
+                        found++;
+                    }
+                }
+                ii++;
+            }
+        }
+    }
+    console.log("search "+tosearch.value+" result="+found+" rows found out of "+ii)
+}
+
+function clearSearchInPage() {
+    var table, rows;
+    var filter;
+    var cell;
+    var eltList;
+    var found = 0;
+    var currentStyle;
+    var tosearch = document.getElementById('searchtext');
+
+    table = document.getElementById('jobrunsTable');
+    if (table !== null) {
+        rows = table.rows;
+
+        for (ii = 1; ii < (rows.length - 1); ii++) {
+            currentStyle = rows[ii].getAttribute("class");
+            if(currentStyle.search("filtered") > 0) {
+                currentStyle.replace("filtered", "");
+                rows[ii].setAttribute("class",currentStyle);
+            }
+        }
+    } else {
+        var idList = ["htrace-", "joblog-", "reslog-"];
+        var elt;
+        var eltexist;
+        var ii;
+        for(ij = 1; ij < idList.length; ij++) {
+            eltexist = true;
+            ii = 0;
+            while (eltexist) {
+                elt = document.getElementById(idList[ij] + ii);
+                if (elt === null) {
+                    eltexist = false;
+                } else {
+                    currentStyle = elt.getAttribute("class");
+                    if (currentStyle.search("filtered2") > 0) {
+                        currentStyle.replace("filtered2","");
+                        elt.setAttribute("class", currentStyle);
+                        found++;
+                    }
+                }
+                ii++;
+            }
+        }
+        eltList = document.getElementsByClassName('themed-grid-col');
+        for(ii = 1; ii < (eltList.length - 1); ii++) {
+            cell = eltList[ii];
+            currentStyle = cell.getAttribute("class");
+            if(currentStyle.search("filtered") > 0) {
+                currentStyle.replace("filtered","");
+                cell.setAttribute("class", currentStyle);
+                found++;
+            }
+        }
+
+    }
+}
+
 function sortTable(id, index, order) {
 
     function sortTable(tblid, index, order) {

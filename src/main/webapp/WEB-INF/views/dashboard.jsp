@@ -72,6 +72,7 @@
                     <h1 class="h2">Job runs</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <div class="btn-group mr-2">
+                            <button class="btn btn-sm btn-outline-secondary" id="btn-chart" onclick="showHideChart(${xdata},${ydata})"><img src="./media/bar-chart-line.svg" class="bi" width="16" height="16" fill="currentColor" /></button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">
                                 <a href="./dashboard?refresh=true">
                                     <img src="./media/arrow-repeat.svg" class="bi" width="32" height="32" fill="currentColor" />
@@ -92,7 +93,7 @@
                     </div>
                 </div>
 
-                <!--            <canvas class="my-4 w-100" id="myChart" width="900" height="380"></canvas>-->
+                <canvas class="my-4 w-100" id="jobChart" width="500" height="80" style="display: none;"></canvas>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-sm" id="jobrunsTable" >
@@ -125,94 +126,73 @@
                         </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="item" items="${jobsList}" varStatus="status">
-                                <c:set var="idx" value="${status.index}" />
-                                <c:choose>
-                                    <c:when test="${item.get('status') == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
-                                    <c:when test="${item.get('status') == 'COMPLETED'}"><c:set var="jobtype" value="ctl" /></c:when>
-                                    <c:when test="${item.get('status') == 'ABORTED'}"><c:set var="jobtype" value="ctl" /></c:when>
-                                    <c:when test="${item.get('status') == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
-                                    <c:otherwise><c:set var="jobtype" value="fla" /></c:otherwise>
-                                </c:choose>
-                                <c:choose>
-                                    <c:when test="${jobtype == 'ctl'}">
-                                        <c:url var="infolink" value="/info">
-                                            <c:param name="company" value="${item.get('company')}" />
-                                            <c:param name="node" value="${item.get('node')}" />
-                                            <c:param name="area" value="${item.get('area')}" />
-                                            <c:param name="task" value="${item.get('task')}" />
-                                            <c:param name="session" value="${item.get('session')}" />
-                                            <c:param name="uproc" value="${item.get('uproc')}" />
-                                            <c:param name="mu" value="${item.get('mu')}" />
-                                            <c:param name="numlanc" value="${item.get('numlanc')}" />
-                                            <c:param name="numsess" value="${item.get('numsess')}" />
-                                            <c:param name="numproc" value="${item.get('numproc')}" />
-                                            <c:param name="pdate" value="${item.get('pdate')}" />
-                                            <c:param name="queue" value="${item.get('queue')}" />
-                                            <c:param name="priority" value="${item.get('priority')}" />
-                                            <c:param name="status" value="${item.get('status')}" />
-                                            <c:param name="step" value="${item.get('step')}" />
-                                            <c:param name="information" value="${item.get('information')}" />
-                                            <c:param name="begin" value="${item.get('begin_date')} ${item.get('begin_time')}" />
-                                            <c:param name="end" value="${item.get('end_date')} ${item.get('begin_time')}" />
-                                        </c:url>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:url var="infolink" value="/info">
-                                            <c:param name="company" value="${item.get('company')}" />
-                                            <c:param name="node" value="${item.get('node')}" />
-                                            <c:param name="area" value="${item.get('area')}" />
-                                            <c:param name="task" value="${item.get('task')}" />
-                                            <c:param name="session" value="${item.get('session')}" />
-                                            <c:param name="uproc" value="${item.get('uproc')}" />
-                                            <c:param name="mu" value="${item.get('mu')}" />
-                                            <c:param name="numlanc" value="${item.get('numlanc')}" />
-                                            <c:param name="numsess" value="${item.get('numsess')}" />
-                                            <c:param name="numproc" value="${item.get('numproc')}" />
-                                            <c:param name="pdate" value="${item.get('pdate')}" />
-                                            <c:param name="queue" value="${item.get('queue')}" />
-                                            <c:param name="priority" value="${item.get('priority')}" />
-                                            <c:param name="status" value="${item.get('status')}" />
-                                            <c:param name="step" value="${item.get('step')}" />
-                                            <c:param name="information" value="${item.get('information')}" />
-                                            <c:param name="begin" value="${item.get('begin_date')} ${item.get('begin_time')}" />
-                                            <c:param name="end" value="${item.get('end_date')} ${item.get('begin_time')}" />
-                                        </c:url>
-                                    </c:otherwise>
-                                </c:choose>
-                                <tr>
-                                    <td>${item.get("company")}|${item.get("node")}|${item.get("area")}</td>
-                                    <td><a href="${infolink}">${item.get("task")}|${item.get("session")}|${item.get("uproc")}@${item.get("mu")}</a></td>
-                                    <td class="status-${item.get("status")}">${item.get("status")}</td>
-                                    <td>${item.get("begin_date")} ${item.get("begin_time")}</td>
-                                    <td>${item.get("end_date")} ${item.get("end_time")}</td>
-                                    <td>${item.get("information")}</td>
-                                </tr>
+                            <c:if test="${ !empty jobsList[0].get('company') }">
+                                <c:forEach var="item" items="${jobsList}" varStatus="status">
+                                    <c:set var="idx" value="${status.index}" />
+                                    <c:choose>
+                                        <c:when test="${item.get('status') == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                        <c:when test="${item.get('status') == 'COMPLETED'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                        <c:when test="${item.get('status') == 'ABORTED'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                        <c:when test="${item.get('status') == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
+                                        <c:otherwise><c:set var="jobtype" value="fla" /></c:otherwise>
+                                    </c:choose>
+                                    <c:choose>
+                                        <c:when test="${jobtype == 'ctl'}">
+                                            <c:url var="infolink" value="/info">
+                                                <c:param name="company" value="${item.get('company')}" />
+                                                <c:param name="node" value="${item.get('node')}" />
+                                                <c:param name="area" value="${item.get('area')}" />
+                                                <c:param name="task" value="${item.get('task')}" />
+                                                <c:param name="session" value="${item.get('session')}" />
+                                                <c:param name="uproc" value="${item.get('uproc')}" />
+                                                <c:param name="mu" value="${item.get('mu')}" />
+                                                <c:param name="numlanc" value="${item.get('numlanc')}" />
+                                                <c:param name="numsess" value="${item.get('numsess')}" />
+                                                <c:param name="numproc" value="${item.get('numproc')}" />
+                                                <c:param name="pdate" value="${item.get('pdate')}" />
+                                                <c:param name="queue" value="${item.get('queue')}" />
+                                                <c:param name="priority" value="${item.get('priority')}" />
+                                                <c:param name="status" value="${item.get('status')}" />
+                                                <c:param name="step" value="${item.get('step')}" />
+                                                <c:param name="information" value="${item.get('information')}" />
+                                                <c:param name="begin" value="${item.get('begin_date')} ${item.get('begin_time')}" />
+                                                <c:param name="end" value="${item.get('end_date')} ${item.get('begin_time')}" />
+                                            </c:url>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:url var="infolink" value="/info">
+                                                <c:param name="company" value="${item.get('company')}" />
+                                                <c:param name="node" value="${item.get('node')}" />
+                                                <c:param name="area" value="${item.get('area')}" />
+                                                <c:param name="task" value="${item.get('task')}" />
+                                                <c:param name="session" value="${item.get('session')}" />
+                                                <c:param name="uproc" value="${item.get('uproc')}" />
+                                                <c:param name="mu" value="${item.get('mu')}" />
+                                                <c:param name="numlanc" value="${item.get('numlanc')}" />
+                                                <c:param name="numsess" value="${item.get('numsess')}" />
+                                                <c:param name="numproc" value="${item.get('numproc')}" />
+                                                <c:param name="pdate" value="${item.get('pdate')}" />
+                                                <c:param name="queue" value="${item.get('queue')}" />
+                                                <c:param name="priority" value="${item.get('priority')}" />
+                                                <c:param name="status" value="${item.get('status')}" />
+                                                <c:param name="step" value="${item.get('step')}" />
+                                                <c:param name="information" value="${item.get('information')}" />
+                                                <c:param name="begin" value="${item.get('begin_date')} ${item.get('begin_time')}" />
+                                                <c:param name="end" value="${item.get('end_date')} ${item.get('begin_time')}" />
+                                            </c:url>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <tr>
+                                        <td>${item.get("company")}|${item.get("node")}|${item.get("area")}</td>
+                                        <td><a href="${infolink}">${item.get("task")}|${item.get("session")}|${item.get("uproc")}@${item.get("mu")}</a></td>
+                                        <td class="status-${item.get("status")}">${item.get("status")}</td>
+                                        <td>${item.get("begin_date")} ${item.get("begin_time")}</td>
+                                        <td>${item.get("end_date")} ${item.get("end_time")}</td>
+                                        <td>${item.get("information")}</td>
+                                    </tr>
 
-                            </c:forEach>
-<%--
-
-                                <c:set var="other" value="${fn:split(otherList[idx],';')}" />
-                                <c:choose>
-                                    <c:when test="${jobtype == 'ctl'}">
-                                        <c:set var="numsess" value="${other[0]}" />
-                                        <c:set var="numproc" value="${other[1]}" />
-                                        <c:set var="pdate" value="${other[2]}" />
-                                        <c:set var="queue" value="${other[3]}" />
-                                        <c:set var="priority" value="${other[4]}" />
-                                        <c:set var="infolink" value="./info?company=${company}&node=${node}&area=${area}&task=${task}&session=${session}&uproc=${uproc}&mu=${mu}&numsess=${numsess}&numproc=${numproc}&pdate=${pdate}&queue=${queue}&priority=${priority}&status=${jobStatusList[idx]}&info=${infoList[idx]}&begin=${beginList[idx]}&end=${endList[idx]}" />
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:set var="numlanc" value="${other[0]}" />
-                                        <c:set var="pdate" value="${other[1]}" />
-                                        <c:set var="queue" value="${other[2]}" />
-                                        <c:set var="priority" value="${other[3]}" />
-                                        <c:set var="step" value="${other[4]}" />
-                                        <c:set var="infolink" value="#" />
-                                    </c:otherwise>
-                                </c:choose>
-
---%>
+                                </c:forEach>
+                            </c:if>
                         </tbody>
                     </table>
                 </div>
@@ -228,66 +208,11 @@
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-<!--<script src="dashboard.js"></script></body>-->
+<script src="./scripts/dashboard.js"></script></body>
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
 </script>
-
-<script>
-    function sortTable(tblid, index, order) {
-        console.log('sorting table id=', tblid, " index=", index, " order=", order)
-        var table, rows, switching, i, x, y, shouldSwitch;
-
-        table = document.getElementById('jobrunsTable');
-        allbtns = document.getElementsByClassName('btn-sm')
-        for(ii=0; ii<allbtns.length;ii++) {
-            allbtns[ii].setAttribute('class','btn btn-sm btn-outline-secondary')
-        }
-        selectedBtn = document.getElementById("btn-sort-"+index+"-"+order).setAttribute('class','btn btn-sm btn-secondary')
-        switching = true;
-        /*Make a loop that will continue until
-        no switching has been done:*/
-        while (switching) {
-            //start by saying: no switching is done:
-            switching = false;
-            rows = table.rows;
-            /*Loop through all table rows (except the
-            first, which contains table headers):*/
-            for (i = 1; i < (rows.length - 1); i++) {
-                //start by saying there should be no switching:
-                shouldSwitch = false;
-                /*Get the two elements you want to compare,
-                one from current row and one from the next:*/
-                x = rows[i].getElementsByTagName("TD")[index];
-                y = rows[i + 1].getElementsByTagName("TD")[index];
-                //console.log(i,"elt x=",x.innerText.toString()," elt y=", y.innerText.toString())
-                //check if the two rows should switch place:
-                if(order == 'asc') {
-                    if (x.innerText.toString() < y.innerText.toString()) {
-                        //if so, mark as a switch and break the loop:
-                        shouldSwitch = true;
-                        break;
-                    }
-                } else {
-                    if (x.innerText.toString() > y.innerText.toString()) {
-                        //if so, mark as a switch and break the loop:
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-            }
-            if (shouldSwitch) {
-                //console.log("switching row ",i)
-                /*If a switch has been marked, make the switch
-                and mark that a switch has been done:*/
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            } else {
-                console.log('no switch')
-            }
-        }
-    }
-</script>
+<script src="./scripts/custom.js"></script>
 </html>

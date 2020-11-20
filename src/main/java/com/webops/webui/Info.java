@@ -48,6 +48,11 @@ public class Info extends HttpServlet {
 			logger.error(this.getServletName()+"/doGet: Failed to get logs of job");
 			request.setAttribute("error", "Failed to get logs of job");
 		}
+		ret = jobRuns.getExecution(request, uvmsConnection);
+		if(!ret) {
+			logger.error(this.getServletName()+"/doGet: Failed to get exec data");
+			request.setAttribute("error", "Failed to get exec data");
+		}
 
 		logger.info(this.getServletName()+"/doGet: got from session="+ uvmsConnection.toString());
 		request.setAttribute("uvmsConnection", uvmsConnection);
