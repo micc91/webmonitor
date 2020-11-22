@@ -16,6 +16,7 @@ public class JobLogs extends ObjectsList {
         fields.add("type"); // can be: joblog, trace, sessionlabel, uproclabel, mulabel
         fields.add("value");
 
+        setSize(0);
         name="jobLogs";
     }
 
@@ -48,6 +49,7 @@ public class JobLogs extends ObjectsList {
 
         entry.put("type",type);
         entry.put("value",value);
+        setSize(getSize()+1);
         return items.add(entry);
     }
 }

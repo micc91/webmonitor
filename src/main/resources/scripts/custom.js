@@ -1,3 +1,8 @@
+function refreshJobRuns() {
+    var offset = document.getElementById('select-offset').value;
+    window.location.search = '?refresh=true&offset='+offset;
+}
+
 function searchInPage() {
     var table, rows;
     var filter;

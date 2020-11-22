@@ -20,6 +20,7 @@ public class NodesList extends ObjectsList {
         fields.add("version");
 
         name = "nodesList";
+        setSize(0);
     }
 
     public boolean addItem(Envir item) {
@@ -30,7 +31,7 @@ public class NodesList extends ObjectsList {
         entry.put("area",item.getArea().getValue());
         entry.put("version",item.getVersion().getValue());
         entry.put("status",item.getStatus().getValue().toString());
-
+        setSize(getSize()+1);
         return items.add(entry);
     }
 }

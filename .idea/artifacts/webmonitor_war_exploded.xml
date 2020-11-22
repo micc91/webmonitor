@@ -14,6 +14,7 @@
           <element id="module-output" name="webmonitor" />
         </element>
         <element id="directory" name="lib">
+          <element id="library" level="project" name="Maven: joda-time:joda-time:2.10.8" />
           <element id="library" level="project" name="Maven: javax.servlet:servlet-api:2.5" />
           <element id="library" level="project" name="Maven: log4j:log4j:1.2.12" />
           <element id="library" level="project" name="Maven: com.sun.xml.ws:jaxws-rt:2.3.3" />

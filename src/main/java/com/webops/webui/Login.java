@@ -118,7 +118,9 @@ public class Login extends HttpServlet {
 			request.setAttribute("error", "Failed to get list of nodes");
 		}
 
-		session.setAttribute("selectedContext", null);
+		SettingsMap settingsMap = new SettingsMap();
+		settingsMap.init();
+		settingsMap.setInSession(session);
 
 		logger.info(this.getServletName()+"/doPost: received from Jsp="+ uvmsConnection.toString()+" => "+result);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/"+nextPage).forward(request, response);

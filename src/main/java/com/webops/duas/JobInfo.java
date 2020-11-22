@@ -49,6 +49,7 @@ public class JobInfo extends ObjectsList {
         fields.add("varvalue");
         fields.add("varorigin");
 
+        setSize(0);
         name = "jobInfo";
         varbegin = 0;
         varend = 0;
@@ -98,6 +99,7 @@ public class JobInfo extends ObjectsList {
             logger.info(this.getClass().getName()+"/ adding exec var "+items.get(items.size()-1).get("varname")+"="+items.get(items.size()-1).get("varvalue"));
             varend++;
         }
+        setSize(getSize()+1);
         logger.info(this.getClass().getName()+"/ Added vars from index "+varbegin+" to "+varend);
     }
 
@@ -138,6 +140,7 @@ public class JobInfo extends ObjectsList {
             logger.info(this.getClass().getName()+"/ adding launch var "+items.get(items.size()-1).get("varname")+"="+items.get(items.size()-1).get("varvalue"));
             varend++;
         }
+        setSize(getSize()+1);
 
     }
 
