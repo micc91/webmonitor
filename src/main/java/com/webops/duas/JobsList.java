@@ -75,6 +75,7 @@ public class JobsList extends ObjectsList {
         if( ! items.isEmpty()) {
             items.clear();
         }
+        setSize(0);
         resetStats();
     }
 
@@ -139,6 +140,7 @@ public class JobsList extends ObjectsList {
         entry.put("step", "");
 
         items.add(entry);
+        setSize(getSize()+1);
 
     }
 
@@ -170,7 +172,7 @@ public class JobsList extends ObjectsList {
         entry.put("step", item.getStep());
 
         items.add(entry);
-
+        setSize(getSize()+1);
     }
 
     @Override

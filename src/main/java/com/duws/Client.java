@@ -10,9 +10,10 @@ import org.apache.log4j.Logger;
 import javax.xml.bind.JAXBElement;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Client {
     private static final Logger logger = Logger.getLogger(Client.class);
@@ -94,28 +95,50 @@ public class Client {
         return ret;
     }
 
-    public boolean setExecutionAndLaunchFilters() {
+    public boolean setExecutionAndLaunchFilters(String offset) {
+
+        Integer iOffset = 1440; // D - 1 day by default
+        if(offset != null) {
+            if (!offset.equals("none")) {
+                iOffset = Integer.parseInt(offset);
+            }
+        }
+
+/*        DateFormat fmtYyyyMmDd = new SimpleDateFormat("yyyyMMdd");
+        DateFormat fmtHhMmSs = new SimpleDateFormat("HHmmSS");
+        Calendar calb = Calendar.getInstance();
+        calb.add(Calendar.MINUTE, iOffset);
+        Date begin = calb.getTime();
+        String sBegin = fmtYyyyMmDd.format(begin);
+
+        String sBeginT = fmtHhMmSs.format(begin);
 
         Calendar cal = Calendar.getInstance();
-        Date now = cal.getTime();
-        DateFormat fmtYyyyMmDd = new SimpleDateFormat("yyyyMMdd");
-        String sNow = fmtYyyyMmDd.format(now);
         cal.add(Calendar.DATE,1);
         Date tomorrow = cal.getTime();
         String sTomorrow = fmtYyyyMmDd.format(tomorrow);
-        logger.info(this.getClass().getName()+"/setExecutionFilter: currentFilter set with now="+sNow+", tomorrow="+sTomorrow);
+  */
+
+        org.joda.time.DateTime nowDT = new org.joda.time.DateTime();
+        org.joda.time.DateTime beginDT = nowDT.minusMinutes(iOffset);
+        String sBegin = String.format("%04d",beginDT.getYear()) + String.format("%02d",beginDT.getMonthOfYear()) + String.format("%02d",beginDT.getDayOfMonth());
+        String sBeginT = String.format("%02d",beginDT.getHourOfDay()) + String.format("%02d",beginDT.getMinuteOfHour()) + String.format("%02d",beginDT.getSecondOfMinute());
+        org.joda.time.DateTime endDT = nowDT.plusSeconds(86400 - nowDT.getSecondOfDay());
+        String sEnd = String.format("%04d",endDT.getYear()) + String.format("%02d",endDT.getMonthOfYear()) + String.format("%02d",endDT.getDayOfMonth());
+        String sEndT = String.format("%02d",endDT.getHourOfDay()) + String.format("%02d",endDT.getMinuteOfHour()) + String.format("%02d",endDT.getSecondOfMinute());
+        logger.info(this.getClass().getName()+"/setExecutionFilter: currentFilter set with begin="+sBegin+" "+sBeginT+", end="+sEnd + " "+sEndT+ "(offset="+iOffset+")");
 
         if(currentFilter == null) {
             currentFilter = new ExecutionFilter();
         }
-        currentFilter.setBeginDateMin(sNow);
-        currentFilter.setBeginDateMax(sNow);
-        currentFilter.setBeginHourMin("000000");
-        currentFilter.setBeginHourMax("000000");
-        currentFilter.setEndDateMin(sTomorrow);
-        currentFilter.setEndDateMax(sTomorrow);
-        currentFilter.setEndHourMin("235959");
-        currentFilter.setEndHourMin("235959");
+        currentFilter.setBeginDateMin(sBegin);
+        currentFilter.setBeginDateMax(sBegin);
+        currentFilter.setBeginHourMin(sBeginT);
+        currentFilter.setBeginHourMax(sBeginT);
+        currentFilter.setEndDateMin(sEnd);
+        currentFilter.setEndDateMax(sEnd);
+        currentFilter.setEndHourMin(sEndT);
+        currentFilter.setEndHourMin(sEndT);
         currentFilter.setProcessingDate("*");
         currentFilter.setNumlancMin("0000000");
         currentFilter.setNumlancMax("9999999");
@@ -134,14 +157,14 @@ public class Client {
         if(currentLFilter == null) {
             currentLFilter = new LaunchFilter();
         }
-        currentLFilter.setBeginDateMin(sNow);
-        currentLFilter.setBeginDateMax(sNow);
-        currentLFilter.setBeginHourMin("000000");
-        currentLFilter.setBeginHourMax("000000");
-        currentLFilter.setEndDateMin(sTomorrow);
-        currentLFilter.setEndDateMax(sTomorrow);
-        currentLFilter.setEndHourMin("235959");
-        currentLFilter.setEndHourMin("235959");
+        currentLFilter.setBeginDateMin(sBegin);
+        currentLFilter.setBeginDateMax(sBegin);
+        currentLFilter.setBeginHourMin(sBeginT);
+        currentLFilter.setBeginHourMax(sBeginT);
+        currentLFilter.setEndDateMin(sEnd);
+        currentLFilter.setEndDateMax(sEnd);
+        currentLFilter.setEndHourMin(sEndT);
+        currentLFilter.setEndHourMin(sEndT);
         currentLFilter.setProcessingDate("*");
         currentLFilter.setNumlancMin("0000000");
         currentLFilter.setNumlancMax("9999999");
@@ -169,7 +192,7 @@ public class Client {
         return output;
     }
 
-    public boolean getListExecution(UvmsConnection connection, Map<String, String> node, JobsList jobsList) throws Exception {
+    public boolean getListExecution(UvmsConnection connection, Map<String, String> node, JobsList jobsList, String offset) throws Exception {
         boolean ret;
 
         Context currentCtx = new Context();
@@ -195,7 +218,7 @@ public class Client {
         ctxHolder.setToken(token);
 
         if(currentFilter == null || currentLFilter == null) {
-            ret = setExecutionAndLaunchFilters();
+            ret = setExecutionAndLaunchFilters(offset);
         }
 
         try {

@@ -83,7 +83,7 @@ public class JobRuns {
         return ret;
     }
 
-    public boolean getListExecution(HttpServletRequest request, UvmsConnection uvmsConnection, List<String> selectedNodes) {
+    public boolean getListExecution(HttpServletRequest request, UvmsConnection uvmsConnection, List<String> currentNodesList, String offset) {
         Client duwsClient = null;
         try {
             duwsClient = new Client();
@@ -97,23 +97,7 @@ public class JobRuns {
             logger.error(this.getClass().getName()+"/getListExecution: nodesList null or empty");
         }
 
-        String[] currentNodesList;
-        if(request.getParameterValues("selectedNodes") == null) {
-            if(selectedNodes != null) {
-                int ii = 0;
-                currentNodesList = new String[selectedNodes.size()];
-                for(String nodenum : selectedNodes) {
-                    currentNodesList[ii] = nodenum;
-                    ii++;
-                }
-            } else {
-                currentNodesList = null;
-            }
-        } else {
-            currentNodesList = request.getParameterValues("selectedNodes");
-        }
-
-        if(currentNodesList != null) {
+        if(!currentNodesList.isEmpty()) {
             jobsList.reset();
 
             logger.info(this.getClass().getName()+"/getListExecution: Nodes selected by form:");
@@ -121,7 +105,7 @@ public class JobRuns {
                 Map<String, String> item = nodesList.get(Integer.parseInt(idx));
                 logger.info(this.getClass().getName() + "/getListExecution: node " + idx + "=" + item.get("company") + "|" + item.get("node") + "|" + item.get("area"));
                 try {
-                    ret = duwsClient.getListExecution(uvmsConnection, item, (JobsList) jobsList);;
+                    ret = duwsClient.getListExecution(uvmsConnection, item, (JobsList) jobsList, offset);;
                 } catch (Exception e) {
                     logger.error(this.getClass().getName() + ": " + duwsClient.getLastResponse() + "(" + duwsClient.getLastResult() + ")");
                     logger.error("Exception: ", e);

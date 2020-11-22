@@ -2878,7 +2878,7 @@
          </duws:launch>\r
       </duws:addLaunch>\r
    </soapenv:Body>\r
-</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/addLaunch"/></con:call></con:operation><con:operation id="f49e0114-f1e0-44ad-913d-c0178ef03563" isOneWay="false" action="" name="addLaunchFromTask" bindingOperationName="addLaunchFromTask" type="Request-Response" outputName="addLaunchFromTaskResponse" inputName="addLaunchFromTask" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="5c70aca7-c341-4972-9fa8-be8b07da62aa" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/addLaunch"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="f49e0114-f1e0-44ad-913d-c0178ef03563" isOneWay="false" action="" name="addLaunchFromTask" bindingOperationName="addLaunchFromTask" type="Request-Response" outputName="addLaunchFromTaskResponse" inputName="addLaunchFromTask" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="5c70aca7-c341-4972-9fa8-be8b07da62aa" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <duws:addLaunchFromTask>\r
@@ -2916,7 +2916,7 @@
          </duws:taskId>\r
       </duws:addLaunchFromTask>\r
    </soapenv:Body>\r
-</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/addLaunchFromTask"/></con:call></con:operation><con:operation id="fc6b9972-c766-42a8-a502-a9bcd01ba4c6" isOneWay="false" action="" name="addLaunchFromTask2" bindingOperationName="addLaunchFromTask2" type="Request-Response" outputName="addLaunchFromTask2Response" inputName="addLaunchFromTask2" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="fd87f8fd-4194-40bf-8268-04d6b852aeb2" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/addLaunchFromTask"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="fc6b9972-c766-42a8-a502-a9bcd01ba4c6" isOneWay="false" action="" name="addLaunchFromTask2" bindingOperationName="addLaunchFromTask2" type="Request-Response" outputName="addLaunchFromTask2Response" inputName="addLaunchFromTask2" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="fd87f8fd-4194-40bf-8268-04d6b852aeb2" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <duws:addLaunchFromTask2>\r
@@ -2965,7 +2965,7 @@
          </duws:variables>\r
       </duws:addLaunchFromTask2>\r
    </soapenv:Body>\r
-</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/addLaunchFromTask2"/></con:call></con:operation><con:operation id="912b131f-6c03-4f13-8822-64e8b859e8a0" isOneWay="false" action="" name="bypassLaunchConditionCheck" bindingOperationName="bypassLaunchConditionCheck" type="Request-Response" outputName="bypassLaunchConditionCheckResponse" inputName="bypassLaunchConditionCheck" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="46ddae23-dd24-4811-a339-8e55210483d3" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/addLaunchFromTask2"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="912b131f-6c03-4f13-8822-64e8b859e8a0" isOneWay="false" action="" name="bypassLaunchConditionCheck" bindingOperationName="bypassLaunchConditionCheck" type="Request-Response" outputName="bypassLaunchConditionCheckResponse" inputName="bypassLaunchConditionCheck" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="46ddae23-dd24-4811-a339-8e55210483d3" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <duws:bypassLaunchConditionCheck>\r
@@ -3345,52 +3345,52 @@
          </duws:eventId>\r
       </duws:getEvent>\r
    </soapenv:Body>\r
-</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getEvent"/></con:call></con:operation><con:operation id="2f42f4f9-a60a-4916-8087-8e3aa6387f9d" isOneWay="false" action="" name="getExecution" bindingOperationName="getExecution" type="Request-Response" outputName="getExecutionResponse" inputName="getExecution" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="697f2f1b-fe98-42b1-b756-3945e259e843" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getEvent"/></con:call></con:operation><con:operation id="2f42f4f9-a60a-4916-8087-8e3aa6387f9d" isOneWay="false" action="" name="getExecution" bindingOperationName="getExecution" type="Request-Response" outputName="getExecutionResponse" inputName="getExecution" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="697f2f1b-fe98-42b1-b756-3945e259e843" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <duws:getExecution>\r
          <!--Optional:-->\r
          <duws:context>\r
-            <duws:token>?</duws:token>\r
+            <duws:token>4B1E43BA3DE6BCFB2E16058541187915</duws:token>\r
             <duws:context>\r
                <duws:envir>\r
-                  <duws:company>?</duws:company>\r
-                  <duws:node>?</duws:node>\r
+                  <duws:company>AUTODC</duws:company>\r
+                  <duws:node>CJRN0Z2_02</duws:node>\r
                   <!--Optional:-->\r
-                  <duws:area>?</duws:area>\r
+                  <duws:area>X</duws:area>\r
                   <!--Optional:-->\r
-                  <duws:status>?</duws:status>\r
+                  <duws:status></duws:status>\r
                   <!--Optional:-->\r
-                  <duws:version>?</duws:version>\r
+                  <duws:version></duws:version>\r
                </duws:envir>\r
             </duws:context>\r
          </duws:context>\r
          <!--Optional:-->\r
          <duws:executionId>\r
             <!--Optional:-->\r
-            <duws:task>?</duws:task>\r
+            <duws:task>PVK_JOBS_LOOP</duws:task>\r
             <!--Optional:-->\r
-            <duws:session>?</duws:session>\r
+            <duws:session></duws:session>\r
             <!--Optional:-->\r
-            <duws:sessionVersion>?</duws:sessionVersion>\r
+            <duws:sessionVersion></duws:sessionVersion>\r
             <!--Optional:-->\r
-            <duws:uproc>?</duws:uproc>\r
+            <duws:uproc>JOBS_LOOP</duws:uproc>\r
             <!--Optional:-->\r
-            <duws:uprocVersion>?</duws:uprocVersion>\r
+            <duws:uprocVersion></duws:uprocVersion>\r
             <!--Optional:-->\r
-            <duws:mu>?</duws:mu>\r
+            <duws:mu>CJRN0Z2_02</duws:mu>\r
             <!--Optional:-->\r
-            <duws:numLanc>?</duws:numLanc>\r
+            <duws:numLanc></duws:numLanc>\r
             <!--Optional:-->\r
-            <duws:numProc>?</duws:numProc>\r
+            <duws:numProc>0009657</duws:numProc>\r
             <!--Optional:-->\r
-            <duws:numSess>?</duws:numSess>\r
+            <duws:numSess></duws:numSess>\r
             <!--Optional:-->\r
-            <duws:tempfilePath>?</duws:tempfilePath>\r
+            <duws:tempfilePath></duws:tempfilePath>\r
          </duws:executionId>\r
       </duws:getExecution>\r
    </soapenv:Body>\r
-</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getExecution"/></con:call></con:operation><con:operation id="61d619f7-30bd-41d9-b291-269515bb2711" isOneWay="false" action="" name="getExecutionLog" bindingOperationName="getExecutionLog" type="Request-Response" outputName="getExecutionLogResponse" inputName="getExecutionLog" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="19646052-3890-4ef4-9bf8-3c2263dad65a" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getExecution"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="61d619f7-30bd-41d9-b291-269515bb2711" isOneWay="false" action="" name="getExecutionLog" bindingOperationName="getExecutionLog" type="Request-Response" outputName="getExecutionLogResponse" inputName="getExecutionLog" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="19646052-3890-4ef4-9bf8-3c2263dad65a" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <duws:getExecutionLog>\r
@@ -3480,52 +3480,52 @@
          </duws:executionId>\r
       </duws:getExecutionLogAsAttachment>\r
    </soapenv:Body>\r
-</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getExecutionLogAsAttachment"/></con:call></con:operation><con:operation id="a018f209-7539-402f-954d-2f657166008a" isOneWay="false" action="" name="getHistoryTrace" bindingOperationName="getHistoryTrace" type="Request-Response" outputName="getHistoryTraceResponse" inputName="getHistoryTrace" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="930cfe9f-aff2-4af3-8b4d-ecdf3074cf8a" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getExecutionLogAsAttachment"/></con:call></con:operation><con:operation id="a018f209-7539-402f-954d-2f657166008a" isOneWay="false" action="" name="getHistoryTrace" bindingOperationName="getHistoryTrace" type="Request-Response" outputName="getHistoryTraceResponse" inputName="getHistoryTrace" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="930cfe9f-aff2-4af3-8b4d-ecdf3074cf8a" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <duws:getHistoryTrace>\r
          <!--Optional:-->\r
          <duws:context>\r
-            <duws:token>?</duws:token>\r
+            <duws:token>4BF76992125F92728E16058036812752</duws:token>\r
             <duws:context>\r
                <duws:envir>\r
-                  <duws:company>?</duws:company>\r
-                  <duws:node>?</duws:node>\r
+                  <duws:company>AUTODC</duws:company>\r
+                  <duws:node>CJRN0Z2_02</duws:node>\r
                   <!--Optional:-->\r
-                  <duws:area>?</duws:area>\r
+                  <duws:area>X</duws:area>\r
                   <!--Optional:-->\r
-                  <duws:status>?</duws:status>\r
+                  <duws:status></duws:status>\r
                   <!--Optional:-->\r
-                  <duws:version>?</duws:version>\r
+                  <duws:version></duws:version>\r
                </duws:envir>\r
             </duws:context>\r
          </duws:context>\r
          <!--Optional:-->\r
          <duws:executionId>\r
             <!--Optional:-->\r
-            <duws:task>?</duws:task>\r
+            <duws:task>CYCLIC</duws:task>\r
             <!--Optional:-->\r
             <duws:session>?</duws:session>\r
             <!--Optional:-->\r
-            <duws:sessionVersion>?</duws:sessionVersion>\r
+            <duws:sessionVersion></duws:sessionVersion>\r
             <!--Optional:-->\r
-            <duws:uproc>?</duws:uproc>\r
+            <duws:uproc>UPROCHACKATHON-OK</duws:uproc>\r
             <!--Optional:-->\r
-            <duws:uprocVersion>?</duws:uprocVersion>\r
+            <duws:uprocVersion></duws:uprocVersion>\r
             <!--Optional:-->\r
-            <duws:mu>?</duws:mu>\r
+            <duws:mu>CJRN0Z2_02</duws:mu>\r
             <!--Optional:-->\r
-            <duws:numLanc>?</duws:numLanc>\r
+            <duws:numLanc></duws:numLanc>\r
             <!--Optional:-->\r
-            <duws:numProc>?</duws:numProc>\r
+            <duws:numProc>9499</duws:numProc>\r
             <!--Optional:-->\r
-            <duws:numSess>?</duws:numSess>\r
+            <duws:numSess></duws:numSess>\r
             <!--Optional:-->\r
             <duws:tempfilePath>?</duws:tempfilePath>\r
          </duws:executionId>\r
       </duws:getHistoryTrace>\r
    </soapenv:Body>\r
-</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getHistoryTrace"/></con:call></con:operation><con:operation id="2bf7efb9-9a9e-4fe0-b188-fb5ba1798bd4" isOneWay="false" action="" name="getLaunch" bindingOperationName="getLaunch" type="Request-Response" outputName="getLaunchResponse" inputName="getLaunch" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="86cae8cd-88c4-419b-a686-3ee5ddf8f64e" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getHistoryTrace"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="2bf7efb9-9a9e-4fe0-b188-fb5ba1798bd4" isOneWay="false" action="" name="getLaunch" bindingOperationName="getLaunch" type="Request-Response" outputName="getLaunchResponse" inputName="getLaunch" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="86cae8cd-88c4-419b-a686-3ee5ddf8f64e" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <duws:getLaunch>\r
@@ -3568,7 +3568,7 @@
          </duws:launchId>\r
       </duws:getLaunch>\r
    </soapenv:Body>\r
-</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getLaunch"/></con:call></con:operation><con:operation id="4fa5e69c-2b62-4aa2-8e98-070c520aaebd" isOneWay="false" action="" name="getLaunchFromTask" bindingOperationName="getLaunchFromTask" type="Request-Response" outputName="getLaunchFromTaskResponse" inputName="getLaunchFromTask" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="65fbad35-920c-471a-b35c-1b74d4f9119a" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getLaunch"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="4fa5e69c-2b62-4aa2-8e98-070c520aaebd" isOneWay="false" action="" name="getLaunchFromTask" bindingOperationName="getLaunchFromTask" type="Request-Response" outputName="getLaunchFromTaskResponse" inputName="getLaunchFromTask" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="65fbad35-920c-471a-b35c-1b74d4f9119a" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <duws:getLaunchFromTask>\r
@@ -4105,7 +4105,7 @@
          </duws:runBookFilter>\r
       </duws:getRunBooks>\r
    </soapenv:Body>\r
-</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getRunBooks"/></con:call></con:operation><con:operation id="952faa98-fa3f-47b7-b6b0-f1e8c344f2f9" isOneWay="false" action="" name="getRunNotes" bindingOperationName="getRunNotes" type="Request-Response" outputName="getRunNotesResponse" inputName="getRunNotes" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="3818533a-436a-400d-8b03-e465cb00eb54" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://duws.orsyp.com/DuWebService/getRunBooks"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="952faa98-fa3f-47b7-b6b0-f1e8c344f2f9" isOneWay="false" action="" name="getRunNotes" bindingOperationName="getRunNotes" type="Request-Response" outputName="getRunNotesResponse" inputName="getRunNotes" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="3818533a-436a-400d-8b03-e465cb00eb54" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/du_web_services_6.10.51_all_os/DuwsSEI</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:duws="http://duws.orsyp.com">\r
    <soapenv:Header/>\r
    <soapenv:Body>\r
       <duws:getRunNotes>\r

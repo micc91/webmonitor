@@ -12,6 +12,7 @@ public abstract class ObjectsList {
     protected List<String> fields = new ArrayList<>();
 
     protected String name;
+    protected int size;
 
     protected ObjectsList() {
 
@@ -26,6 +27,7 @@ public abstract class ObjectsList {
         if(items.isEmpty()) {
             items.add(empty);
         }
+        size = 0;
     }
 
     public void reset() {
@@ -34,6 +36,12 @@ public abstract class ObjectsList {
         }
     }
 
+    public int getSize() {
+        return size;
+    }
+    protected void setSize(int size) {
+        this.size = size;
+    }
     public void setName(String name) {
         this.name = name;
     }

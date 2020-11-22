@@ -23,8 +23,14 @@
 <header>
         <%@ include file="/WEB-INF/views/static-menu.jsp" %>
 </header>
-<main role="main" class="container-fluid text-center">
-        <h1>Please log in to Management Server to start</h1>
+<main role="main" class="container-fluid">
+        <div class="jumbotron">
+                <h1 class="display-4">Welcome to Web Ops</h1>
+                <p class="lead">User interface on the monitoring features of Dollar Universe Scheduling Suite</p>
+                <hr class="my-4">
+                <p>Monitor your job runs, server engines and batch queues directly in your favourite web browser</p>
+                <a class="btn btn-primary btn-lg" href="./login" role="button">Login to UVMS</a>
+        </div>
 </main>
 <footer class="fixed-bottom bg-dark footer mt-auto py-3">
         <div class="container">

@@ -9,7 +9,9 @@
 <jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>
 <jsp:useBean id="nodesList" scope="request" type="java.util.List"/>
 <jsp:useBean id="jobsList" scope="request" type="java.util.List"/>
-<%-- TODO: add useBean audit, settingsMap, selectedContext --%>
+<%-- TODO: add useBean audit --%>
+<jsp:useBean id="settings" scope="session" type="java.util.Map"/>
+<jsp:useBean id="selectedContext" scope="session" type="java.util.List"/>
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -46,16 +48,22 @@
 
                     <form class="nav flex-column" action="./dashboard" method="post" >
                         <h2>Context</h2>
+                        <c:set var="idx" value="0" />
                         <c:forEach var="item" items="${nodesList}" varStatus="status">
                             <c:choose>
                                 <c:when test="${item.get('status') == 'CONNECTED'}"><c:set var="activation" value="" /></c:when>
                                 <c:otherwise><c:set var="activation" value="disabled" /></c:otherwise>
                             </c:choose>
-                            <%-- TODO: handle selectedContext if not empty to check box for already selected nodes --%>
+                            <%-- handle selectedContext if not empty to check box for already selected nodes --%>
                             <c:set var="current" value="${status.index}" />
+                            <c:set var="checkedattr" value="false" />
+                            <c:if test="${selectedContext[idx] == current && activation != 'disabled'}">
+                                <c:set var="checkedattr" value="true" />
+                                <c:set var="idx" value="${idx + 1}" />
+                            </c:if>
                             <div class="checkbox ${activation}">
                                 <label for="${current}" class="nav-item ${activation}">
-                                    <input id="${current}" value="${current}" class="nav-item ${activation}" type="checkbox" name="selectedNodes" ${activation}>
+                                    <input id="${current}" value="${current}" class="nav-item ${activation}" type="checkbox" name="selectedNodes" ${activation} > <%--checked="${checkedattr}" --%>
                                         ${item.get("company")}:${item.get("node")}:${item.get("area")}
                                     </input>
                                 </label>
@@ -78,17 +86,20 @@
                                     <img src="./media/arrow-repeat.svg" class="bi" width="32" height="32" fill="currentColor" />
                                 </a>
                             </button>
-                            <button type="button" class="btn btn-sm btn-outline-secondary">New Run</button>
-                            <%--<button type="button" class="btn btn-sm btn-outline-secondary" onclick="sortTable()" >Sort</button>--%>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                <a href="./new">
+                                New Run
+                                </a>
+                            </button>
                         </div>
-                        <select class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                            <option>H - 5 min</option>
-                            <option>H - 1 hour</option>
-                            <option>H - 6 hours</option>
-                            <option>H - 12 hours</option>
-                            <option>D - 1 day</option>
-                            <option>D - 2 days</option>
-                            <option>Any Time</option>
+                        <select class="btn btn-sm btn-outline-secondary dropdown-toggle" id="select-offset" onchange="refreshJobRuns()">
+                            <option value="5">H - 5 min</option>
+                            <option value="60">H - 1 hour</option>
+                            <option value="360">H - 6 hours</option>
+                            <option value="720">H - 12 hours</option>
+                            <option value="1440">D - 1 day</option>
+                            <option value="2880">D - 2 days</option>
+                            <option value="none">Any Time</option>
                         </select>
                     </div>
                 </div>
@@ -130,7 +141,6 @@
                                 <c:forEach var="item" items="${jobsList}" varStatus="status">
                                     <c:set var="idx" value="${status.index}" />
                                     <c:choose>
-                                        <c:when test="${item.get('status') == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
                                         <c:when test="${item.get('status') == 'COMPLETED'}"><c:set var="jobtype" value="ctl" /></c:when>
                                         <c:when test="${item.get('status') == 'ABORTED'}"><c:set var="jobtype" value="ctl" /></c:when>
                                         <c:when test="${item.get('status') == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
