@@ -140,6 +140,12 @@ body {
     color: yellow;
 }
 
+.selected-row {
+    color: blue;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px black;
+}
+
 .filtered {
 /*    background-color: yellow;*/
     text-shadow: 2px 2px 5px blue;
@@ -151,5 +157,12 @@ body {
 }
 
 .footer-text {
+    color: white;
+}
+
+.tooltip > .tooltip-inner {
+    padding: 15px;
+    font-size: 120%;
+    background-color: black;
     color: white;
 }

@@ -50,6 +50,65 @@ public class Client {
         return errorCode;
     }
 
+    public ContextHolder setContext(UvmsConnection connection, String company, String node, String iArea) {
+        token = connection.getToken();
+        ExecutionId execId = new ExecutionId();
+        Context currentCtx = new Context();
+        Envir currentEnvir = new Envir();
+        ContextHolder ctxHolder = new ContextHolder();
+
+        JAXBElement<String> area = new JAXBElement<>(ss.getServiceName(),String.class, iArea);
+        currentEnvir.setArea(area);
+        currentEnvir.setCompany(company);
+        currentEnvir.setNode(node);
+        JAXBElement<EnvirStatus> status = new JAXBElement<>(ss.getServiceName(),EnvirStatus.class,EnvirStatus.fromValue("CONNECTED"));
+        currentEnvir.setStatus(status);
+        currentCtx.setEnvir(currentEnvir);
+        logger.info(this.getClass().getName()+"/setContext: currentEnvir="+currentEnvir.getCompany()+","+currentEnvir.getNode()+","+currentEnvir.getArea());
+        // Setting up the context
+        ctxHolder.setContext(currentCtx);
+        ctxHolder.setToken(token);
+
+        return ctxHolder;
+    }
+
+    private LaunchId setLaunchId(String task, String session, String uproc, String mu, String numSess, String numJob, String numLanc) {
+        LaunchId launchId = new LaunchId();
+
+        if(! task.equals("-")) {
+            launchId.setTask(task);
+        }
+        if(! session.equals("-")) {
+            launchId.setSession(session);
+            launchId.setNumSess(numSess);
+        }
+        launchId.setUproc(uproc);
+        launchId.setMu(mu);
+        launchId.setNumProc(numJob);
+        launchId.setNumLanc(numLanc);
+
+        return launchId;
+    }
+
+    private ExecutionId setExecutionId(String task, String session, String uproc, String mu, String numSess, String numJob) {
+        ExecutionId execId = new ExecutionId();
+
+        JAXBElement<String> muElt = new JAXBElement<>(ss.getServiceName(),String.class, mu);
+        if(! task.equals("-")) {
+            execId.setTask(task);
+        }
+        if(! session.equals("-")) {
+            execId.setSession(session);
+            execId.setNumSess(numSess);
+        }
+        execId.setUproc(uproc);
+        execId.setMu(muElt);
+        execId.setNumProc(numJob);
+        logger.info(this.getClass().getName()+"/setExecutionId: execId="+execId.getTask()+":"+execId.getSession()+":"+execId.getUproc()+":"+execId.getMu().getValue()+"/"+execId.getNumLanc()+":"+execId.getNumSess()+":"+execId.getNumProc());
+
+        return execId;
+    }
+
     public String login(UvmsConnection connection) throws Exception {
 
         uvmsContext.setUvmsHost(connection.getUvmsHost());
@@ -99,25 +158,10 @@ public class Client {
 
         Integer iOffset = 1440; // D - 1 day by default
         if(offset != null) {
-            if (!offset.equals("none")) {
+            if (!offset.equals("none") && !offset.isEmpty()) {
                 iOffset = Integer.parseInt(offset);
             }
         }
-
-/*        DateFormat fmtYyyyMmDd = new SimpleDateFormat("yyyyMMdd");
-        DateFormat fmtHhMmSs = new SimpleDateFormat("HHmmSS");
-        Calendar calb = Calendar.getInstance();
-        calb.add(Calendar.MINUTE, iOffset);
-        Date begin = calb.getTime();
-        String sBegin = fmtYyyyMmDd.format(begin);
-
-        String sBeginT = fmtHhMmSs.format(begin);
-
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE,1);
-        Date tomorrow = cal.getTime();
-        String sTomorrow = fmtYyyyMmDd.format(tomorrow);
-  */
 
         org.joda.time.DateTime nowDT = new org.joda.time.DateTime();
         org.joda.time.DateTime beginDT = nowDT.minusMinutes(iOffset);
@@ -195,27 +239,9 @@ public class Client {
     public boolean getListExecution(UvmsConnection connection, Map<String, String> node, JobsList jobsList, String offset) throws Exception {
         boolean ret;
 
-        Context currentCtx = new Context();
-        Envir currentEnvir = new Envir();
-        ContextHolder ctxHolder = new ContextHolder();
+        ContextHolder ctxHolder = setContext(connection, node.get("company"), node.get("node"), node.get("area"));
         List<ExecutionItem> jobRuns;
         List<LaunchItem> jobLaunches;
-
-        JAXBElement<String> area = new JAXBElement<>(ss.getServiceName(),String.class, node.get("area"));
-        currentEnvir.setArea(area);
-        currentEnvir.setCompany(node.get("company"));
-        currentEnvir.setNode(node.get("node"));
-        JAXBElement<EnvirStatus> status = new JAXBElement<>(ss.getServiceName(),EnvirStatus.class,EnvirStatus.fromValue("CONNECTED"));
-        currentEnvir.setStatus(status);
-        currentCtx.setEnvir(currentEnvir);
-        logger.info(this.getClass().getName()+"/getListExecution: currentEnvir="+currentEnvir.toString());
-
-        token = connection.getToken();
-        logger.info(this.getClass().getName()+"/getListExecution("+node.get("company")+"|"+node.get("node")+"|"+node.get("area")+"): token="+token);
-
-        // Setting up the context
-        ctxHolder.setContext(currentCtx);
-        ctxHolder.setToken(token);
 
         if(currentFilter == null || currentLFilter == null) {
             ret = setExecutionAndLaunchFilters(offset);
@@ -257,7 +283,7 @@ public class Client {
                 item.setEndDate(formatDate(item.getEndDate()));
                 item.setEndHour(formatTime(item.getEndHour()));
                 item.setProcessingDate(formatDate(item.getProcessingDate()));
-                jobsList.addItem(currentEnvir, item);
+                jobsList.addItem(ctxHolder.getContext().getEnvir(), item);
             }
             ret = true;
         } else {
@@ -280,7 +306,7 @@ public class Client {
                 item.setEndDate(formatDate(item.getEndDate()));
                 item.setEndHour(formatTime(item.getEndHour()));
                 item.setProcessingDate(formatDate(item.getProcessingDate()));
-                jobsList.addItem(currentEnvir, item);
+                jobsList.addItem(ctxHolder.getContext().getEnvir(), item);
             }
             ret = true;
         } else {
@@ -304,37 +330,8 @@ public class Client {
     public Map<String, List<String>> getJobLogs(UvmsConnection connection, String company, String node, String iArea,
                                                 String task, String session, String uproc, String mu,
                                                 String numSess, String numJob) {
-        token = connection.getToken();
-        ExecutionId execId = new ExecutionId();
-        Context currentCtx = new Context();
-        Envir currentEnvir = new Envir();
-        ContextHolder ctxHolder = new ContextHolder();
-
-        JAXBElement<String> area = new JAXBElement<>(ss.getServiceName(),String.class, iArea);
-        currentEnvir.setArea(area);
-        currentEnvir.setCompany(company);
-        currentEnvir.setNode(node);
-        JAXBElement<EnvirStatus> status = new JAXBElement<>(ss.getServiceName(),EnvirStatus.class,EnvirStatus.fromValue("CONNECTED"));
-        currentEnvir.setStatus(status);
-        currentCtx.setEnvir(currentEnvir);
-        logger.info(this.getClass().getName()+"/getJobLogs: currentEnvir="+currentEnvir.toString());
-        logger.info(this.getClass().getName()+"/getJobLogs: input params="+task+":"+session+":"+uproc+":"+mu+"::"+numSess+":"+numJob+".");
-        // Setting up the context
-        ctxHolder.setContext(currentCtx);
-        ctxHolder.setToken(token);
-
-        JAXBElement<String> muElt = new JAXBElement<>(ss.getServiceName(),String.class, mu);
-        if(! task.equals("-")) {
-            execId.setTask(task);
-        }
-        if(! session.equals("-")) {
-            execId.setSession(session);
-            execId.setNumSess(numSess);
-        }
-        execId.setUproc(uproc);
-        execId.setMu(muElt);
-        execId.setNumProc(numJob);
-        logger.info(this.getClass().getName()+"/getJobLogs: execId="+execId.getTask()+":"+execId.getSession()+":"+execId.getUproc()+":"+execId.getMu().getValue()+"/"+execId.getNumLanc()+":"+execId.getNumSess()+":"+execId.getNumProc());
+        ExecutionId execId = setExecutionId(task, session, uproc, mu, numSess, numJob);
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
 
         List<String> error4JobLogList = new ArrayList<>();
         List<String> error4HTraceList = new ArrayList<>();
@@ -431,38 +428,9 @@ public class Client {
 
     public boolean getExecution(UvmsConnection connection, String company, String node, String iArea, String task, String session, String uproc, String mu, String numSess, String numJob, String numLanc, JobInfo jobInfo) {
         boolean ret;
-        token = connection.getToken();
-        ExecutionId execId = new ExecutionId();
-        LaunchId launchId = new LaunchId();
-        Context currentCtx = new Context();
-        Envir currentEnvir = new Envir();
-        ContextHolder ctxHolder = new ContextHolder();
-
-        JAXBElement<String> area = new JAXBElement<>(ss.getServiceName(),String.class, iArea);
-        currentEnvir.setArea(area);
-        currentEnvir.setCompany(company);
-        currentEnvir.setNode(node);
-        JAXBElement<EnvirStatus> status = new JAXBElement<>(ss.getServiceName(),EnvirStatus.class,EnvirStatus.fromValue("CONNECTED"));
-        currentEnvir.setStatus(status);
-        currentCtx.setEnvir(currentEnvir);
-        logger.info(this.getClass().getName()+"/getExecution: currentEnvir="+currentEnvir.toString());
-        logger.info(this.getClass().getName()+"/getExecution: input params="+task+":"+session+":"+uproc+":"+mu+"::"+numSess+":"+numJob+".");
-        // Setting up the context
-        ctxHolder.setContext(currentCtx);
-        ctxHolder.setToken(token);
-
-        JAXBElement<String> muElt = new JAXBElement<>(ss.getServiceName(),String.class, mu);
-        if(! task.equals("-")) {
-            execId.setTask(task);
-        }
-        if(! session.equals("-")) {
-            execId.setSession(session);
-            execId.setNumSess(numSess);
-        }
-        execId.setUproc(uproc);
-        execId.setMu(muElt);
-        execId.setNumProc(numJob);
-        logger.info(this.getClass().getName()+"/getExecution: execId="+execId.getTask()+":"+execId.getSession()+":"+execId.getUproc()+":"+execId.getMu().getValue()+"/"+execId.getNumLanc()+":"+execId.getNumSess()+":"+execId.getNumProc());
+        ExecutionId execId = setExecutionId(task, session, uproc, mu, numSess, numJob);
+        LaunchId launchId = setLaunchId(task, session, uproc, mu, numSess, numJob, numLanc);
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
 
         List<String> errorList = new ArrayList<>();
         Execution exec = null;
@@ -482,24 +450,12 @@ public class Client {
 
         if(exec != null) {
             logger.info(this.getClass().getName()+"/getExecution: Adding exec data");
-            jobInfo.addItems(currentEnvir, exec);
+            jobInfo.addItems(ctxHolder.getContext().getEnvir(), exec);
             ret = true;
         } else {
             logger.error(this.getClass().getName()+"/getExecution: jobInfo = null");
             ret = false;
         }
-
-        if(! task.equals("-")) {
-            launchId.setTask(task);
-        }
-        if(! session.equals("-")) {
-            launchId.setSession(session);
-            launchId.setNumSess(numSess);
-        }
-        launchId.setUproc(uproc);
-        launchId.setMu(mu);
-        launchId.setNumProc(numJob);
-        launchId.setNumLanc(numLanc);
 
         Launch launch = null;
         try {
@@ -518,7 +474,7 @@ public class Client {
 
         if(launch != null) {
             logger.info(this.getClass().getName()+"/getLaunch: Adding exec data");
-            jobInfo.addItems(currentEnvir, launch);
+            jobInfo.addItems(ctxHolder.getContext().getEnvir(), launch);
             ret = true;
         } else {
             logger.error(this.getClass().getName()+"/getLaunch: jobInfo = null");
@@ -527,4 +483,265 @@ public class Client {
 
         return ret;
     }
+
+    public Map<String, String> getDuwsVersion() {
+        Map<String, String> output = new HashMap<>();
+        DuwsVersion duwsVersion = null;
+
+        output.put("status","");
+        output.put("version", "unknown");
+
+        try {
+            duwsVersion = service.getWsVersion();
+        } catch (DuwsException_Exception duwse) {
+            errorCode = duwse.getFaultInfo().getErrorCode();
+            errorMessage = duwse.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getDuwsVersion failed: "+errorMessage+" ("+errorCode+")");
+//            logger.error("Exception: ",duwse);
+            output.put("status", "Request failed: "+errorMessage+" ("+errorCode+")");
+        }
+
+        if(duwsVersion != null) {
+            output.put("version", duwsVersion.getFullVersion());
+            output.put("status", "available");
+        }
+        return output;
+    }
+
+    //icon: trash.svg
+    public boolean deleteLaunch(UvmsConnection connection, String company, String node, String iArea, String task, String session, String uproc, String mu, String numSess, String numJob, String numLanc) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+        LaunchId launchId = setLaunchId(task, session, uproc, mu, numSess, numJob, numLanc);
+
+        try {
+            service.deleteLaunch(ctxHolder, launchId);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/deleteLaunch failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/deleteLaunch timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+        return ret;
+    }
+
+    //icon: caret-right-square.svg
+    public boolean releaseLaunch(UvmsConnection connection, String company, String node, String iArea, String task, String session, String uproc, String mu, String numSess, String numJob, String numLanc) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+        LaunchId launchId = setLaunchId(task, session, uproc, mu, numSess, numJob, numLanc);
+
+        try {
+            service.releaseLaunch(ctxHolder, launchId);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/releaseLaunch failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/releaseLaunch timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    //icon: cone-striped.svg
+    public boolean holdLaunch(UvmsConnection connection, String company, String node, String iArea, String task, String session, String uproc, String mu, String numSess, String numJob, String numLanc) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+        LaunchId launchId = setLaunchId(task, session, uproc, mu, numSess, numJob, numLanc);
+
+        try {
+            service.holdLaunch(ctxHolder, launchId);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/holdLaunch failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/holdLaunch timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    //icon: arrow-return-right.svg
+    public boolean bypassLaunchConditionCheck(UvmsConnection connection, String company, String node, String iArea, String task, String session, String uproc, String mu, String numSess, String numJob, String numLanc) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+        LaunchId launchId = setLaunchId(task, session, uproc, mu, numSess, numJob, numLanc);
+
+        try {
+            service.bypassLaunchConditionCheck(ctxHolder, launchId);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/bypassLaunchConditionCheck failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/bypassLaunchConditionCheck timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    //icon: check2-square.svg
+    public boolean forceCompleteLaunch(UvmsConnection connection, String company, String node, String iArea, String task, String session, String uproc, String mu, String numSess, String numJob, String numLanc) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+        LaunchId launchId = setLaunchId(task, session, uproc, mu, numSess, numJob, numLanc);
+
+        try {
+            service.forceCompleteLaunch(ctxHolder, launchId);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/forceCompleteLaunch failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/forceCompleteLaunch timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    //icon: chevron-double-right.svg
+    public boolean skipExecution(UvmsConnection connection, String company, String node, String iArea, String task, String session, String uproc, String mu, String numSess, String numJob, String numLanc) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+        LaunchId launchId = setLaunchId(task, session, uproc, mu, numSess, numJob, numLanc);
+
+        try {
+            service.skipExecution(ctxHolder, launchId);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/skipExecution failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/skipExecution timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    //icon: exclamation-octagon-fill.svg
+    public boolean stopExecution(UvmsConnection connection, String company, String node, String iArea, String task, String session, String uproc, String mu, String numSess, String numJob) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+        ExecutionId execId = setExecutionId(task, session, uproc, mu, numSess, numJob);
+        int delay = 60;
+
+        try {
+            service.stopExecution(ctxHolder, execId, delay);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/stopExecution failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/stopExecution timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    //icon: trash.svg
+    public boolean purgeExecution(UvmsConnection connection, String company, String node, String iArea, String task, String session, String uproc, String mu, String numSess, String numJob) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+        ExecutionId execId = setExecutionId(task, session, uproc, mu, numSess, numJob);
+        int delay = 60;
+
+        try {
+            service.purgeExecution(ctxHolder, execId);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/purgeExecution failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/purgeExecution timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        return ret;
+
+    }
+
+
+    //public void rerunExecution()
+    //public void updateLaunch()
+
+    //public void addLaunch()
+    //public addLaunchFromTask2() {}
+    //public addLaunchFromTask() {}
+
+
+    //public stopEngine()
+    //public restartEngine()
+    //public stopQueue()
+    //public startQueue()
+    //public void resetQueue()
+    //public void getListEvent()
+    //public void listEngines()
+    //public void listQueues()
+
 }
