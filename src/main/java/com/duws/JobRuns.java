@@ -214,4 +214,89 @@ public class JobRuns {
         return ret;
     }
 
+    public boolean actionOnJob(HttpServletRequest request, UvmsConnection uvmsConnection) {
+        Client duwsClient = null;
+        try {
+            duwsClient = new Client();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        Map<String, List<String>> jobParams;
+        boolean ret = true;
+
+        String action = request.getParameter("action");
+        String company = request.getParameter("company");
+        String node  = request.getParameter("node");
+        String area = request.getParameter("area");
+        String task = request.getParameter("task");
+        String session = request.getParameter("session");
+        String uproc = request.getParameter("uproc");
+        String mu = request.getParameter("mu");
+        String numJob = request.getParameter("numproc");
+        String numSess = request.getParameter("numsess");
+        String numLanc = request.getParameter("numlanc");
+        String status = request.getParameter("status");
+
+        if(company == null || company.isEmpty()) {
+            logger.error(this.getClass().getName()+"/actionOnJob: company null or empty");
+        }
+        if(node == null || node.isEmpty()) {
+            logger.error(this.getClass().getName()+"/actionOnJob: node null or empty");
+        }
+        if(area == null || area.isEmpty()) {
+            logger.error(this.getClass().getName()+"/actionOnJob: area null or empty");
+        }
+
+        String jobType;
+        if(status.equals("RUNNING") || status.equals("COMPLETED") || status.equals("ABORTED")) {
+            jobType = "ctl";
+        } else {
+            jobType = "fla";
+        }
+
+        if(jobType.equals("ctl")) {
+            if (action.equals("delete")) {
+                    ret = duwsClient.purgeExecution(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob);
+            } else {
+                if (action.equals("stop") && jobType.equals("ctl") && status.equals("RUNNING")) {
+                    ret = duwsClient.stopExecution(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob);
+                }
+            }
+        } else {
+            if (action.equals("delete")) {
+                ret = duwsClient.deleteLaunch(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob, numLanc);
+            }
+            if (action.equals("hold")) {
+                ret = duwsClient.holdLaunch(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob, numLanc);
+            }
+            if (action.equals("release")) {
+                ret = duwsClient.releaseLaunch(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob, numLanc);
+            }
+            if (action.equals("force")) {
+                ret = duwsClient.forceCompleteLaunch(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob, numLanc);
+            }
+            if (status.equals("LAUNCH_WAIT") || status.equals("EVENT_WAIT")) {
+                if (action.equals("bypass")) {
+                    ret = duwsClient.bypassLaunchConditionCheck(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob, numLanc);
+                } else {
+                    if (action.equals("skip")) {
+                        ret = duwsClient.skipExecution(uvmsConnection, company, node, area, task, session, uproc, mu, numSess, numJob, numLanc);
+                    }
+                }
+            }
+        }
+
+        if(ret) {
+            logger.info(this.getClass().getName()+"/actionOnJob: Successful");
+            //TODO: set in session?
+        } else {
+            logger.error(this.getClass().getName()+"/actionOnJob: failed");
+        }
+
+        request.setAttribute("lastResult", duwsClient.getLastResponse());
+        request.setAttribute("returnCode", duwsClient.getLastResult());
+
+        return ret;
+    }
+
 }

@@ -100,7 +100,12 @@ public class SettingsMap {
 
     public String getItem(String field) {
         if(fields.contains(field)) {
-            return items.get(field);
+            String output = items.get(field);
+            if(output != null) {
+                return output;
+            } else {
+                return "";
+            }
         } else {
             return "";
         }

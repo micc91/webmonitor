@@ -81,8 +81,17 @@ public class Dashboard extends HttpServlet {
         JobRuns jobRuns = new JobRuns();
         boolean ret = false;
 
+        boolean refresh = settings.getItem("refresh").equals("true");
+        String action = request.getParameter("action");
+        if(action != null) {
+            ret = jobRuns.actionOnJob(request, uvmsConnection);
+            if(ret) {
+                refresh = true;
+            }
+        }
+
         // do not request data if already present in session - unless SettingsMap.refresh=true:
-        if(settings.getItem("refresh").equals("true") || jobRuns.getNodesList().getSize() == 0) {
+        if(refresh || jobRuns.getNodesList().getSize() == 0) {
             ret = jobRuns.getDUEnvironmentList(request, uvmsConnection);
             if (!ret) {
                 logger.error(this.getServletName() + "/doGet: Failed to get list of nodes");
@@ -98,6 +107,7 @@ public class Dashboard extends HttpServlet {
 
         //TODO: re-store data in session if a refresh has been done
         //...
+        settings.setInSession(session);
 
         logger.info(this.getServletName()+"/doGet: got from session="+ uvmsConnection.toString());
 

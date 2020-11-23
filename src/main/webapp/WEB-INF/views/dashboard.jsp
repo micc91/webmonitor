@@ -56,14 +56,14 @@
                             </c:choose>
                             <%-- handle selectedContext if not empty to check box for already selected nodes --%>
                             <c:set var="current" value="${status.index}" />
-                            <c:set var="checkedattr" value="false" />
+                            <c:set var="checkedattr" value="" />
                             <c:if test="${selectedContext[idx] == current && activation != 'disabled'}">
-                                <c:set var="checkedattr" value="true" />
+                                <c:set var="checkedattr" value="checked" />
                                 <c:set var="idx" value="${idx + 1}" />
                             </c:if>
                             <div class="checkbox ${activation}">
                                 <label for="${current}" class="nav-item ${activation}">
-                                    <input id="${current}" value="${current}" class="nav-item ${activation}" type="checkbox" name="selectedNodes" ${activation} > <%--checked="${checkedattr}" --%>
+                                    <input id="${current}" value="${current}" class="nav-item ${activation}" type="checkbox" name="selectedNodes" ${activation} ${checkedattr} >
                                         ${item.get("company")}:${item.get("node")}:${item.get("area")}
                                     </input>
                                 </label>
@@ -78,8 +78,18 @@
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                     <h1 class="h2">Job runs</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group mr-2">
+                    <div class="btn-toolbar mb-2 mb-md-0" > <%--role="toolbar" aria-label="toolbar with buttons">--%>
+                        <div class="btn-group mr-2" > <%--role="group" aria-label="action group" > --%>
+                            <%-- delete, cancel, hold, release, bypass, force, skip --%>
+                                <button class="btn btn-sm btn-outline-secondary" id="btn-action-delete" onclick="actionOnJob('delete')"><img src="./media/trash.svg"  class="bi" width="16" height="16" fill="currentColor" /></button>
+                                <button class="btn btn-sm btn-outline-secondary" id="btn-action-stop" onclick="actionOnJob('stop')"><img src="./media/exclamation-octagon-fill.svg"  class="bi" width="16" height="16" fill="currentColor" /></button>
+                                <button class="btn btn-sm btn-outline-secondary" id="btn-action-hold" onclick="actionOnJob('hold')"><img src="./media/cone-striped.svg"  class="bi" width="16" height="16" fill="currentColor" /></button>
+                                <button class="btn btn-sm btn-outline-secondary" id="btn-action-release" onclick="actionOnJob('release')"><img src="./media/caret-right-square.svg"  class="bi" width="16" height="16" fill="currentColor" /></button>
+                                <button class="btn btn-sm btn-outline-secondary" id="btn-action-bypass" onclick="actionOnJob('bypass')"><img src="./media/arrow-return-right.svg"  class="bi" width="16" height="16" fill="currentColor" /></button>
+                                <button class="btn btn-sm btn-outline-secondary" id="btn-action-force" onclick="actionOnJob('force')"><img src="./media/check2-square.svg"  class="bi" width="16" height="16" fill="currentColor" /></button>
+                                <button class="btn btn-sm btn-outline-secondary" id="btn-action-skip" onclick="actionOnJob('skip')"><img src="./media/chevron-double-right.svg"  class="bi" width="16" height="16" fill="currentColor" /></button>
+                        </div>
+                        <div class="btn-group mr-2" > <%--role="group" aria-label="display group" >--%>
                             <button class="btn btn-sm btn-outline-secondary" id="btn-chart" onclick="showHideChart(${xdata},${ydata})"><img src="./media/bar-chart-line.svg" class="bi" width="16" height="16" fill="currentColor" /></button>
                             <button type="button" class="btn btn-sm btn-outline-secondary">
                                 <a href="./dashboard?refresh=true">
@@ -92,14 +102,31 @@
                                 </a>
                             </button>
                         </div>
+                        <c:set var="selected5" value=""/>
+                        <c:set var="selected60" value=""/>
+                        <c:set var="selected360" value=""/>
+                        <c:set var="selected720" value=""/>
+                        <c:set var="selected1440" value=""/>
+                        <c:set var="selected2880" value=""/>
+                        <c:set var="selectedNone" value="selected"/>
+                        <c:choose>
+                            <c:when test="${settings.offset == '5'}"   ><c:set var="selected5"    value="selected"/></c:when>
+                            <c:when test="${settings.offset == '60'}"  ><c:set var="selected60"   value="selected"/></c:when>
+                            <c:when test="${settings.offset == '360'}" ><c:set var="selected360"  value="selected"/></c:when>
+                            <c:when test="${settings.offset == '720'}" ><c:set var="selected720"  value="selected"/></c:when>
+                            <c:when test="${settings.offset == '1440'}"><c:set var="selected1440" value="selected"/></c:when>
+                            <c:when test="${settings.offset == '2880'}"><c:set var="selected2880" value="selected"/></c:when>
+                            <c:when test="${settings.offset == 'none'}"><c:set var="selectedNone" value="selected"/></c:when>
+                            <c:otherwise><c:set var="selectedNone" value="selected"/></c:otherwise>
+                        </c:choose>
                         <select class="btn btn-sm btn-outline-secondary dropdown-toggle" id="select-offset" onchange="refreshJobRuns()">
-                            <option value="5">H - 5 min</option>
-                            <option value="60">H - 1 hour</option>
-                            <option value="360">H - 6 hours</option>
-                            <option value="720">H - 12 hours</option>
-                            <option value="1440">D - 1 day</option>
-                            <option value="2880">D - 2 days</option>
-                            <option value="none">Any Time</option>
+                            <option value="none" ${selectedNone} >Any Time</option>
+                            <option value="5"    ${selected5}    >H - 5 min</option>
+                            <option value="60"   ${selected60}   >H - 1 hour</option>
+                            <option value="360"  ${selected360}  >H - 6 hours</option>
+                            <option value="720"  ${selected720}  >H - 12 hours</option>
+                            <option value="1440" ${selected1440} >D - 1 day</option>
+                            <option value="2880" ${selected2880} >D - 2 days</option>
                         </select>
                     </div>
                 </div>
@@ -110,11 +137,11 @@
                     <table class="table table-striped table-sm" id="jobrunsTable" >
                         <thead>
                         <tr>
-                            <th data-toggle="tooltip" data-placement="top" title="Company|Node|Area">Location
+                            <th data-toggle="tooltip" data-placement="top" title="Company|Node|Area" >Location
                                 <button class="btn btn-sm btn-outline-secondary" id="btn-sort-0-asc"  onclick="sortTable('jobrunsTable',0,'asc')"><img src="./media/chevron-up.svg" class="bi" width="16" height="16" fill="currentColor" /></button>
                                 <button class="btn btn-sm btn-outline-secondary" id="btn-sort-0-desc" onclick="sortTable('jobrunsTable',0,'desc')"><img src="./media/chevron-down.svg" class="bi" width="16" height="16" fill="currentColor" onclick="sortTable('jobrunsTable',0,'desc')"/></button>
                             </th>
-                            <th data-toggle="tooltip" data-placement="top" title="Task|Session|Uproc@MU">Job ID
+                            <th data-toggle="tooltip" data-placement="top" title="Task|Session|Uproc@MU"  >Job ID
                                 <button class="btn btn-sm btn-outline-secondary" id="btn-sort-1-asc" onclick="sortTable('jobrunsTable',1,'asc')"><img src="./media/chevron-up.svg" class="bi" width="16" height="16" fill="currentColor" /></button>
                                 <button class="btn btn-sm btn-outline-secondary" id="btn-sort-1-desc" onclick="sortTable('jobrunsTable',1,'desc')"><img src="./media/chevron-down.svg" class="bi" width="16" height="16" fill="currentColor" /></button>
                             </th>
@@ -218,11 +245,12 @@
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<script src="./scripts/custom.js"></script>
 <script src="./scripts/dashboard.js"></script></body>
+
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
     })
 </script>
-<script src="./scripts/custom.js"></script>
 </html>
