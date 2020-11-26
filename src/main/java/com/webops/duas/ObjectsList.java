@@ -57,6 +57,18 @@ public abstract class ObjectsList {
     public void setInRequest(HttpServletRequest request) {
         request.setAttribute(name, items);
     }
+    public void setFromRequest(HttpServletRequest request) {
+        if(request.getAttribute(name) != null) {
+            items = (List<Map<String, String>>) request.getAttribute(name);
+        }
+    }
+
+    public void setFromSession(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        if(session.getAttribute(name) != null) {
+            items = (List<Map<String, String>>) session.getAttribute(name);
+        }
+    }
 
     public void setInSession(HttpSession session) {
         session.setAttribute(name, items);

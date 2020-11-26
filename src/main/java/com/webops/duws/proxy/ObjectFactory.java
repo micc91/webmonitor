@@ -173,11 +173,11 @@ public class ObjectFactory {
     private final static QName _AddLaunchFromTask_QNAME = new QName("http://duws.orsyp.com", "addLaunchFromTask");
     private final static QName _SessionTree_QNAME = new QName("http://duws.orsyp.com", "sessionTree");
     private final static QName _Variable_QNAME = new QName("http://duws.orsyp.com", "variable");
-    private final static QName _ExecutionIdSessionVersion_QNAME = new QName("http://duws.orsyp.com", "sessionVersion");
-    private final static QName _ExecutionIdMu_QNAME = new QName("http://duws.orsyp.com", "mu");
     private final static QName _EnvirArea_QNAME = new QName("http://duws.orsyp.com", "area");
     private final static QName _EnvirStatus_QNAME = new QName("http://duws.orsyp.com", "status");
     private final static QName _EnvirVersion_QNAME = new QName("http://duws.orsyp.com", "version");
+    private final static QName _ExecutionIdSessionVersion_QNAME = new QName("http://duws.orsyp.com", "sessionVersion");
+    private final static QName _ExecutionIdMu_QNAME = new QName("http://duws.orsyp.com", "mu");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.webops.duws.proxy
@@ -2811,24 +2811,6 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "http://duws.orsyp.com", name = "sessionVersion", scope = ExecutionId.class)
-    public JAXBElement<String> createExecutionIdSessionVersion(String value) {
-        return new JAXBElement<String>(_ExecutionIdSessionVersion_QNAME, String.class, ExecutionId.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     * 
-     */
-    @XmlElementDecl(namespace = "http://duws.orsyp.com", name = "mu", scope = ExecutionId.class)
-    public JAXBElement<String> createExecutionIdMu(String value) {
-        return new JAXBElement<String>(_ExecutionIdMu_QNAME, String.class, ExecutionId.class, value);
-    }
-
-    /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
-     * 
-     */
     @XmlElementDecl(namespace = "http://duws.orsyp.com", name = "area", scope = Envir.class)
     public JAXBElement<String> createEnvirArea(String value) {
         return new JAXBElement<String>(_EnvirArea_QNAME, String.class, Envir.class, value);
@@ -2850,6 +2832,24 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = "http://duws.orsyp.com", name = "version", scope = Envir.class)
     public JAXBElement<String> createEnvirVersion(String value) {
         return new JAXBElement<String>(_EnvirVersion_QNAME, String.class, Envir.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://duws.orsyp.com", name = "sessionVersion", scope = ExecutionId.class)
+    public JAXBElement<String> createExecutionIdSessionVersion(String value) {
+        return new JAXBElement<String>(_ExecutionIdSessionVersion_QNAME, String.class, ExecutionId.class, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link String }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "http://duws.orsyp.com", name = "mu", scope = ExecutionId.class)
+    public JAXBElement<String> createExecutionIdMu(String value) {
+        return new JAXBElement<String>(_ExecutionIdMu_QNAME, String.class, ExecutionId.class, value);
     }
 
 }

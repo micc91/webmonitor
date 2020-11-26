@@ -27,29 +27,32 @@
     <link href="./styles/signin.css" rel="stylesheet" type="text/css">
 
 </head>
-<body>
+<body class="bg-logout">
 <header>
     <%@ include file="/WEB-INF/views/menu.jsp" %>
 </header>
 <main role="main" class="container-fluid text-center">
+    <div class="jumbotron semi-transparent">
+
     <c:choose>
         <c:when test="${ sessionScope.uvmsConnection.token == 'disconnected'}">
-            <h1>You have been successfully logged out</h1>
+            <h1 class="display-4">You have been successfully logged out</h1>
         </c:when>
         <c:otherwise>
-            <h1 style="color: red">You are still connected.</h1>
+            <h1 class="display-4" style="color: red">You are still connected.</h1>
+            <hr class="my-4">
             <form class="form-signin" action="./logout" method="post" >
                 <h1 class="h3 mb-3 font-weight-normal">Confirm logout ?</h1>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Log Out</button>
             </form>
         </c:otherwise>
     </c:choose>
-
+    </div>
 </main>
 <%@ include file="/WEB-INF/views/footer.jsp" %>
 </body>
-<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="./scripts/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
 </html>

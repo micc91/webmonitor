@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -50,6 +51,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="information" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" form="qualified"/>
  *         &lt;element name="severity" type="{http://www.w3.org/2001/XMLSchema}int" form="qualified"/>
  *         &lt;element name="rankInSession" type="{http://www.w3.org/2001/XMLSchema}int" form="qualified"/>
+ *         &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string" form="qualified"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -81,7 +83,8 @@ import javax.xml.bind.annotation.XmlType;
     "priority",
     "information",
     "severity",
-    "rankInSession"
+    "rankInSession",
+    "user"
 })
 public class Launch {
 
@@ -107,6 +110,8 @@ public class Launch {
     protected String information;
     protected int severity;
     protected int rankInSession;
+    @XmlElement(required = true)
+    protected String user;
 
     /**
      * Gets the value of the ident property.
@@ -586,6 +591,30 @@ public class Launch {
      */
     public void setRankInSession(int value) {
         this.rankInSession = value;
+    }
+
+    /**
+     * Gets the value of the user property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the value of the user property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setUser(String value) {
+        this.user = value;
     }
 
 

@@ -26,33 +26,49 @@
                 }
         </style>
 </head>
-<body>
+<body class="bg-welcome">
 <header>
         <%@ include file="/WEB-INF/views/static-menu.jsp" %>
 </header>
 <main role="main" class="container">
-        <div class="jumbotron">
+        <div class="jumbotron slightly-transparent">
                 <h1 class="display-4">Welcome to Web Ops</h1>
-                <p class="lead">User interface on the monitoring features of Dollar Universe Scheduling Suite</p>
+                <p class="lead">User interface on the monitoring features of Dollar Universe Workload Automation</p>
                 <hr class="my-4">
-                <p>Monitor your job runs, server engines and batch queues directly in your favourite web browser</p>
-                <c:if test="${ empty sessionScope.uvmsConnection || sessionScope.uvmsConnection == 'disconnected'}">
-                        <a class="btn btn-primary btn-lg" href="./login" role="button">Login to UVMS</a>
-                </c:if>
+                <p>Monitor your workflows directly in your favourite web browser</p>
+                <c:choose>
+                        <c:when test="${ empty sessionScope.uvmsConnection || sessionScope.uvmsConnection.token == 'disconnected'}">
+                                <a class="btn btn-primary btn-lg" href="./login" role="button">Login to UVMS</a>
+                        </c:when>
+                        <c:otherwise>
+                                <p class="font-weight-bold">You already have a valid token (${sessionScope.uvmsConnection.token})</p>
+                        </c:otherwise>
+                </c:choose>
         </div>
-        <div class="py-4">
-                <h2>Dollar Universe Web Services</h2>
-                <div class="row mb-3">
-                        <div class="col-md-4 themed-grid-col">Status</div>
-                        <div class="col-md-8 themed-grid-col">${duwsStatus}</div>
+        <div class="card-deck mb-3 text-center slightly-transparent">
+                <div class="card mb-4 shadow-sm slightly-transparent">
+                        <div class="card-header">
+                                <h4 class="my-0 font-weight-normal">Dollar Universe Web Services</h4>
+                        </div>
+                        <div class="card-body">
+                                <div class="row mb-3">
+                                        <div class="col-md-4 themed-grid-col">Status</div>
+                                        <div class="col-md-8 themed-grid-col">${duwsStatus}</div>
+                                </div>
+                                <div class="row mb-3">
+                                        <div class="col-md-4 themed-grid-col">Version</div>
+                                        <div class="col-md-8 themed-grid-col">${duwsVersion}</div>
+                                </div>
+                                <c:choose>
+                                        <c:when test="${ empty duwsStatus || duwsStatus != 'available'}">
+                                                <a class="btn btn-primary btn-lg" href="./index?check=true" role="button">Check</a>
+                                        </c:when>
+                                        <c:otherwise>
+                                                <a class="btn btn-primary btn-lg" href="./index?check=true" role="button">Check again</a>
+                                        </c:otherwise>
+                                </c:choose>
+                        </div>
                 </div>
-                <div class="row mb-3">
-                        <div class="col-md-4 themed-grid-col">Version</div>
-                        <div class="col-md-8 themed-grid-col">${duwsVersion}</div>
-                </div>
-                <c:if test="${ empty duwsStatus || duwsStatus != 'available'}">
-                        <a class="btn btn-primary btn-lg" href="./index?check=true" role="button">Check</a>
-                </c:if>
         </div>
 </main>
 <footer class="fixed-bottom bg-dark footer mt-auto py-3">
@@ -63,9 +79,9 @@
         </div>
 </footer>
 </body>
-<!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="./scripts/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
 </html>
 

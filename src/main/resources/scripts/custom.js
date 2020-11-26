@@ -1,11 +1,110 @@
+function updateDatesInNewRunForm() {
+    var lwduration = 600000; // 10 minutes
+
+    var now = new Date();
+    var beginD = now.getDate().toString().padStart(2,'0')+"/"+(now.getMonth()+1).toString().padStart(2,'0')+"/"+now.getFullYear();
+    var beginT = now.getHours().toString().padStart(2,'0')+":"+now.getMinutes().toString().padStart(2,'0')+":"+now.getSeconds().toString().padStart(2,'0');
+
+    var endEpoch = now.getTime() + lwduration;
+    var end = new Date();
+    end.setTime(endEpoch);
+    var endD = end.getDate().toString().padStart(2,'0')+"/"+(end.getMonth()+1).toString().padStart(2,'0')+"/"+end.getFullYear();
+    var endT = end.getHours().toString().padStart(2,'0')+":"+end.getMinutes().toString().padStart(2,'0')+":"+end.getSeconds().toString().padStart(2,'0');
+
+    var pDate = beginD;
+
+    var beginDField = document.getElementById('inputStartD');
+    var beginTField = document.getElementById('inputStartT');
+    var endDField   = document.getElementById('inputEndD');
+    var endTField   = document.getElementById('inputEndT');
+    var pDateField  = document.getElementById('inputPdate');
+
+    if(beginDField.value === '') { beginDField.value = beginD; }
+    if(beginTField.value === '') { beginTField.value = beginT; }
+    if(endDField.value   === '') { endDField.value   = endD; }
+    if(endTField.value   === '') { endTField.value   = endT; }
+    if(pDateField.value  === '') { pDateField.value  = pDate; }
+}
+
+function updateNewRunForm(id) {
+    var newdata = document.getElementById(id).value.toString();
+    var fields = newdata.split("|");
+    var value = fields[0];
+    var inputTsk = document.getElementById('inputTask');
+    var inputSes = document.getElementById('inputSession');
+    var inputUpr = document.getElementById('inputUproc');
+    var inputMu = document.getElementById('inputMu');
+    var inputQueue = document.getElementById('inputQueue');
+    var inputUser = document.getElementById('inputUser');
+    if(id === 'inputTask') {
+        if(value !== 'none') {
+            var session = fields[1];
+            var uproc = fields[2];
+            var mu = fields[3];
+            var queue = fields[4];
+            var user = fields[5];
+            if(session === "") { session = 'none'; }
+            for(var ii = 0; ii<inputSes.options.length; ii++) {
+                var sesfields = inputSes.options[ii].value.split("|");
+                var sesname = sesfields[0];
+                if(sesname === session) {
+                    inputSes.selectedIndex = ii;
+                }
+            }
+            for(var ii = 0; ii<inputUpr.options.length; ii++) {
+                if(inputUpr.options[ii].value === uproc) {
+                    inputUpr.selectedIndex = ii;
+                }
+            }
+            for(var ii = 0; ii<inputMu.options.length; ii++) {
+                if(inputMu.options[ii].value === mu) {
+                    inputMu.selectedIndex = ii;
+                }
+            }
+            inputQueue.value = queue;
+            inputUser.value = user;
+        }
+    } else {
+        if(id === 'inputSession') {
+            inputTsk.selectedIndex = 0;
+            if(value !== 'none') {
+                var uproc = fields[1];
+                for(var ii = 0; ii<inputUpr.options.length; ii++) {
+                    if(inputUpr.options[ii].value === uproc) {
+                        inputUpr.selectedIndex = ii;
+                    }
+                }
+            }
+        } else {
+            if(id === 'inputUproc') {
+                inputTsk.selectedIndex = 0;
+                inputSes.selectedIndex = 0;
+            } else {
+                if(id === 'inputMu') {
+                    inputTsk.selectedIndex = 0;
+                }
+            }
+        }
+    }
+}
+
+function setAutoRefreshJobRuns(autoRefresh) {
+    var refreshInterval = document.getElementById('select-refresh').value;
+    if(refreshInterval === 'none') {
+        window.clearInterval(autoRefresh);
+    } else {
+        autoRefresh = window.setInterval(refreshJobRuns, refreshInterval);
+    }
+}
+
 function refreshJobRuns() {
+    var refreshInterval = document.getElementById('select-refresh').value;
     var offset = document.getElementById('select-offset').value;
-    window.location.search = '?refresh=true&offset='+offset;
+    window.location.search = '?refresh=true&offset='+offset+'&timer='+refreshInterval;
 }
 
 function searchInPage() {
     var table, rows;
-    var filter;
     var cell;
     var eltList;
     var found = 0;
@@ -63,7 +162,6 @@ function searchInPage() {
 
 function clearSearchInPage() {
     var table, rows;
-    var filter;
     var cell;
     var eltList;
     var found = 0;
@@ -118,59 +216,57 @@ function clearSearchInPage() {
     }
 }
 
-function sortTable(id, index, order) {
 
-    function sortTable(tblid, index, order) {
-        console.log('sorting table id=', tblid, " index=", index, " order=", order)
-        var table, rows, switching, i, x, y, shouldSwitch;
+function sortTable(tblid, index, order) {
+    console.log('sorting table id=', tblid, " index=", index, " order=", order)
+    var table, rows, switching, i, x, y, shouldSwitch;
 
-        table = document.getElementById('jobrunsTable');
-        allbtns = document.getElementsByClassName('btn-sm')
-        for(ii=0; ii<allbtns.length;ii++) {
-            allbtns[ii].setAttribute('class','btn btn-sm btn-outline-secondary')
-        }
-        selectedBtn = document.getElementById("btn-sort-"+index+"-"+order).setAttribute('class','btn btn-sm btn-secondary')
-        switching = true;
-        /*Make a loop that will continue until
-        no switching has been done:*/
-        while (switching) {
-            //start by saying: no switching is done:
-            switching = false;
-            rows = table.rows;
-            /*Loop through all table rows (except the
-            first, which contains table headers):*/
-            for (i = 1; i < (rows.length - 1); i++) {
-                //start by saying there should be no switching:
-                shouldSwitch = false;
-                /*Get the two elements you want to compare,
-                one from current row and one from the next:*/
-                x = rows[i].getElementsByTagName("TD")[index];
-                y = rows[i + 1].getElementsByTagName("TD")[index];
-                //console.log(i,"elt x=",x.innerText.toString()," elt y=", y.innerText.toString())
-                //check if the two rows should switch place:
-                if(order == 'asc') {
-                    if (x.innerText.toString() < y.innerText.toString()) {
-                        //if so, mark as a switch and break the loop:
-                        shouldSwitch = true;
-                        break;
-                    }
-                } else {
-                    if (x.innerText.toString() > y.innerText.toString()) {
-                        //if so, mark as a switch and break the loop:
-                        shouldSwitch = true;
-                        break;
-                    }
+    table = document.getElementById('jobrunsTable');
+    allbtns = document.getElementsByClassName('btn-sm')
+    for(ii=0; ii<allbtns.length;ii++) {
+        allbtns[ii].setAttribute('class','btn btn-sm btn-outline-secondary')
+    }
+    selectedBtn = document.getElementById("btn-sort-"+index+"-"+order).setAttribute('class','btn btn-sm btn-secondary')
+    switching = true;
+    /*Make a loop that will continue until
+    no switching has been done:*/
+    while (switching) {
+        //start by saying: no switching is done:
+        switching = false;
+        rows = table.rows;
+        /*Loop through all table rows (except the
+        first, which contains table headers):*/
+        for (i = 1; i < (rows.length - 1); i++) {
+            //start by saying there should be no switching:
+            shouldSwitch = false;
+            /*Get the two elements you want to compare,
+            one from current row and one from the next:*/
+            x = rows[i].getElementsByTagName("TD")[index];
+            y = rows[i + 1].getElementsByTagName("TD")[index];
+            //console.log(i,"elt x=",x.innerText.toString()," elt y=", y.innerText.toString())
+            //check if the two rows should switch place:
+            if(order === 'asc') {
+                if (x.innerText.toString() < y.innerText.toString()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
+                }
+            } else {
+                if (x.innerText.toString() > y.innerText.toString()) {
+                    //if so, mark as a switch and break the loop:
+                    shouldSwitch = true;
+                    break;
                 }
             }
-            if (shouldSwitch) {
-                //console.log("switching row ",i)
-                /*If a switch has been marked, make the switch
-                and mark that a switch has been done:*/
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-            } else {
-                console.log('no switch')
-            }
+        }
+        if (shouldSwitch) {
+            //console.log("switching row ",i)
+            /*If a switch has been marked, make the switch
+            and mark that a switch has been done:*/
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+        } else {
+            console.log('no switch')
         }
     }
 }
@@ -278,12 +374,18 @@ function copyTableToArray(tblid) {
 
 /* globals Chart:false, feather:false */
 /*(showHideChart)()*/
-function showHideChart(xdata, ydata) {
+function showHideChart(xdata, ydata, graphType) {
     'use strict'
 
-    //feather.replace()
+    var otherType;
 
-    var btn = document.getElementById('btn-chart');
+    if(graphType === 'bar') {
+        otherType = 'pie'
+    } else {
+        otherType = 'bar';
+    }
+    var otherBtn = document.getElementById('btn-chart-'+otherType);
+    var btn = document.getElementById('btn-chart-'+graphType);
     var show;
     // Graphs
     var ctx = document.getElementById('jobChart');
@@ -296,6 +398,7 @@ function showHideChart(xdata, ydata) {
 
     if(show) {
         btn.setAttribute('class', 'btn btn-sm btn-secondary');
+        otherBtn.setAttribute('class','btn btn-sm btn-outline-secondary');
         ctx.style.display = '';
         //ctx.style.height = '500';
         // eslint-disable-next-line no-unused-vars
@@ -346,7 +449,7 @@ function showHideChart(xdata, ydata) {
         }
 
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: graphType,
             data: {
                 labels: xdata,
                 datasets: [{

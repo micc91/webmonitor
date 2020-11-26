@@ -1,9 +1,6 @@
 package com.duws;
 
-import com.webops.duas.JobInfo;
-import com.webops.duas.JobsList;
-import com.webops.duas.NodesList;
-import com.webops.duas.UvmsConnection;
+import com.webops.duas.*;
 import com.webops.duws.proxy.*;
 import org.apache.log4j.Logger;
 
@@ -14,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Client {
     private static final Logger logger = Logger.getLogger(Client.class);
@@ -52,7 +50,6 @@ public class Client {
 
     public ContextHolder setContext(UvmsConnection connection, String company, String node, String iArea) {
         token = connection.getToken();
-        ExecutionId execId = new ExecutionId();
         Context currentCtx = new Context();
         Envir currentEnvir = new Envir();
         ContextHolder ctxHolder = new ContextHolder();
@@ -64,7 +61,7 @@ public class Client {
         JAXBElement<EnvirStatus> status = new JAXBElement<>(ss.getServiceName(),EnvirStatus.class,EnvirStatus.fromValue("CONNECTED"));
         currentEnvir.setStatus(status);
         currentCtx.setEnvir(currentEnvir);
-        logger.info(this.getClass().getName()+"/setContext: currentEnvir="+currentEnvir.getCompany()+","+currentEnvir.getNode()+","+currentEnvir.getArea());
+        logger.info(this.getClass().getName()+"/setContext: currentEnvir="+currentEnvir.getCompany()+","+currentEnvir.getNode()+","+currentEnvir.getArea().getValue());
         // Setting up the context
         ctxHolder.setContext(currentCtx);
         ctxHolder.setToken(token);
@@ -726,14 +723,301 @@ public class Client {
 
     }
 
+    public boolean getListTask(UvmsConnection connection, String company, String node, String iArea, TaskList objList) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+
+        List<TaskItem> responseList = null;
+        TaskFilter filter = new TaskFilter();
+        filter.setTask("*");
+        filter.setSession("*");
+        filter.setUproc("*");
+        filter.setMu("*");
+
+        try {
+            responseList = service.getListTask(ctxHolder, filter);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getListTask failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getListTask timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+            responseList = null;
+        }
+
+        objList.reset();
+        int idx=0;
+        if(responseList != null) {
+            for (TaskItem item : responseList) {
+                ret = ret & objList.addItem(ctxHolder.getContext().getEnvir(), item);
+                idx++;
+                logger.info(this.getClass().getName() + " [Adding " + idx + "] " + ctxHolder.getContext().getEnvir().getNode() + ":" + ctxHolder.getContext().getEnvir().getCompany() + ":" + ctxHolder.getContext().getEnvir().getArea().getValue() + ".");
+            }
+            ret = true;
+        }
+
+        return ret;
+    }
+
+    public boolean getListSession(UvmsConnection connection, String company, String node, String iArea, SessionList objList) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+
+        SessionFilter filter = new SessionFilter();
+        filter.setSession("*");
+
+        List<SessionItem> responseList = null;
+
+        try {
+            responseList = service.getListSession(ctxHolder, filter);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getListSession failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getListSession timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        objList.reset();
+        int idx=0;
+        if(responseList != null) {
+            for (SessionItem item : responseList) {
+                ret = ret & objList.addItem(ctxHolder.getContext().getEnvir(), item);
+                idx++;
+                logger.info(this.getClass().getName() + " [Adding " + idx + "] " + ctxHolder.getContext().getEnvir().getNode() + ":" + ctxHolder.getContext().getEnvir().getCompany() + ":" + ctxHolder.getContext().getEnvir().getArea().getValue() + ".");
+            }
+            ret = true;
+        }
+
+        return ret;
+    }
+
+    public boolean getListUproc(UvmsConnection connection, String company, String node, String iArea, UprocList objList) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+        List<UprocItem> responseList = null;
+
+        UprocFilter filter = new UprocFilter();
+        filter.setUproc("*");
+
+        try {
+            responseList = service.getListUproc(ctxHolder, filter);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getListUproc failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getListUproc timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        objList.reset();
+        int idx=0;
+        if(responseList != null) {
+            for (UprocItem item : responseList) {
+                ret = ret & objList.addItem(ctxHolder.getContext().getEnvir(), item);
+                idx++;
+                logger.info(this.getClass().getName() + " [Adding " + idx + "] " + ctxHolder.getContext().getEnvir().getNode() + ":" + ctxHolder.getContext().getEnvir().getCompany() + ":" + ctxHolder.getContext().getEnvir().getArea().getValue() + ".");
+            }
+            ret = true;
+        }
+
+        return ret;
+    }
+
+    public boolean getListMu(UvmsConnection connection, String company, String node, String iArea, MuList objList) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, iArea);
+        List<MuItem> responseList = null;
+
+        MuFilter filter = new MuFilter();
+        filter.setMu("*");
+
+        try {
+            responseList = service.getListMU(ctxHolder, filter);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getListMu failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 0;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/getListMu timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        objList.reset();
+        int idx=0;
+        if(responseList != null) {
+            for (MuItem item : responseList) {
+                ret = ret & objList.addItem(ctxHolder.getContext().getEnvir(), item);
+                idx++;
+                logger.info(this.getClass().getName() + " [Adding " + idx + "] " + ctxHolder.getContext().getEnvir().getNode() + ":" + ctxHolder.getContext().getEnvir().getCompany() + ":" + ctxHolder.getContext().getEnvir().getArea().getValue() + ".");
+            }
+            ret = true;
+        }
+
+        return ret;
+    }
+
+    public boolean addLaunchFromTask(UvmsConnection connection, String company, String node, String area, JobInfo newRun) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, area);
+
+        TaskId objId = new TaskId();
+        objId.setTask(newRun.getEntry("task"));
+        objId.setSession(newRun.getEntry("session"));
+        objId.setUproc(newRun.getEntry("uproc"));
+        objId.setMu(newRun.getEntry("mu"));
+        LaunchId newLaunchId = new LaunchId();
+
+        try {
+            newLaunchId = service.addLaunchFromTask(ctxHolder, objId);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/addLaunchFromTask failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 255;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/addLaunchFromTask timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        if(newLaunchId != null) {
+            newRun.addEntry("numlanc", newLaunchId.getNumLanc());
+            logger.info(this.getClass().getName() + " Launch "+newRun.getEntry("numlanc")+" created on " + ctxHolder.getContext().getEnvir().getNode() + ":" + ctxHolder.getContext().getEnvir().getCompany() + ":" + ctxHolder.getContext().getEnvir().getArea().getValue() + ".");
+        }
+
+        return ret;
+    }
+
+    private String parseDate(String format, String input) {
+
+        if (input == null) {
+            logger.info("parseDate: input = NULL");
+            return "";
+        }
+
+        String[] sepList = new String [] { "/","-"," " };
+        String separator = "/";
+        for(String sep : sepList) {
+            if (format.contains(sep)) {
+                separator = sep; break;
+            } else {
+                //logger.info("parseDate: format "+format+" doesnt contain "+sep );
+            }
+        }
+        Pattern p = Pattern.compile(separator);
+        logger.info("parseDate: input="+input+", separator="+separator+ ", pattern="+p.toString());
+        String[] fields = p.split(input);
+        String[] fieldTypes = p.split(format);
+        int ii = 0;
+        String year = "";
+        String month = "";
+        String day = "";
+        for(String field: fields) {
+            if(fieldTypes[ii].equals("yyyy")) {
+                year = field;
+            } else if (fieldTypes[ii].equals("mm")) {
+                month = field;
+            } else if (fieldTypes[ii].equals(("dd"))) {
+                day = field;
+            }
+            ii++;
+        }
+        return year+month+day;
+    }
+
+    public boolean addLaunch(UvmsConnection connection, String company, String node, String area, JobInfo newRun) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, area);
+
+        LaunchId launchId = new LaunchId();
+        launchId.setTask("");
+        launchId.setSession(newRun.getEntry("session"));
+        launchId.setUproc(newRun.getEntry("uproc"));
+        launchId.setMu(newRun.getEntry("mu"));
+
+        Launch objId = new Launch();
+        objId.setBeginDate(parseDate("dd/mm/yyyy", newRun.getEntry("start_date")));
+        objId.setBeginHour(newRun.getEntry("start_time").replaceAll(":",""));
+        objId.setEndDate(parseDate("dd/mm/yyyy", newRun.getEntry("end_date")));
+        objId.setEndHour(newRun.getEntry("end_time").replaceAll(":",""));
+        objId.setProcessingDate(parseDate("dd/mm/yyyy", newRun.getEntry("pdate")));
+        objId.setStep("0");
+        objId.setQueue(newRun.getEntry("queue"));
+        objId.setInformation("");
+        objId.setPriority("100");
+        objId.setSeverity(0);
+        objId.setUser(newRun.getEntry("user"));
+        objId.setIdent(launchId);
+
+        LaunchId newLaunchId = new LaunchId();
+
+        try {
+            newLaunchId = service.addLaunch(ctxHolder, objId);
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/addLaunchFromTask failed: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 255;
+            errorMessage = e.getFaultInfo().getMessage();
+            logger.error(this.getClass().getName()+"/addLaunchFromTask timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        if(newLaunchId != null) {
+            newRun.addEntry("numlanc", newLaunchId.getNumLanc());
+            logger.info(this.getClass().getName() + " Launch "+newRun.getEntry("numlanc")+" created on " + ctxHolder.getContext().getEnvir().getNode() + ":" + ctxHolder.getContext().getEnvir().getCompany() + ":" + ctxHolder.getContext().getEnvir().getArea().getValue() + ".");
+        }
+
+        return ret;
+    }
+
+    //public addLaunchFromTask2() {}  ==> with variables....
 
     //public void rerunExecution()
     //public void updateLaunch()
-
-    //public void addLaunch()
-    //public addLaunchFromTask2() {}
-    //public addLaunchFromTask() {}
-
 
     //public stopEngine()
     //public restartEngine()
@@ -741,7 +1025,6 @@ public class Client {
     //public startQueue()
     //public void resetQueue()
     //public void getListEvent()
-    //public void listEngines()
-    //public void listQueues()
+    //+delete, update, add event
 
 }

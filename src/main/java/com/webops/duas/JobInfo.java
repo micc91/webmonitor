@@ -55,7 +55,41 @@ public class JobInfo extends ObjectsList {
         varend = 0;
     }
 
-    private void addEntry(String field, String value) {
+    public void log() {
+        String value;
+        for (Map<String, String> item : items) {
+            for (String entry : item.keySet()) {
+                value = item.get(entry);
+                if (value == null) {
+                    value = "NULL";
+                }
+                logger.info(this.getClass().getName() + ": " + entry + "=" + value);
+            }
+        }
+    }
+
+    public String getEntry(String key) {
+        for (Map<String, String> item : items) {
+            for (String entry : item.keySet()) {
+                if (entry.equals(key)) {
+                    return item.get(entry);
+                }
+            }
+        }
+        return "";
+    }
+
+    public void putEntry(String key, String value) {
+        for (Map<String, String> item : items) {
+            for (String entry : item.keySet()) {
+                if (entry.equals(key)) {
+                    item.put(entry, value);
+                }
+            }
+        }
+    }
+
+    public void addEntry(String field, String value) {
         Map<String, String> entry = new HashMap<>();
 
         entry.put(field,value);
@@ -84,6 +118,7 @@ public class JobInfo extends ObjectsList {
         addEntry("queue",item.getData().getQueue());
         addEntry("priority",item.getData().getPriority());
         addEntry("numentry",item.getData().getNumEntry());
+        addEntry("user",item.getData().getUser());
         addEntry("step", "");
 
         Map<String, String> entry = new HashMap<>();

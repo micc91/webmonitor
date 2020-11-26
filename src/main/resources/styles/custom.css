@@ -19,81 +19,58 @@ body {
     }
 }
 
-.bg {
-    background-image: url("../media/nuages.jpg");
-    height: 90%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-.bg2 {
-    background-image: url("../media/Vue_du_mont_ventoux.jpg");
-    height: 90%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-.bg3 {
-    background-image: url("../media/Massif_Mont_Blanc.jpg");
-    height: 90%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
 .bg-welcome {
-    background-image: linear-gradient(
-            rgba(0, 0, 0, 0.45),
-            rgba(0, 0, 0, 0.45)
-    ),url("../media/Reseau_Mondial.jpg");
-    height: 90%;
+    background-image: url("../media/Reseau_Mondial.jpg");
+    height: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 .bg-login {
-    background-image: linear-gradient(
-            rgba(0, 0, 0, 0.45),
-            rgba(0, 0, 0, 0.45)
-    ),url("../media/Serrure.jpg");
-    height: 90%;
+    background-image: url("../media/Serrure.jpg");
+    height: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 .bg-logout {
-    background-image: linear-gradient(
-            rgba(0, 0, 0, 0.45),
-            rgba(0, 0, 0, 0.45)
-    ),url("../media/Serrure.jpg");
-    height: 90%;
+    background-image: url("../media/Serrure.jpg");
+    height: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 .bg-dashboard {
-    background-image: linear-gradient(
-            rgba(0, 0, 0, 0.45),
-            rgba(0, 0, 0, 0.45)
-    ),url("../media/Fond_degrade_bleu_alphanum.jpg");
-    height: 90%;
+    background-image: url("../media/Fond_degrade_bleu_alphanum.jpg");
+    height: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 .bg-other {
-    background-image: linear-gradient(
-            rgba(0, 0, 0, 0.45),
-            rgba(0, 0, 0, 0.45)
-    ),url("./media/Colonnes_binaires.jpg");
-    height: 90%;
+    background-image: url("./media/Colonnes_binaires.jpg");
+    height: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+}
+
+.semi-transparent {
+    background: rgba(255,255,255,0.5);
+}
+
+.slightly-transparent {
+    background: rgba(255,255,255,0.8);
+}
+
+.semi-gradient-transparent {
+    background: linear-gradient(
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0));
 }
 
 .error-msg {
@@ -140,6 +117,7 @@ body {
     color: yellow;
 }
 
+/* Row of a job run selected in dashboard */
 .selected-row {
     color: blue;
     font-weight: bold;
@@ -160,9 +138,38 @@ body {
     color: white;
 }
 
-.tooltip > .tooltip-inner {
+/* Feather Icons */
+.feather {
+    width: 24px;
+    height: 24px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.feather-sm {
+    width: 12px;
+    height: 12px;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: child;
+}
+
+/* For the pages displayed with grid */
+.themed-grid-col {
+     padding-top: 15px;
+     padding-bottom: 15px;
+     background-color: rgba(86, 61, 124, .15);
+     border: 1px solid rgba(86, 61, 124, .2);
+ }
+
+.themed-container {
     padding: 15px;
-    font-size: 120%;
-    background-color: black;
-    color: white;
+    margin-bottom: 30px;
+    background-color: rgba(0, 0, 0, 1);
+    border: 1px solid rgba(123, 123, 123, .4);
 }

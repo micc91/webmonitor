@@ -9,7 +9,7 @@
 <!--      <li class="nav-item"><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a></li>
 -->
       <c:choose>
-        <c:when test="${uvmsConnection.token == 'disconnected'}">
+        <c:when test="${ empty sessionScope.uvmsConnection || sessionScope.uvmsConnection.token == 'disconnected'}">
           <c:set var="loginstatus" value="" scope="request"/>
           <c:set var="logoutstatus" value="disabled" scope="request"/>
         </c:when>
@@ -24,9 +24,11 @@
     </ul>
 <!--    <form class="form-inline mt-2 mt-md-0">-->
     <div class="form-inline mt-2 mt-md-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" id="searchtext" >
-      <button class="btn btn-outline-success my-2 my-sm-0" onclick="searchInPage()">Search</button>
-      <button class="btn btn-outline-success my-2 my-sm-0" onclick="clearSearchInPage()">Clear</button>
+      <c:set var="disabled" value="disabled"/>
+      <c:if test="${currentPage == 'dashboard' || currentPage == 'info'}"><c:set var="disabled" value=""/></c:if>
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" id="searchtext" ${disabled} >
+      <button class="btn btn-outline-success my-2 my-sm-0" onclick="searchInPage()"  ${disabled} >Search</button>
+<%--      <button class="btn btn-outline-success my-2 my-sm-0" onclick="clearSearchInPage()"  ${disabled} >Clear</button>--%>
     </div>
 <!--    </form>-->
   </div>

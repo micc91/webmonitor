@@ -8,16 +8,24 @@
       <li class="nav-item active"><a class="nav-link" href="./index">Home <span class="sr-only">(current)</span></a></li>
 <!--      <li class="nav-item"><a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a></li>
 -->
+      <c:choose>
+        <c:when test="${ empty sessionScope.uvmsConnection || sessionScope.uvmsConnection.token == 'disconnected'}">
           <c:set var="loginstatus" value="" scope="request"/>
           <c:set var="logoutstatus" value="disabled" scope="request"/>
+        </c:when>
+        <c:otherwise>
+          <c:set var="loginstatus" value="disabled" scope="request"/>
+          <c:set var="logoutstatus" value="" scope="request"/>
+        </c:otherwise>
+      </c:choose>
 
       <li class="nav-item"><a class="nav-link ${loginstatus}" href="./login">Login</a></li>
       <li class="nav-item"><a class="nav-link ${logoutstatus}" href="./dashboard">Dashboard</a></li>
       <li class="nav-item"><a class="nav-link ${logoutstatus}" href="./logout">Logout</a></li>
     </ul>
     <form class="form-inline mt-2 mt-md-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" disabled>
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit" disabled>Search</button>
     </form>
   </div>
 </nav>

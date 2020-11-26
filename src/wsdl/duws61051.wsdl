@@ -221,6 +221,7 @@
       <xs:element form="qualified" minOccurs="0" name="priority" type="xs:string"/>
       <xs:element form="qualified" minOccurs="0" name="numEntry" type="xs:string"/>
       <xs:element minOccurs="0" name="info" type="xs:string"/>
+      <xs:element form="qualified" name="user" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="variable">
@@ -501,6 +502,7 @@
       <xs:element form="qualified" minOccurs="0" name="information" type="xs:string"/>
       <xs:element form="qualified" name="severity" type="xs:int"/>
       <xs:element form="qualified" name="rankInSession" type="xs:int"/>
+      <xs:element form="qualified" name="user" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="addLaunchResponse">

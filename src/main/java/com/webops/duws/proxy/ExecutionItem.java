@@ -31,6 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="priority" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" form="qualified"/>
  *         &lt;element name="numEntry" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0" form="qualified"/>
  *         &lt;element name="info" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string" form="qualified"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -54,7 +55,8 @@ import javax.xml.bind.annotation.XmlType;
     "queue",
     "priority",
     "numEntry",
-    "info"
+    "info",
+    "user"
 })
 public class ExecutionItem {
 
@@ -73,6 +75,8 @@ public class ExecutionItem {
     protected String numEntry;
     @XmlElement(namespace = "")
     protected String info;
+    @XmlElement(required = true)
+    protected String user;
 
     /**
      * Gets the value of the ident property.
@@ -400,6 +404,30 @@ public class ExecutionItem {
      */
     public void setInfo(String value) {
         this.info = value;
+    }
+
+    /**
+     * Gets the value of the user property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getUser() {
+        return user;
+    }
+
+    /**
+     * Sets the value of the user property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setUser(String value) {
+        this.user = value;
     }
 
 }
