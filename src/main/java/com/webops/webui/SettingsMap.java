@@ -26,6 +26,7 @@ public class SettingsMap {
         fields.add("order");
         fields.add("offset");
         fields.add("filter");
+        fields.add("timer");
 
         name="settings";
     }
@@ -49,9 +50,11 @@ public class SettingsMap {
             }
         }
         List<String> paramList = (List<String>) session.getAttribute("selectedContext");
-        if(!paramList.isEmpty()) {
-            selectedContext.clear();
-            selectedContext = paramList;
+        if(paramList != null) {
+            if (!paramList.isEmpty()) {
+                selectedContext.clear();
+                selectedContext = paramList;
+            }
         }
     }
 

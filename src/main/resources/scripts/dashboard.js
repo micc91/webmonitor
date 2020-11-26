@@ -3,7 +3,7 @@ function highlight(e) {
   e.target.parentNode.className = 'selected-row';
 }
 
-var table = document.getElementById('jobrunsTable'),
+var table = document.getElementById('jobRunsTableBody'),
     selected = table.getElementsByClassName('selected-row');
 table.onclick = highlight;
 

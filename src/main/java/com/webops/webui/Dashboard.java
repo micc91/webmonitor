@@ -79,6 +79,12 @@ public class Dashboard extends HttpServlet {
         settings.setFromRequest(request);
 
         JobRuns jobRuns = new JobRuns();
+        if(request.getAttribute("jobsList") == null) {
+            jobRuns.getJobsList().setInRequest(request);
+        }
+        if(request.getAttribute("nodesList") == null) {
+            jobRuns.getNodesList().setInRequest(request);
+        }
         boolean ret = false;
 
         boolean refresh = settings.getItem("refresh").equals("true");

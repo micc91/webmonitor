@@ -136,6 +136,7 @@ public class JobsList extends ObjectsList {
         entry.put("pdate",item.getProcessingDate());
         entry.put("information",item.getInfo());
         entry.put("queue",item.getQueue());
+        entry.put("user", item.getUser());
         entry.put("priority",item.getPriority());
         entry.put("step", "");
 
@@ -168,6 +169,7 @@ public class JobsList extends ObjectsList {
         entry.put("pdate",item.getProcessingDate());
         entry.put("information","");
         entry.put("queue",item.getQueue());
+        entry.put("user", "");
         entry.put("priority",item.getPriority());
         entry.put("step", item.getStep());
 

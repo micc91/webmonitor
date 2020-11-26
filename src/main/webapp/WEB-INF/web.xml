@@ -25,7 +25,7 @@
 	<servlet>
   	  <servlet-name>Login</servlet-name>
 	  <display-name>Login</display-name>
-	  <description>Welcome page</description>
+	  <description>Authentication page</description>
 	  <servlet-class>com.webops.webui.Login</servlet-class>
 	</servlet>
 
@@ -56,6 +56,10 @@
 		<servlet-name>Welcome</servlet-name>
 		<servlet-class>com.webops.webui.Welcome</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>NewRun</servlet-name>
+		<servlet-class>com.webops.webui.NewRun</servlet-class>
+	</servlet>
 
 	<servlet-mapping>
 		<servlet-name>Dashboard</servlet-name>
@@ -76,5 +80,9 @@
 	<servlet-mapping>
 		<servlet-name>Welcome</servlet-name>
 		<url-pattern>/index</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>NewRun</servlet-name>
+		<url-pattern>/new</url-pattern>
 	</servlet-mapping>
 </web-app>

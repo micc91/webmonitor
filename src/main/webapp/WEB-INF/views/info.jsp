@@ -23,24 +23,10 @@
         <!-- Custom styles for this template -->
         <link href="./styles/signin.css" rel="stylesheet" type="text/css">
         <link href="./styles/custom.css" rel="stylesheet" type="text/css">
-        <style>
-            .themed-grid-col {
-                padding-top: 15px;
-                padding-bottom: 15px;
-                background-color: rgba(86, 61, 124, .15);
-                border: 1px solid rgba(86, 61, 124, .2);
-            }
-
-            .themed-container {
-                padding: 15px;
-                margin-bottom: 30px;
-                background-color: rgba(0, 0, 0, 1);
-                border: 1px solid rgba(123, 123, 123, .4);
-            }
-        </style>
     </head>
 	<body>
         <header>
+            <c:set var="currentPage" value="info"/>
             <%@ include file="menu.jsp" %>
         </header>
         <main role="main">
@@ -128,6 +114,10 @@
                             <div class="col-md-6 themed-grid-col">${param.queue}</div>
                         </div>
                         <div class="row">
+                            <div class="col-md-6 themed-grid-col">Submission Account</div>
+                            <div class="col-md-6 themed-grid-col">${param.user}</div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-6 themed-grid-col">Priority</div>
                             <div class="col-md-6 themed-grid-col">${param.priority}</div>
                         </div>
@@ -202,8 +192,9 @@
         </main>
         <%@ include file="footer.jsp" %>
     </body>
-    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="./scripts/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
     <script src="./scripts/custom.js"></script>
 </html>
