@@ -20,13 +20,13 @@ public class SettingsMap {
     protected String name;
 
     protected SettingsMap() {
-        fields.add("refresh");
-        fields.add("sort");
-        fields.add("order");
-        fields.add("offset");
-        fields.add("filter");
-        fields.add("timer");
-
+        fields.add("refresh"); // refresh job runs or not (true/false)
+        fields.add("sort"); // sort criteria for job runs list
+        fields.add("order"); // sort order for job runs list
+        fields.add("offset"); // offset time to start date when requesting job runs (H - 5 min, ...)
+        fields.add("filter"); // string to search in page
+        fields.add("timer"); // timer interval if automatic refresh of job runs
+        fields.add("chart"); // display chart bar or pie or none (no display)
         name="settings";
     }
 
@@ -63,7 +63,10 @@ public class SettingsMap {
             param = request.getParameter(field);
             if(param != null) {
                 if (!param.isEmpty()) {
-                    items.put(field, param);
+                    // if a value is not already present in map:
+                    if(items.get(field) == null || items.get(field).isEmpty()) {
+                        items.put(field, param);
+                    }
                 }
             }
         }

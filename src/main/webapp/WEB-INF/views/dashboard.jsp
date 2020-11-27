@@ -97,7 +97,7 @@
                             </button>
                         </div>
                         <div class="btn-group mr-2" > <%--role="group" aria-label="display group" >--%>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-dhb-refresh-manual" onclick="refreshJobRuns()">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-dhb-refresh-manual" onclick="refreshJobRunsManually()">
                                 <svg class="feather" ><use xlink:href="./media/feather-sprite.svg#refresh-cw"/></svg>
                             </button>
                             <c:set var="refresh30" value=""/>
@@ -111,12 +111,7 @@
                                 <c:when test="${settings.timer == 'none'}"><c:set var="refreshNone" value="selected"/></c:when>
                                 <c:otherwise><c:set var="selectedNone" value="selected"/></c:otherwise>
                             </c:choose>
-                            <select class="btn btn-sm btn-outline-secondary dropdown-toggle" id="select-refresh" onchange="var autoRefresh = window.setInterval(refreshJobRuns, ${settings.timer}); var refreshInterval = document.getElementById('select-refresh').value;
-    if(refreshInterval == 'none') {
-        window.clearInterval(autoRefresh);
-    } else {
-        autoRefresh = window.setInterval(refreshJobRuns, refreshInterval);
-    }">
+                            <select class="btn btn-sm btn-outline-secondary dropdown-toggle" id="select-refresh" onchange="setAutoRefreshJobRuns()">
                                 <option value="none" ${refreshNone} >Manual</option>
                                 <option value="30000"   ${refresh30}   >30 secs</option>
                                 <option value="60000"   ${refresh60}   >1 minute</option>
@@ -140,7 +135,7 @@
                                 <c:when test="${settings.offset == 'none'}"><c:set var="selectedNone" value="selected"/></c:when>
                                 <c:otherwise><c:set var="selectedNone" value="selected"/></c:otherwise>
                             </c:choose>
-                            <select class="btn btn-sm btn-outline-secondary dropdown-toggle" id="select-offset" onchange="refreshJobRuns()">
+                            <select class="btn btn-sm btn-outline-secondary dropdown-toggle" id="select-offset" onchange="refreshJobRunsManually()">
                                 <option value="none" ${selectedNone} >Any Time</option>
                                 <option value="5"    ${selected5}    >H - 5 min</option>
                                 <option value="60"   ${selected60}   >H - 1 hour</option>

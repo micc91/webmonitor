@@ -169,7 +169,7 @@
                             <span class="error-msg">${errors['inputEndT']}</span>
                         </div>
                     </div>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit" id="btn-new-run" onclick="animateStarting('btn-new-run');" >Run</button>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" id="btn-new-run" onclick="animateLoading('btn-new-run');" >Run</button>
                 </form>
             </div>
         </main>

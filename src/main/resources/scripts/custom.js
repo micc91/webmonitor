@@ -1,11 +1,12 @@
 function animateLoading(eltId) {
     var elt = document.getElementById(eltId);
-    elt.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
-}
-
-function animateStarting(eltId) {
-    var elt = document.getElementById(eltId);
-    elt.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating launch...';
+    var message = 'Loading...';
+    if(eltId === 'btn-new-run') {
+        message = 'Creating launch...';
+    } else if (eltId === 'btn-signin') {
+        message = 'Signing in...';
+    }
+    elt.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> '+message;
 }
 
 function updateDatesInNewRunForm() {
@@ -98,21 +99,47 @@ function updateNewRunForm(id) {
     }
 }
 
-function setAutoRefreshJobRuns(autoRefresh) {
+function refreshJobRunsManually() {
+    animateLoading('btn-dhb-refresh-manual');
     var refreshInterval = document.getElementById('select-refresh').value;
-    if(refreshInterval === 'none') {
-        window.clearInterval(autoRefresh);
-    } else {
-        autoRefresh = window.setInterval(refreshJobRuns, refreshInterval);
+    var offset = document.getElementById('select-offset').value;
+    var btnChartPie = document.getElementById('btn-chart-pie');
+    var btnChartBar = document.getElementById('btn-chart-bar');
+    var displayChart = 'none';
+    if(btnChartBar.className === 'btn btn-sm btn-secondary') {
+        displayChart = 'bar';
+    } else if(btnChartPie.className === 'btn btn-sm btn-secondary') {
+        displayChart = 'pie';
     }
+    if(refreshInterval !== 'none') {
+        window.setTimeout(refreshJobRuns, refreshInterval);
+    }
+    window.location.search = '?refresh=true&offset='+offset+'&chart='+displayChart+'&timer='+refreshInterval;
 }
 
 function refreshJobRuns() {
     animateLoading('btn-dhb-refresh-manual');
-
     var refreshInterval = document.getElementById('select-refresh').value;
     var offset = document.getElementById('select-offset').value;
-    window.location.search = '?refresh=true&offset='+offset+'&timer='+refreshInterval;
+    var btnChartPie = document.getElementById('btn-chart-pie');
+    var btnChartBar = document.getElementById('btn-chart-bar');
+    var displayChart = 'none';
+    if(btnChartBar.className === 'btn btn-sm btn-secondary') {
+        displayChart = 'bar';
+    } else if(btnChartPie.className === 'btn btn-sm btn-secondary') {
+        displayChart = 'pie';
+    }
+    if(refreshInterval !== 'none') {
+        window.setTimeout(refreshJobRuns, refreshInterval);
+        window.location.search = '?refresh=true&offset='+offset+'&chart='+displayChart+'&timer='+refreshInterval;
+    }
+}
+
+function setAutoRefreshJobRuns() {
+    var refreshInterval = document.getElementById('select-refresh').value;
+    if(refreshInterval !== 'none') {
+        window.setTimeout(refreshJobRuns, refreshInterval);
+    }
 }
 
 function searchInPage() {
@@ -460,32 +487,54 @@ function showHideChart(xdata, ydata, graphType) {
             }
         }
 
-        var myChart = new Chart(ctx, {
-            type: graphType,
-            data: {
-                labels: xdata,
-                datasets: [{
-                    data: ydata,
-                    lineTension: 0,
-                    backgroundColor: bgcolor,
-                    borderColor: bordercolor,
-                    borderWidth: 2,
-                    pointBackgroundColor: '#007bff'
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: false
-                        }
+        if(graphType === 'bar') {
+            var myChart = new Chart(ctx, {
+                type: graphType,
+                data: {
+                    labels: xdata,
+                    datasets: [{
+                        data: ydata,
+                        lineTension: 0,
+                        backgroundColor: bgcolor,
+                        borderColor: bordercolor,
+                        borderWidth: 2,
+                        pointBackgroundColor: '#007bff'
                     }]
                 },
-                legend: {
-                    display: false
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: false
+                            }
+                        }]
+                    },
+                    legend: {
+                        display: false
+                    }
                 }
-            }
-        })
+            })
+        } else {
+            var myChart = new Chart(ctx, {
+                type: graphType,
+                data: {
+                    labels: xdata,
+                    datasets: [{
+                        data: ydata,
+                        lineTension: 0,
+                        backgroundColor: bgcolor,
+                        borderColor: bordercolor,
+                        borderWidth: 2,
+                        pointBackgroundColor: '#007bff'
+                    }]
+                },
+                options: {
+                    legend: {
+                        display: false
+                    }
+                }
+            })
+        }
 
     } else {
         btn.setAttribute('class', 'btn btn-sm btn-outline-secondary');
