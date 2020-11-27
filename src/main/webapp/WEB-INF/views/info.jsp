@@ -30,52 +30,59 @@
             <%@ include file="menu.jsp" %>
         </header>
         <main role="main">
-            <div class="container">
+            <div class="container px-lg-5">
     		<h1>Job Information</h1>
+                <c:if test="${! empty returnCode && returnCode != '0'}">
+                    <div class="alert alert-danger" role="alert">
+                        Something went wrong!
+                        <p>${lastresult} (${returnCode})</p>
+                    </div>
+                </c:if>
+
                 <h2 class="mt-4">Location</h2>
-                <div class="row mb-3">
-                    <div class="col-4 themed-grid-col">${param.company}</div>
-                    <div class="col-4 themed-grid-col">${param.node}</div>
-                    <div class="col-4 themed-grid-col">${param.area}</div>
+                <div class="row mb-3 justify-content-center">
+                    <div class="col-4 themed-grid-col px-lg-5">${param.company}</div>
+                    <div class="col-4 themed-grid-col px-lg-5">${param.node}</div>
+                    <div class="col-4 themed-grid-col px-lg-5">${param.area}</div>
                 </div>
 
                 <h2 class="mt-4">General</h2>
                 <%-- task, session, uproc, mu --%>
                 <%-- numlanc, numproc, numsess --%>
-                <div class="row mb-3">
+                <div class="row mb-3 justify-content-center">
                     <div class="col-md-8 themed-grid-col">
                         <div class="pb-3">
-                            Identification
+                            <h3>Identification</h3>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 themed-grid-col">Task</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Task</div>
                             <div class="col-md-6 themed-grid-col">${param.task}</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 themed-grid-col">Session</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Session</div>
                             <div class="col-md-6 themed-grid-col">${param.session}</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 themed-grid-col">Uproc</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Uproc</div>
                             <div class="col-md-6 themed-grid-col">${param.uproc}</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 themed-grid-col">MU</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">MU</div>
                             <div class="col-md-6 themed-grid-col">${param.mu}</div>
                         </div>
                     </div>
                     <div class="col-md-4 themed-grid-col">
                         <div class="pb-3">
-                            Internal IDs
+                            <h3>Internal IDs</h3>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 themed-grid-col">Num Lanc</div>
+                        <div class="row ">
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Num Lanc</div>
                             <div class="col-md-6 themed-grid-col">${param.numlanc}</div>
-                            <div class="col-md-6 themed-grid-col">Num Sess</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Num Sess</div>
                             <div class="col-md-6 themed-grid-col">${param.numsess}</div>
-                            <div class="col-md-6 themed-grid-col">Num Proc</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Num Proc</div>
                             <div class="col-md-6 themed-grid-col">${param.numproc}</div>
-                            <div class="col-md-6 themed-grid-col">Num Entry</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Num Entry</div>
                             <div class="col-md-6 themed-grid-col">${numentry}</div>
                         </div>
                     </div>
@@ -104,54 +111,58 @@
                 <hr class="my-4">
                 <h2 class="mt-4">Context Info</h2>
                 <%-- queue, priority, account, information, step --%>
-                <div class="row mb-3">
+                <div class="row mb-3 justify-content-center">
                     <div class="col-md-8 themed-grid-col">
                         <div class="pb-3">
-                            Technical Data
+                            <h3>Technical Data</h3>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 themed-grid-col">Batch Queue</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Batch Queue</div>
                             <div class="col-md-6 themed-grid-col">${param.queue}</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 themed-grid-col">Submission Account</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Submission Account</div>
                             <div class="col-md-6 themed-grid-col">${param.user}</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 themed-grid-col">Priority</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Priority</div>
                             <div class="col-md-6 themed-grid-col">${param.priority}</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 themed-grid-col">Step</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Step</div>
                             <div class="col-md-6 themed-grid-col">${param.step}</div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 themed-grid-col">Information</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Information</div>
                             <div class="col-md-6 themed-grid-col">${param.information}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Severity</div>
+                            <div class="col-md-6 themed-grid-col">${param.severity}</div>
                         </div>
                     </div>
                     <%-- begin, end, processing date --%>
                     <div class="col-md-4 themed-grid-col">
                         <div class="pb-3">
-                            Dates and times
+                            <h3>Dates and times</h3>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 themed-grid-col">Begin date/time</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Begin date/time</div>
                             <div class="col-md-6 themed-grid-col">${param.begin}</div>
-                            <div class="col-md-6 themed-grid-col">End date/time</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">End date/time</div>
                             <div class="col-md-6 themed-grid-col">${param.end}</div>
-                            <div class="col-md-6 themed-grid-col">Processing date</div>
+                            <div class="col-md-6 themed-grid-col font-weight-bold">Processing date</div>
                             <div class="col-md-6 themed-grid-col">${param.pdate}</div>
                         </div>
                     </div>
                 </div>
                 <hr class="my-4">
                 <h2 class="mt-4">Variables</h2>
-                <div class="row mb-3">
-                    <div class="col-md-3 themed-grid-col">Name</div>
-                    <div class="col-md-3 themed-grid-col">Type</div>
-                    <div class="col-md-3 themed-grid-col">Value</div>
-                    <div class="col-md-3 themed-grid-col">Origin</div>
+                <div class="row mb-3 justify-content-center">
+                    <div class="col-md-3 themed-grid-col font-weight-bold">Name</div>
+                    <div class="col-md-3 themed-grid-col font-weight-bold">Type</div>
+                    <div class="col-md-3 themed-grid-col font-weight-bold">Value</div>
+                    <div class="col-md-3 themed-grid-col font-weight-bold">Origin</div>
                     <c:forEach var="idx" begin="${varbegin}" end="${varend - 1}" step="1">
                         <div class="col-md-3 themed-grid-col">${jobInfo[idx].get('varname')}</div>
                         <div class="col-md-3 themed-grid-col">${jobInfo[idx].get('vartype')}</div>

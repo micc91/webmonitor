@@ -31,6 +31,12 @@
             <div class="jumbotron semi-transparent">
                 <c:set var="welcome_msg" value="You are not yet connected" scope="page"></c:set>
                 <c:if test="${ !empty uvmsConnection.login}"><c:set var="welcome_msg" value="Welcome ${uvmsConnection.login}" scope="page" /></c:if>
+                <c:if test="${!empty returnCode && returnCode != 0}">
+                    <div class="alert alert-danger" role="alert">
+                        Something went wrong!
+                        <p>${lastresult} (${returnCode})</p>
+                    </div>
+                </c:if>
                 <h1 class="display-4"><c:out value="${welcome_msg}!" /></h1>
                 <form class="form-signin" action="./login" method="post" >
                         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>

@@ -1,6 +1,5 @@
 package com.webops.webui;
 
-import com.webops.duas.NodesList;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -95,9 +94,22 @@ public class SettingsMap {
         return selectedContext;
     }
 
+    public void resetSelectedContext() {
+        selectedContext.clear();
+    }
+
     public void setSelectedContext(String[] selectedNodes) {
         for(String idx : selectedNodes) {
+            logger.info(this.getClass().getName()+"/setSelectedContext(String[]): adding node# "+ idx);
             addNode(idx);
+        }
+    }
+
+    public void setSelectedContext(List<String> selectedNodes) {
+        if(selectedNodes != null) {
+            for (String idx : selectedNodes) {
+                addNode(idx);
+            }
         }
     }
 

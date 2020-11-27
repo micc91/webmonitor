@@ -120,12 +120,12 @@ public class JobInfo extends ObjectsList {
         addEntry("numentry",item.getData().getNumEntry());
         addEntry("user",item.getData().getUser());
         addEntry("step", "");
-
-        Map<String, String> entry = new HashMap<>();
+        addEntry("severity", "");
 
         varbegin = items.size();
         varend = varbegin;
         for(Variable var : item.getVariables().getVariables()) {
+            Map<String, String> entry = new HashMap<>();
             entry.put("varname", var.getName());
             entry.put("vartype", var.getType());
             entry.put("varvalue", var.getValue());
@@ -135,7 +135,7 @@ public class JobInfo extends ObjectsList {
             varend++;
         }
         setSize(getSize()+1);
-        logger.info(this.getClass().getName()+"/ Added vars from index "+varbegin+" to "+varend);
+        logger.info(this.getClass().getName()+"/ Added exec vars from index "+varbegin+" to "+varend);
     }
 
     public void addItems(Envir node, Launch item) {
@@ -161,12 +161,13 @@ public class JobInfo extends ObjectsList {
         addEntry("queue",item.getQueue());
         addEntry("priority",item.getPriority());
         addEntry("step", item.getStep());
+        addEntry("severity", String.valueOf(item.getSeverity()));
 
-        Map<String, String> entry = new HashMap<>();
 
         varbegin = items.size();
         varend = varbegin;
         for(Variable var : item.getVariables().getVariables()) {
+            Map<String, String> entry = new HashMap<>();
             entry.put("varname", var.getName());
             entry.put("vartype", var.getType());
             entry.put("varvalue", var.getValue());
@@ -176,6 +177,7 @@ public class JobInfo extends ObjectsList {
             varend++;
         }
         setSize(getSize()+1);
+        logger.info(this.getClass().getName()+"/ Added launch vars from index "+varbegin+" to "+varend);
 
     }
 

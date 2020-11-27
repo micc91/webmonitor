@@ -44,12 +44,13 @@
 <body onload="updateDatesInNewRunForm();" class="bg-other">
 <c:set var="currentPage" value="new"/>
 <%@ include file="menu.jsp" %>
-<div class="container-fluid semi-gradient-transparent">
+<div class="container-fluid">
     <c:set var="selectedContextType" value="radio" />
 
     <div class="row">
         <%@ include file="sidebar.jsp" %>
-        <main role="main">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 ">
+            <div class="jumbotron container-lg ">
             <h1>New Run</h1>
             <c:if test="${! empty numlanc}">
                 <div class="alert alert-success" role="alert">
@@ -59,10 +60,9 @@
             <c:if test="${! empty returnCode && returnCode != '0'}">
                 <div class="alert alert-danger" role="alert">
                     Something went wrong!
-                        ${lastresult} (${returnCode})
+                    <p>${lastresult} (${returnCode})</p>
                 </div>
             </c:if>
-            <div class="jumbotron container-lg semi-gradient-transparent">
                 <form class="form-signin" action="./new" method="post" >
                     <h2>General</h2>
                     <div class="row mb-3">
@@ -169,7 +169,7 @@
                             <span class="error-msg">${errors['inputEndT']}</span>
                         </div>
                     </div>
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Run</button>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit" id="btn-new-run" onclick="animateStarting('btn-new-run');" >Run</button>
                 </form>
             </div>
         </main>

@@ -34,9 +34,16 @@ public class NewRun extends HttpServlet {
         settings.setFromSession(request);
         settings.setFromRequest(request);
 
+        if(uvmsConnection == null || uvmsConnection.getToken().equals("disconnected")) {
+            logger.info(this.getServletName()+"/doPost: No user stored in session");
+            session.setAttribute("uvmsConnection", uvmsConnection);
+            request.setAttribute("uvmsConnection", uvmsConnection);
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        }
+
         JobRuns jobRuns = new JobRuns();
         jobRuns.setFromSession(request);
-        boolean ret = false;
+        boolean ret;
 
         JobInfo newRun = new JobInfo();
 
@@ -95,19 +102,25 @@ public class NewRun extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        boolean ret = true;
+        boolean ret;
         HttpSession session = request.getSession();
         UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");
-        List<String> selectedNodes = null;
-        if(session.getAttribute("selectedContext") != null) {
-            selectedNodes = (List<String>) session.getAttribute("selectedContext");
-        }
+        List<String> selectedNodes;
+        boolean contextSelected = false;
+
         //TODO: Add get from session: Audit
         SettingsMap settings = new SettingsMap();
 
         //get from session: SettingsMap
         settings.setFromSession(request);
         settings.setFromRequest(request);
+
+        if(uvmsConnection == null || uvmsConnection.getToken().equals("disconnected")) {
+            logger.info(this.getServletName()+"/doGet: No user stored in session");
+            session.setAttribute("uvmsConnection", uvmsConnection);
+            request.setAttribute("uvmsConnection", uvmsConnection);
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        }
 
         JobRuns jobRuns = new JobRuns();
         jobRuns.getFromRequest(request);
@@ -121,8 +134,20 @@ public class NewRun extends HttpServlet {
         }
         if(request.getParameterValues("selectedNodes") != null) {
             settings.setSelectedContext(request.getParameterValues("selectedNodes"));
-            if(jobRuns.getTaskList().getSize() == 0 || jobRuns.getMuList().getSize() == 0 || jobRuns.getSessionList().getSize() == 0 || jobRuns.getUprocList().getSize() == 0) {
-                ret = jobRuns.getObjectsForNewRun(request, uvmsConnection, jobRuns.getNodesList().getItems().get(Integer.parseInt(settings.getSelectedContext().get(0))));
+            contextSelected = true;
+        } else {
+            if(session.getAttribute("selectedContext") != null) {
+                selectedNodes = (List<String>) session.getAttribute("selectedContext");
+                settings.setSelectedContext(selectedNodes);
+                contextSelected = true;
+            }
+        }
+        if(contextSelected) {
+            if (jobRuns.getTaskList().getSize() == 0 || jobRuns.getMuList().getSize() == 0 || jobRuns.getSessionList().getSize() == 0 || jobRuns.getUprocList().getSize() == 0) {
+                ret = false;
+                if(!settings.getSelectedContext().isEmpty()){
+                    ret = jobRuns.getObjectsForNewRun(request, uvmsConnection, jobRuns.getNodesList().getItems().get(Integer.parseInt(settings.getSelectedContext().get(0))));
+                }
                 if (!ret) {
                     logger.error(this.getServletName() + "/doPost: Failed to get list of objects for new run form");
                     request.setAttribute("error", "Failed to get list of objects for new run form");

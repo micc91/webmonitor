@@ -50,7 +50,7 @@ public class Logout extends HttpServlet {
         String result;
         HttpSession session = request.getSession();
         Client duwsClient = new Client();
-        String nextPage = "login.jsp";
+        String nextPage;
         boolean ret = true;
 
         UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");

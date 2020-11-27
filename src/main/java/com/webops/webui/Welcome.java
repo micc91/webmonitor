@@ -1,5 +1,9 @@
 package com.webops.webui;
 
+import com.duws.Client;
+import com.webops.duas.UvmsConnection;
+import org.apache.log4j.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,11 +12,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.duws.Client;
-import com.duws.JobRuns;
-import com.webops.duas.UvmsConnection;
-import org.apache.log4j.Logger;
 
 public class Welcome extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -44,7 +43,6 @@ public class Welcome extends HttpServlet {
         Map<String, String> duwsInfo = new HashMap<>();
         duwsInfo.put("status", "unchecked");
         duwsInfo.put("version", "unknown");
-        boolean ret = false;
 
         if(session.getAttribute("duwsStatus") != null) {
             duwsInfo.put("status", (String) session.getAttribute("duwsStatus"));

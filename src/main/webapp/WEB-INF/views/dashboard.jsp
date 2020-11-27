@@ -38,50 +38,23 @@
     <!-- Custom styles for this template -->
     <link href="dashboard.css" rel="stylesheet">
 </head>
-<body class="bg-other">
+<body>
     <c:set var="currentPage" value="dashboard"/>
     <%@ include file="menu.jsp" %>
-    <div class="container-fluid">
+    <div class="container-fluid semi-gradient-transparent">
         <c:set var="selectedContextType" value="checkbox" />
         <div class="row">
             <%@ include file="sidebar.jsp" %>
 
-            <!--<header>-->
-<%--            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-                <div class="sidebar-sticky pt-3">
-
-                    <form class="nav flex-column" action="./dashboard" method="post" >
-                        <h2>Context</h2>
-                        <c:set var="idx" value="0" />
-                        <c:forEach var="item" items="${nodesList}" varStatus="status">
-                            <c:choose>
-                                <c:when test="${item.get('status') == 'CONNECTED'}"><c:set var="activation" value="" /></c:when>
-                                <c:otherwise><c:set var="activation" value="disabled" /></c:otherwise>
-                            </c:choose>
-                            <%-- handle selectedContext if not empty to check box for already selected nodes --%%>
-                            <c:set var="current" value="${status.index}" />
-                            <c:set var="checkedattr" value="" />
-                            <c:if test="${selectedContext[idx] == current && activation != 'disabled'}">
-                                <c:set var="checkedattr" value="checked" />
-                                <c:set var="idx" value="${idx + 1}" />
-                            </c:if>
-                            <div class="checkbox ${activation}">
-                                <label for="${current}" class="nav-item ${activation}">
-                                    <input id="${current}" value="${current}" class="nav-item ${activation}" type="checkbox" name="selectedNodes" ${activation} ${checkedattr} >
-                                        ${item.get("company")}:${item.get("node")}:${item.get("area")}
-                                    </input>
-                                </label>
-                            </div>
-                        </c:forEach>
-                        <button class="btn btn-sm btn-default btn-block btn-outline-secondary" type="submit">Select</button>
-                    </form>
-                </div>
-            </nav>
---%>
-            <!--</header>-->
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 ">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 semi-gradient-transparent">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                     <h1 class="h2">Job runs</h1>
+                    <c:if test="${! empty returnCode && returnCode != '0'}">
+                        <div class="alert alert-danger" role="alert">
+                            Something went wrong!
+                            <p>${lastresult} (${returnCode})</p>
+                        </div>
+                    </c:if>
                     <div class="btn-toolbar mb-2 mb-md-0" > <%--role="toolbar" aria-label="toolbar with buttons">--%>
                         <div class="btn-group mr-2" > <%--role="group" aria-label="action group" > --%>
                             <%-- delete, cancel, hold, release, bypass, force, skip --%>
@@ -124,7 +97,7 @@
                             </button>
                         </div>
                         <div class="btn-group mr-2" > <%--role="group" aria-label="display group" >--%>
-                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="refreshJobRuns()">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-dhb-refresh-manual" onclick="refreshJobRuns()">
                                 <svg class="feather" ><use xlink:href="./media/feather-sprite.svg#refresh-cw"/></svg>
                             </button>
                             <c:set var="refresh30" value=""/>

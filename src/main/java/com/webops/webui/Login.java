@@ -58,10 +58,14 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String result;
-		Map<String, String> errors = new HashMap<String, String>();
+		Map<String, String> errors = new HashMap<>();
 		HttpSession session = request.getSession();
 		Client duwsClient = new Client();
 		String nextPage = "login.jsp";
+		SettingsMap settingsMap = new SettingsMap();
+		settingsMap.init();
+		settingsMap.setInSession(session);
+		int returnCode = 0;
 
 		UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");
 		if(uvmsConnection == null) {
@@ -90,37 +94,43 @@ public class Login extends HttpServlet {
 		/* Initialisation du résultat global de la validation. */
 		if ( errors.isEmpty() ) {
 			result = "Entered data are valid";
-			nextPage = "dashboard.jsp";
-			try {
-				uvmsConnection.setToken(duwsClient.login(uvmsConnection));
-			} catch (Exception e) {
-				logger.error("Exception: ",e);
+			uvmsConnection.setToken(duwsClient.login(uvmsConnection));
+			if(uvmsConnection.getToken().equals("disconnected")) {
 				result=result+" but "+duwsClient.getLastResponse()+ "("+duwsClient.getLastResult()+")";
 				nextPage = "login.jsp";
+				returnCode = duwsClient.getLastResult();
 			}
 		} else {
 			result = "Bad input data. Please fix and retry";
 			nextPage = "login.jsp";
+			returnCode = 1;
+		}
+
+		JobRuns jobRuns = new JobRuns(request);
+
+		if(!uvmsConnection.getToken().equals("disconnected")) {
+			boolean ret;
+
+			ret = jobRuns.getDUEnvironmentList(request, uvmsConnection);
+			if(!ret) {
+				request.setAttribute("error", "Failed to get list of nodes");
+			} else {
+				nextPage = "dashboard.jsp";
+			}
 		}
 
 		/* Stockage du résultat et des messages d'erreur dans l'objet request */
 		request.setAttribute( "errors", errors );
-		request.setAttribute( "result", result );
+		if(!result.isEmpty()) {
+			request.setAttribute("lastresult", result);
+			request.setAttribute("returnCode", returnCode);
+		} else {
+			request.setAttribute("lastresult", duwsClient.getLastResponse());
+			request.setAttribute("returnCode", duwsClient.getLastResult());
+		}
 
 		session.setAttribute("uvmsConnection", uvmsConnection);
 		request.setAttribute("uvmsConnection", uvmsConnection);
-
-		JobRuns jobRuns = new JobRuns(request);
-		boolean ret = false;
-
-		ret = jobRuns.getDUEnvironmentList(request, uvmsConnection);
-		if(!ret) {
-			request.setAttribute("error", "Failed to get list of nodes");
-		}
-
-		SettingsMap settingsMap = new SettingsMap();
-		settingsMap.init();
-		settingsMap.setInSession(session);
 
 		logger.info(this.getServletName()+"/doPost: received from Jsp="+ uvmsConnection.toString()+" => "+result);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/views/"+nextPage).forward(request, response);

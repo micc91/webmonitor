@@ -48,6 +48,15 @@ public class Client {
         return errorCode;
     }
 
+
+    public void setLastResult(int code) {
+        errorCode = code;
+    }
+
+    public void setLastResponse(String message) {
+        errorMessage = message;
+    }
+
     public ContextHolder setContext(UvmsConnection connection, String company, String node, String iArea) {
         token = connection.getToken();
         Context currentCtx = new Context();
@@ -106,22 +115,22 @@ public class Client {
         return execId;
     }
 
-    public String login(UvmsConnection connection) throws Exception {
+    public String login(UvmsConnection connection) {
 
         uvmsContext.setUvmsHost(connection.getUvmsHost());
         uvmsContext.setUvmsPort(Integer.parseInt(connection.getUvmsPort()));
         uvmsContext.setUvmsUser(connection.getLogin());
         uvmsContext.setUvmsPassword(connection.getPassword());
 
-        logger.info("Trying to log in "+uvmsContext.getUvmsUser()+" to "+uvmsContext.getUvmsHost()+":"+uvmsContext.getUvmsPort());
+        logger.info(this.getClass().getName()+"/Login: Trying to log in "+uvmsContext.getUvmsUser()+" to "+uvmsContext.getUvmsHost()+":"+uvmsContext.getUvmsPort());
 
 // Invoking authentication...
         try {
             token = service.login(uvmsContext);
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
-            logger.error("Login failed: "+errorMessage+" ("+errorCode+")");
+            errorMessage = duwse.getMessage();
+            logger.error(this.getClass().getName()+"/Login: Login failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
         }
 
@@ -153,7 +162,7 @@ public class Client {
 
     public boolean setExecutionAndLaunchFilters(String offset) {
 
-        Integer iOffset = 1440; // D - 1 day by default
+        int iOffset = 1440; // D - 1 day by default
         if(offset != null) {
             if (!offset.equals("none") && !offset.isEmpty()) {
                 iOffset = Integer.parseInt(offset);
@@ -242,13 +251,14 @@ public class Client {
 
         if(currentFilter == null || currentLFilter == null) {
             ret = setExecutionAndLaunchFilters(offset);
+            if(!ret) { return ret; }
         }
 
         try {
             jobLaunches = service.getListLaunch(ctxHolder, currentLFilter);
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
+            errorMessage = duwse.getMessage();
             logger.error(this.getClass().getName()+"/getListExecution/getListLaunch failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
 
@@ -259,7 +269,7 @@ public class Client {
             jobRuns = service.getListExecution(ctxHolder, currentFilter);
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
+            errorMessage = duwse.getMessage();
             logger.error(this.getClass().getName()+"/getListExecution failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
 
@@ -338,7 +348,7 @@ public class Client {
             execLog = service.getExecutionLog(ctxHolder, execId);
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
+            errorMessage = duwse.getMessage();
             logger.error(this.getClass().getName()+"/getJobLogs/getExecutionLog failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
             error4JobLogList.add("Job log request failed: "+errorMessage+" ("+errorCode+")");
@@ -353,7 +363,7 @@ public class Client {
             hTrace = service.getHistoryTrace(ctxHolder, execId);
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
+            errorMessage = duwse.getMessage();
             logger.error(this.getClass().getName()+"/getJobLogs/getHistoryTrace failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
             error4HTraceList.add("History trace request failed: "+errorMessage+" ("+errorCode+")");
@@ -368,7 +378,7 @@ public class Client {
             resLog = service.getScriptResourceLog(ctxHolder, execId);
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
+            errorMessage = duwse.getMessage();
             logger.error(this.getClass().getName()+"/getJobLogs/getScriptResourceLog failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
             error4ResLogList.add("Script resource log request failed: "+errorMessage+" ("+errorCode+")");
@@ -414,7 +424,7 @@ public class Client {
             service.logout(connection.getToken());
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
+            errorMessage = duwse.getMessage();
             logger.error(this.getClass().getName()+"/Logout failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
             ret = false;
@@ -435,7 +445,7 @@ public class Client {
             exec = service.getExecution(ctxHolder, execId);
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
+            errorMessage = duwse.getMessage();
             logger.error(this.getClass().getName()+"/getExecution/getExecution failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
             errorList.add("getExecution request failed: "+errorMessage+" ("+errorCode+")");
@@ -459,7 +469,7 @@ public class Client {
             launch = service.getLaunch(ctxHolder, launchId);
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
+            errorMessage = duwse.getMessage();
             logger.error(this.getClass().getName()+"/getExecution/getLaunch failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
             errorList.add("getLaunch request failed: "+errorMessage+" ("+errorCode+")");
@@ -492,7 +502,7 @@ public class Client {
             duwsVersion = service.getWsVersion();
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
-            errorMessage = duwse.getFaultInfo().getMessage();
+            errorMessage = duwse.getMessage();
             logger.error(this.getClass().getName()+"/getDuwsVersion failed: "+errorMessage+" ("+errorCode+")");
 //            logger.error("Exception: ",duwse);
             output.put("status", "Request failed: "+errorMessage+" ("+errorCode+")");
@@ -701,7 +711,6 @@ public class Client {
         errorMessage = "Successful";
         ContextHolder ctxHolder = setContext(connection, company, node, iArea);
         ExecutionId execId = setExecutionId(task, session, uproc, mu, numSess, numJob);
-        int delay = 60;
 
         try {
             service.purgeExecution(ctxHolder, execId);
@@ -937,9 +946,8 @@ public class Client {
         for(String sep : sepList) {
             if (format.contains(sep)) {
                 separator = sep; break;
-            } else {
-                //logger.info("parseDate: format "+format+" doesnt contain "+sep );
-            }
+            }  //else logger.info("parseDate: format "+format+" doesnt contain "+sep );
+
         }
         Pattern p = Pattern.compile(separator);
         logger.info("parseDate: input="+input+", separator="+separator+ ", pattern="+p.toString());
@@ -950,12 +958,16 @@ public class Client {
         String month = "";
         String day = "";
         for(String field: fields) {
-            if(fieldTypes[ii].equals("yyyy")) {
-                year = field;
-            } else if (fieldTypes[ii].equals("mm")) {
-                month = field;
-            } else if (fieldTypes[ii].equals(("dd"))) {
-                day = field;
+            switch (fieldTypes[ii]) {
+                case "yyyy":
+                    year = field;
+                    break;
+                case "mm":
+                    month = field;
+                    break;
+                case ("dd"):
+                    day = field;
+                    break;
             }
             ii++;
         }

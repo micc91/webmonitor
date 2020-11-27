@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Dashboard extends HttpServlet {
@@ -37,8 +36,15 @@ public class Dashboard extends HttpServlet {
         settings.setFromSession(request);
         settings.setFromRequest(request);
 
+        if(uvmsConnection == null || uvmsConnection.getToken().equals("disconnected")) {
+            logger.info(this.getServletName()+"/doGet: No user stored in session");
+            session.setAttribute("uvmsConnection", uvmsConnection);
+            request.setAttribute("uvmsConnection", uvmsConnection);
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        }
+
         JobRuns jobRuns = new JobRuns();
-        boolean ret = false;
+        boolean ret;
 
         ret = jobRuns.getDUEnvironmentList(request, uvmsConnection);
         if(!ret) {
@@ -47,6 +53,8 @@ public class Dashboard extends HttpServlet {
         }
 
         if(request.getParameterValues("selectedNodes") != null) {
+            settings.resetSelectedContext();
+            logger.info(this.getServletName()+"/doPost: New nodes selected in form: ");
             settings.setSelectedContext(request.getParameterValues("selectedNodes"));
         }
 
@@ -78,6 +86,13 @@ public class Dashboard extends HttpServlet {
         settings.setFromSession(request);
         settings.setFromRequest(request);
 
+        if(uvmsConnection == null || uvmsConnection.getToken().equals("disconnected")) {
+            logger.info(this.getServletName()+"/doGet: No user stored in session");
+            session.setAttribute("uvmsConnection", uvmsConnection);
+            request.setAttribute("uvmsConnection", uvmsConnection);
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+        }
+
         JobRuns jobRuns = new JobRuns();
         if(request.getAttribute("jobsList") == null) {
             jobRuns.getJobsList().setInRequest(request);
@@ -85,7 +100,7 @@ public class Dashboard extends HttpServlet {
         if(request.getAttribute("nodesList") == null) {
             jobRuns.getNodesList().setInRequest(request);
         }
-        boolean ret = false;
+        boolean ret;
 
         boolean refresh = settings.getItem("refresh").equals("true");
         String action = request.getParameter("action");

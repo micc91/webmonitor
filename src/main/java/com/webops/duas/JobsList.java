@@ -80,13 +80,7 @@ public class JobsList extends ObjectsList {
     }
 
     public boolean isCtl(String status) {
-        boolean ret;
-        if(status.equals("RUNNING") || status.equals("COMPLETED") || status.equals("ABORTED")) {
-            ret = true;
-        } else {
-            ret = false;
-        }
-        return ret;
+        return status.equals("RUNNING") || status.equals("COMPLETED") || status.equals("ABORTED");
     }
 
     public boolean isFla(String status) {
@@ -181,14 +175,18 @@ public class JobsList extends ObjectsList {
     public void setInRequest(HttpServletRequest request) {
 
         request.setAttribute(name, items);
-        String xdata = "[ ";
-        String ydata = "[ ";
+        String xdata;
+        String ydata;
         String sep = "";
+        StringBuilder xdataBuilder = new StringBuilder("[ ");
+        StringBuilder ydataBuilder = new StringBuilder("[ ");
         for(String item : statusList) {
-            xdata = xdata + sep + "'" + item + "'";
-            ydata = ydata + sep + jobStats.get(item);
+            xdataBuilder.append(sep).append("'").append(item).append("'");
+            ydataBuilder.append(sep).append(jobStats.get(item));
             sep = ", ";
         }
+        ydata = ydataBuilder.toString();
+        xdata = xdataBuilder.toString();
         xdata = xdata + " ]";
         ydata = ydata + " ]";
         request.setAttribute("xdata", xdata);
@@ -199,14 +197,18 @@ public class JobsList extends ObjectsList {
     public void setInSession(HttpSession session) {
 
         session.setAttribute(name, items);
-        String xdata = "[ ";
-        String ydata = "[ ";
+        String xdata;
+        String ydata;
         String sep = "";
+        StringBuilder xdataBuilder = new StringBuilder("[ ");
+        StringBuilder ydataBuilder = new StringBuilder("[ ");
         for(String item : statusList) {
-            xdata = xdata + sep + "'" + item + "'";
-            ydata = ydata + sep + jobStats.get(item);
+            xdataBuilder.append(sep).append("'").append(item).append("'");
+            ydataBuilder.append(sep).append(jobStats.get(item));
             sep = ", ";
         }
+        ydata = ydataBuilder.toString();
+        xdata = xdataBuilder.toString();
         xdata = xdata + " ]";
         ydata = ydata + " ]";
         session.setAttribute("xdata", xdata);

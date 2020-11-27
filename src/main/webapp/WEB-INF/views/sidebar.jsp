@@ -25,7 +25,7 @@
                 <c:set var="current" value="${status.index}" />
                 <c:set var="checkedattr" value="" />
                 <c:set var="classattr" value="" />
-                <c:if test="${selectedContext[idx] == current && activation != 'disabled'}">
+                <c:if test="${sessionScope.selectedContext[idx] == current && activation != 'disabled'}">
                     <c:set var="checkedattr" value="checked" />
                     <c:set var="classattr" value="font-weight-bold"/>
                     <c:set var="idx" value="${idx + 1}" />
@@ -38,7 +38,8 @@
                     </label>
                 </div>
             </c:forEach>
-            <button class="btn btn-sm btn-default btn-block btn-outline-secondary" type="submit">Select</button>
+            <button class="btn btn-sm btn-default btn-block btn-outline-secondary" id="btn-select-context" type="submit" onclick="animateLoading('btn-select-context')">Select</button>
+            <p></p>
         </form>
     </div>
 </nav>

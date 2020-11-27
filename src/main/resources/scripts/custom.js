@@ -1,3 +1,13 @@
+function animateLoading(eltId) {
+    var elt = document.getElementById(eltId);
+    elt.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+}
+
+function animateStarting(eltId) {
+    var elt = document.getElementById(eltId);
+    elt.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Creating launch...';
+}
+
 function updateDatesInNewRunForm() {
     var lwduration = 600000; // 10 minutes
 
@@ -98,6 +108,8 @@ function setAutoRefreshJobRuns(autoRefresh) {
 }
 
 function refreshJobRuns() {
+    animateLoading('btn-dhb-refresh-manual');
+
     var refreshInterval = document.getElementById('select-refresh').value;
     var offset = document.getElementById('select-offset').value;
     window.location.search = '?refresh=true&offset='+offset+'&timer='+refreshInterval;

@@ -52,7 +52,7 @@ body {
 }
 
 .bg-other {
-    background-image: url("./media/Colonnes_binaires.jpg");
+    background-image: url("../media/Colonnes_binaires.jpg");
     height: 100%;
     background-position: center;
     background-repeat: no-repeat;
@@ -70,7 +70,7 @@ body {
 .semi-gradient-transparent {
     background: linear-gradient(
     rgba(255, 255, 255, 1),
-    rgba(255, 255, 255, 0));
+    rgba(255, 255, 255, 0.5));
 }
 
 .error-msg {

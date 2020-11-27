@@ -10,7 +10,7 @@ import java.util.Map;
 public class UprocList extends ObjectsList {
 
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = Logger.getLogger(TaskList.class);
+    private static final Logger logger = Logger.getLogger(UprocList.class);
 
     public UprocList() {
         super();
