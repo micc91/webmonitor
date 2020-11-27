@@ -1,2 +1,4 @@
 # Project exclude paths
 /target/
+backup.pom.xml
+src/test/
