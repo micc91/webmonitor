@@ -8,12 +8,24 @@ public class UvmsConnection {
     private String token;
 
     public UvmsConnection() {
-        this.uvmsPort = "4184";
-        this.login = "admin";
-        this.password = "Lmdpqt1";
-        this.uvmsHost = "localhost";
+        this.uvmsPort = "";
+        this.login = "";
+        this.password = "";
+        this.uvmsHost = "";
         this.token = "disconnected";
     }
+
+    public UvmsConnection(String lastLogin, String lastUvms, String lastPort) {
+        this.uvmsPort = "";
+        this.login = "";
+        this.password = "";
+        this.uvmsHost = "";
+        if(lastLogin != null) { login = lastLogin; }
+        if(lastUvms != null) { uvmsHost = lastUvms; }
+        if(lastPort != null) { uvmsPort = lastPort; }
+        this.token = "disconnected";
+    }
+
     public String getLogin() {
         return login;
     }
@@ -69,6 +81,10 @@ public class UvmsConnection {
     public String getToken() {
         return token;
     }
+
+    public void setDisconnected() { token = "disconnected"; }
+    public boolean isDisconnected() { return token.equals("disconnected"); }
+    public boolean isConnected() { return !isDisconnected(); }
 
     @Override
     public String toString() {

@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>
+<%--<jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>--%>
 <jsp:useBean id="nodesList" scope="request" type="java.util.List"/>
 <jsp:useBean id="jobsList" scope="request" type="java.util.List"/>
 <%-- TODO: add useBean audit --%>
@@ -29,14 +29,14 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="./styles/bootstrap.min.css" crossorigin="anonymous" type="text/css">
+    <link rel="stylesheet" href="<c:url value='/styles/bootstrap.min.css'/>" crossorigin="anonymous" type="text/css">
 
     <!-- Custom styles for this template -->
 <!--    <link href="./styles/signin.css" rel="stylesheet" type="text/css">
 -->
-    <link href="./styles/custom.css" rel="stylesheet" type="text/css">
+    <link href="<c:url value='/styles/custom.css'/>" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template -->
-    <link href="dashboard.css" rel="stylesheet">
+    <link href="<c:url value='/styles/dashboard.css'/>" rel="stylesheet">
 </head>
 <body>
     <c:set var="currentPage" value="dashboard"/>
@@ -271,8 +271,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-<script src="./scripts/custom.js"></script>
-<script src="./scripts/dashboard.js"></script></body>
+<script src="<c:url value='/scripts/custom.js'/>"></script>
+<script src="<c:url value='/scripts/dashboard.js'/>"></script></body>
 
 <script>
 $(function () {

@@ -10,7 +10,7 @@
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
     <div class="sidebar-sticky pt-3">
 
-        <form class="nav flex-column" action="./${currentPage}" method="post" >
+        <form class="nav flex-column" action="<c:url value='/${currentPage}'/>" method="post" >
             <h2>Context</h2>
             <c:set var="idx" value="0" />
             <c:forEach var="item" items="${nodesList}" varStatus="status">

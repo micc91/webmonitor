@@ -13,10 +13,10 @@
 
         <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="./styles/bootstrap.min.css" crossorigin="anonymous" type="text/css" >
+        <link rel="stylesheet" href="<c:url value='/styles/bootstrap.min.css'/>" crossorigin="anonymous" type="text/css" >
 
         <!-- Custom styles for this template -->
-        <link rel="stylesheet" href="./styles/custom.css" crossorigin="anonymous" type="text/css" >
+        <link rel="stylesheet" href="<c:url value='/styles/custom.css'/>" crossorigin="anonymous" type="text/css" >
         <style>
                 .themed-grid-col {
                         padding-top: 15px;
@@ -61,10 +61,10 @@
                                 </div>
                                 <c:choose>
                                         <c:when test="${ empty duwsStatus || duwsStatus != 'available'}">
-                                                <a class="btn btn-primary btn-lg" href="./index?check=true" role="button" id="check-duws" onclick="animateLoading('check-duws');">Check</a>
+                                                <a class="btn btn-primary btn-lg" href="<c:url value="index"><c:param name="check" value="true"></c:param></c:url>" role="button" id="check-duws" onclick="animateLoading('check-duws');">Check</a>
                                         </c:when>
                                         <c:otherwise>
-                                                <a class="btn btn-primary btn-lg" href="./index?check=true" role="button" id="check-duws-again" onclick="animateLoading('check-duws-again');">Check again</a>
+                                                <a class="btn btn-primary btn-lg" href="<c:url value="index"><c:param name="check" value="true"></c:param></c:url>" role="button" id="check-duws-again" onclick="animateLoading('check-duws-again');">Check again</a>
                                         </c:otherwise>
                                 </c:choose>
                         </div>
@@ -85,7 +85,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
-<script src="./scripts/custom.js"></script>
+<script src="<c:url value='/scripts/custom.js'/>"></script>
 
 </html>
 

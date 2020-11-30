@@ -17,6 +17,13 @@ public class Welcome extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(Welcome.class);
 
+    private static final String ATTR_UVMSCONN = "uvmsConnection";
+//    private static final String ATTR_LASTRESULT = "lastResult";
+    private static final String ATTR_DUWS_STATUS = "duwsStatus";
+    private static final String ATTR_DUWS_VERSION = "duwsVersion";
+    private static final String PAGE_WELCOME = "/index.jsp";
+    private static final String ATTR_ACTION_CHECK = "check";
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -38,17 +45,17 @@ public class Welcome extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");
+        UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute(ATTR_UVMSCONN);
         Client client = new Client();
         Map<String, String> duwsInfo = new HashMap<>();
         duwsInfo.put("status", "unchecked");
         duwsInfo.put("version", "unknown");
 
-        if(session.getAttribute("duwsStatus") != null) {
-            duwsInfo.put("status", (String) session.getAttribute("duwsStatus"));
+        if(session.getAttribute(ATTR_DUWS_STATUS) != null) {
+            duwsInfo.put("status", (String) session.getAttribute(ATTR_DUWS_STATUS));
         }
-        if(session.getAttribute("duwsVersion") != null) {
-            duwsInfo.put("version", (String) session.getAttribute("duwsVersion"));
+        if(session.getAttribute(ATTR_DUWS_VERSION) != null) {
+            duwsInfo.put("version", (String) session.getAttribute(ATTR_DUWS_VERSION));
         }
 
         if(uvmsConnection == null) {
@@ -56,7 +63,7 @@ public class Welcome extends HttpServlet {
             uvmsConnection = new UvmsConnection();
         }
 
-        String check = request.getParameter("check");
+        String check = request.getParameter(ATTR_ACTION_CHECK);
         if(check != null) {
             if(check.equals("true")) {
                 duwsInfo = client.getDuwsVersion();
@@ -64,13 +71,13 @@ public class Welcome extends HttpServlet {
         }
 
         logger.info(this.getServletName()+"/doGet: got from session="+ uvmsConnection.toString());
-        request.setAttribute("uvmsConnection", uvmsConnection);
-        session.setAttribute("duwsStatus", duwsInfo.get("status"));
-        session.setAttribute("duwsVersion", duwsInfo.get("version"));
+        request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+        session.setAttribute(ATTR_DUWS_STATUS, duwsInfo.get("status"));
+        session.setAttribute(ATTR_DUWS_VERSION, duwsInfo.get("version"));
 
         // TODO Auto-generated method stub
         response.getWriter().append("Served at: ").append(request.getContextPath());
 
-        this.getServletContext().getRequestDispatcher("/index.jsp").forward(request, response);
+        this.getServletContext().getRequestDispatcher(PAGE_WELCOME).forward(request, response);
     }
 }

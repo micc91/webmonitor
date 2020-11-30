@@ -5,7 +5,7 @@
   Time: 10:18
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored ="false" %>
-<jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>
+<%-- <jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>--%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,21 +20,24 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="./styles/bootstrap.min.css" crossorigin="anonymous" type="text/css" >
+    <link rel="stylesheet" href="<c:url value='/styles/bootstrap.min.css'/>" crossorigin="anonymous" type="text/css" >
 
     <!-- Custom styles for this template -->
-    <link rel="stylesheet" href="./styles/custom.css" crossorigin="anonymous" type="text/css" >
-    <link href="./styles/signin.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="<c:url value='/styles/custom.css'/>" crossorigin="anonymous" type="text/css" >
+    <link href="<c:url value='/styles/signin.css'/>" rel="stylesheet" type="text/css">
 
 </head>
 <body class="bg-logout">
 <header>
-    <%@ include file="/WEB-INF/views/menu.jsp" %>
+    <%@ include file="menu.jsp" %>
 </header>
 <main role="main" class="container-fluid text-center">
     <div class="jumbotron semi-transparent">
 
     <c:choose>
+        <c:when test="${ empty sessionScope.uvmsConnection || sessionScope.uvmsConnection.token == ''}">
+            <h1 class="display-4">You are disconnected</h1>
+        </c:when>
         <c:when test="${ sessionScope.uvmsConnection.token == 'disconnected'}">
             <h1 class="display-4">You have been successfully logged out</h1>
         </c:when>
@@ -49,7 +52,7 @@
     </c:choose>
     </div>
 </main>
-<%@ include file="/WEB-INF/views/footer.jsp" %>
+<%@ include file="footer.jsp" %>
 </body>
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

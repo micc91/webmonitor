@@ -16,6 +16,15 @@ public class Dashboard extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(Dashboard.class);
 
+    private static final String PAGE_LOGIN = "/WEB-INF/views/login.jsp";
+    private static final String PAGE_DASHBOARD = "/WEB-INF/views/dashboard.jsp";
+    private static final String ATTR_UVMSCONN = "uvmsConnection";
+    private static final String ATTR_CONTEXT = "selectedContext";
+    private static final String ATTR_SELECTEDNODES = "selectedNodes";
+    private static final String ATTR_NODESLIST = "nodesList";
+    private static final String ATTR_JOBSLIST = "jobsList";
+    private static final String ATTR_REFRESH = "refresh";
+    private static final String ATTR_ACTION = "action";
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -30,17 +39,17 @@ public class Dashboard extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");
+        UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute(ATTR_UVMSCONN);
         SettingsMap settings = new SettingsMap();
 
         settings.setFromSession(request);
         settings.setFromRequest(request);
 
-        if(uvmsConnection == null || uvmsConnection.getToken().equals("disconnected")) {
+        if(uvmsConnection == null || uvmsConnection.isDisconnected()) {
             logger.info(this.getServletName()+"/doGet: No user stored in session");
-            session.setAttribute("uvmsConnection", uvmsConnection);
-            request.setAttribute("uvmsConnection", uvmsConnection);
-            this.getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+            session.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+            request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+            this.getServletContext().getRequestDispatcher(PAGE_LOGIN).forward(request, response);
         }
 
         JobRuns jobRuns = new JobRuns();
@@ -52,10 +61,10 @@ public class Dashboard extends HttpServlet {
             request.setAttribute("error", "Failed to get list of nodes");
         }
 
-        if(request.getParameterValues("selectedNodes") != null) {
+        if(request.getParameterValues(ATTR_SELECTEDNODES) != null) {
             settings.resetSelectedContext();
             logger.info(this.getServletName()+"/doPost: New nodes selected in form: ");
-            settings.setSelectedContext(request.getParameterValues("selectedNodes"));
+            settings.setSelectedContext(request.getParameterValues(ATTR_SELECTEDNODES));
         }
 
         ret = jobRuns.getListExecution(request, uvmsConnection, settings.getSelectedContext(), settings.getItem("offset"));
@@ -66,10 +75,10 @@ public class Dashboard extends HttpServlet {
         logger.info(this.getServletName()+"/doPost: got from session="+ uvmsConnection.toString());
 
         //TODO: delete this line: ?
-        request.setAttribute("uvmsConnection", uvmsConnection);
+        request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
         settings.setInSession(session);
 
-        this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
+        this.getServletContext().getRequestDispatcher(PAGE_DASHBOARD).forward(request, response);
     }
 
     /**
@@ -77,8 +86,8 @@ public class Dashboard extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute("uvmsConnection");
-        List<String> selectedNodes = (List<String>) session.getAttribute("selectedContext");
+        UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute(ATTR_UVMSCONN);
+        List<String> selectedNodes = (List<String>) session.getAttribute(ATTR_CONTEXT);
         //TODO: Add get from session: Audit
         SettingsMap settings = new SettingsMap();
 
@@ -86,24 +95,24 @@ public class Dashboard extends HttpServlet {
         settings.setFromSession(request);
         settings.setFromRequest(request);
 
-        if(uvmsConnection == null || uvmsConnection.getToken().equals("disconnected")) {
+        if(uvmsConnection == null || uvmsConnection.isDisconnected()) {
             logger.info(this.getServletName()+"/doGet: No user stored in session");
-            session.setAttribute("uvmsConnection", uvmsConnection);
-            request.setAttribute("uvmsConnection", uvmsConnection);
-            this.getServletContext().getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+            session.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+            request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+            this.getServletContext().getRequestDispatcher(PAGE_LOGIN).forward(request, response);
         }
 
         JobRuns jobRuns = new JobRuns();
-        if(request.getAttribute("jobsList") == null) {
+        if(request.getAttribute(ATTR_JOBSLIST) == null) {
             jobRuns.getJobsList().setInRequest(request);
         }
-        if(request.getAttribute("nodesList") == null) {
+        if(request.getAttribute(ATTR_NODESLIST) == null) {
             jobRuns.getNodesList().setInRequest(request);
         }
         boolean ret;
 
-        boolean refresh = settings.getItem("refresh").equals("true");
-        String action = request.getParameter("action");
+        boolean refresh = settings.getItem(ATTR_REFRESH).equals("true");
+        String action = request.getParameter(ATTR_ACTION);
         if(action != null) {
             ret = jobRuns.actionOnJob(request, uvmsConnection);
             if(ret) {
@@ -133,8 +142,8 @@ public class Dashboard extends HttpServlet {
         logger.info(this.getServletName()+"/doGet: got from session="+ uvmsConnection.toString());
 
         //TODO: delete this line: ?
-        request.setAttribute("uvmsConnection", uvmsConnection);
+        request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
 
-        this.getServletContext().getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
+        this.getServletContext().getRequestDispatcher(PAGE_DASHBOARD).forward(request, response);
     }
 }

@@ -1,5 +1,5 @@
 <%@ page pageEncoding="UTF-8" isELIgnored ="false" %>
-<jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>
+<%--<jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>--%>
 <jsp:useBean id="historyTrace" scope="request" type="java.util.List"/>
 <jsp:useBean id="jobLog" scope="request" type="java.util.List"/>
 <jsp:useBean id="resLog" scope="request" type="java.util.List"/>
@@ -14,15 +14,15 @@
         <meta name="author" content="Michael Checler, adapted from Mark Otto, Jacob Thornton, and Bootstrap contributors">
         <meta name="generator" content="Jekyll v4.1.1">
 
-        <title>Information</title>
+        <title>Job Information</title>
 
         <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
         <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="./styles/bootstrap.min.css" crossorigin="anonymous" type="text/css" >
+        <link rel="stylesheet" href="<c:url value='/styles/bootstrap.min.css'/>" crossorigin="anonymous" type="text/css" >
 
         <!-- Custom styles for this template -->
-        <link href="./styles/signin.css" rel="stylesheet" type="text/css">
-        <link href="./styles/custom.css" rel="stylesheet" type="text/css">
+        <link href="<c:url value='/styles/signin.css'/>" rel="stylesheet" type="text/css">
+        <link href="<c:url value='/styles/custom.css'/>" rel="stylesheet" type="text/css">
     </head>
 	<body>
         <header>
@@ -282,6 +282,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
-    <script src="./scripts/custom.js"></script>
+    <script src="<c:url value='/scripts/custom.js'/>"></script>
     <script>$('.collapse').collapse()</script>
 </html>
