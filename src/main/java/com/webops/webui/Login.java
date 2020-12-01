@@ -92,7 +92,7 @@ public class Login extends HttpServlet {
 		else {
 			logger.info(this.getServletName() + "/doGet: got from session=" + uvmsConnection.toString());
 		}
-		request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+		session.setAttribute(ATTR_UVMSCONN, uvmsConnection);
 
 		this.getServletContext().getRequestDispatcher(PAGE_LOGIN).forward(request, response);
 	}
@@ -182,7 +182,7 @@ public class Login extends HttpServlet {
 		}
 
 		session.setAttribute(ATTR_UVMSCONN, uvmsConnection);
-		request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+		//request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
 
 		logger.info(this.getServletName()+"/doPost: received from Jsp="+ uvmsConnection.toString()+" => "+result);
 

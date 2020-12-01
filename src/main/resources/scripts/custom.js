@@ -139,6 +139,8 @@ function setAutoRefreshJobRuns() {
     var refreshInterval = document.getElementById('select-refresh').value;
     if(refreshInterval !== 'none') {
         window.setTimeout(refreshJobRuns, refreshInterval);
+    } else {
+        window.clearTimeout();
     }
 }
 

@@ -38,7 +38,7 @@
     <!-- Custom styles for this template -->
     <link href="<c:url value='/styles/dashboard.css'/>" rel="stylesheet">
 </head>
-<body>
+<body onload="setAutoRefreshJobRuns()">
     <c:set var="currentPage" value="dashboard"/>
     <%@ include file="menu.jsp" %>
     <div class="container-fluid semi-gradient-transparent">
