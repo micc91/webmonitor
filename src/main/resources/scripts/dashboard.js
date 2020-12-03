@@ -1,19 +1,38 @@
 function highlight(e) {
-  if (selected[0]) selected[0].className = '';
-  e.target.parentNode.className = 'selected-row';
+//  if (selected[0]) selected[0].className = '';
+  if(e.target.parentNode.className === '') {
+    e.target.parentNode.className = 'selected-row';
+  } else {
+    e.target.parentNode.className = '';
+  }
 }
 
 var table    = document.getElementById('jobRunsTableBody');
 var selected = table.getElementsByClassName('selected-row');
 table.onclick = highlight;
 
-function actionOnJob(action){
-  var paramList = this.table.getElementsByClassName("selected-row" )[0].getElementsByTagName("TD")[1].getElementsByTagName("a")[0].getAttribute("href");
-//  var ii = 0;
-//  for(var ii = 0; ii < paramList.length; ii++) {
+function actionOnJob(action) {
+  var selectedRows = this.table.getElementsByClassName("selected-row" );
+  var paramList;
+  var newParamList;
+  var status;
 
-    var newParamList = encodeURI(paramList.replace(/^.*info\?/, ""));
-    var status = paramList.replace(/^.*status=/,'').replace(/&step=.*$/,'');
+  if(selectedRows.length > 1) {
+    paramList='idlist='
+    for (var ii = 0; ii < selectedRows.length; ii++) {
+      if(paramList !== 'idlist=') { paramList = paramList+','; }
+      paramList = paramList + selectedRows[ii].getElementsByTagName("TD")[0].innerText;
+    }
+    newParamList=paramList;
+    status=selectedRows[0].getElementsByTagName("TD")[2].getElementsByTagName("a")[0].getAttribute("href").replace(/^.*status=/,'').replace(/&step=.*$/,'');
+  }
+  else {
+    paramList = selectedRows[0].getElementsByTagName("TD")[2].getElementsByTagName("a")[0].getAttribute("href");
+
+//  var newParamList = encodeURI(paramList.replace(/^.*info\?/, ""));
+    newParamList = paramList.replace(/^.*info\?/, "");
+    status = paramList.replace(/^.*status=/,'').replace(/&step=.*$/,'');
+  }
     console.log("oldParamList = " + paramList);
     console.log("newParamList = " + newParamList);
     //Possible actions:
@@ -63,6 +82,6 @@ function actionOnJob(action){
         window.location.search = "?" + newParamList + "&" + "action=" + action;
       }
     }
-//  }
+
 }
 

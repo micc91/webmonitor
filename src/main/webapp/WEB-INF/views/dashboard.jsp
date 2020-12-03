@@ -47,14 +47,23 @@
             <%@ include file="sidebar.jsp" %>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4 ">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-                    <h1 class="h2">Job runs</h1>
-                    <c:if test="${! empty returnCode && returnCode != '0'}">
+                <c:if test="${! empty returnCode && returnCode != '0'}">
+                    <div class="row align-items-center pt-3 pb-2 mb-3">
                         <div class="alert alert-danger" role="alert">
                             Something went wrong!
-                            <p>${lastresult} (${returnCode})</p>
+                            <p>${lastResult} (${returnCode})</p>
                         </div>
-                    </c:if>
+                    </div>
+                </c:if>
+                <c:if test="${! empty returnCode && returnCode == '0' && !empty lastResult && lastResult != '' && lastResult != 'Successful'}">
+                    <div class="row align-items-center pt-3 pb-2 mb-3">
+                        <div class="alert alert-success" role="alert">
+                            <p>${lastResult} (${returnCode})</p>
+                        </div>
+                    </div>
+                </c:if>
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">Job runs</h1>
                     <div class="btn-toolbar mb-2 mb-md-0" > <%--role="toolbar" aria-label="toolbar with buttons">--%>
                         <div class="btn-group mr-2" > <%--role="group" aria-label="action group" > --%>
                             <%-- delete, cancel, hold, release, bypass, force, skip --%>
@@ -205,6 +214,7 @@
                                     <c:set var="idx" value="${status.index}" />
                                     <c:url var="infolink" value="/info?${item.get('urlparams')}"/>
                                     <tr>
+                                        <td style="display: none;">${item.get("hashcode")}</td>
                                         <td>${item.get("company")}|${item.get("node")}|${item.get("area")}</td>
                                         <td><a href="${infolink}">${item.get("task")}|${item.get("session")}|${item.get("uproc")}@${item.get("mu")}</a></td>
                                         <td class="status-${item.get("status")}">${item.get("status")}</td>

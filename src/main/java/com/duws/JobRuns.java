@@ -312,7 +312,7 @@ public class JobRuns {
         return ret;
     }
 
-    public boolean actionOnJob(HttpServletRequest request, UvmsConnection uvmsConnection) {
+    public boolean actionOnJob(HttpServletRequest request, UvmsConnection uvmsConnection, Map<String, String> job) {
         Client duwsClient = null;
         try {
             duwsClient = new Client();
@@ -322,18 +322,46 @@ public class JobRuns {
         //Map<String, List<String>> jobParams;
         boolean ret = true;
 
-        String action = request.getParameter("action");
-        String company = request.getParameter("company");
-        String node  = request.getParameter("node");
-        String area = request.getParameter("area");
-        String task = request.getParameter("task");
-        String session = request.getParameter("session");
-        String uproc = request.getParameter("uproc");
-        String mu = request.getParameter("mu");
-        String numJob = request.getParameter("numproc");
-        String numSess = request.getParameter("numsess");
-        String numLanc = request.getParameter("numlanc");
-        String status = request.getParameter("status");
+        String action;
+        String company;
+        String node;
+        String area;
+        String task;
+        String session;
+        String uproc;
+        String mu;
+        String numJob;
+        String numSess;
+        String numLanc;
+        String status;
+
+        action = request.getParameter("action");
+
+        if(job == null) {
+            company = request.getParameter("company");
+            node = request.getParameter("node");
+            area = request.getParameter("area");
+            task = request.getParameter("task");
+            session = request.getParameter("session");
+            uproc = request.getParameter("uproc");
+            mu = request.getParameter("mu");
+            numJob = request.getParameter("numproc");
+            numSess = request.getParameter("numsess");
+            numLanc = request.getParameter("numlanc");
+            status = request.getParameter("status");
+        } else {
+            company = job.get("company");
+            node = job.get("node");
+            area = job.get("area");
+            task = job.get("task");
+            session = job.get("session");
+            uproc = job.get("uproc");
+            mu = job.get("mu");
+            numJob = job.get("numproc");
+            numSess = job.get("numsess");
+            numLanc = job.get("numlanc");
+            status = job.get("status");
+        }
 
         if(company == null || company.isEmpty()) {
             logger.error(this.getClass().getName()+"/actionOnJob: company null or empty");

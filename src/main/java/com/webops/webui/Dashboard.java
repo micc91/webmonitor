@@ -1,6 +1,8 @@
 package com.webops.webui;
 
 import com.duws.JobRuns;
+import com.webops.duas.JobInfo;
+import com.webops.duas.JobsList;
 import com.webops.duas.UvmsConnection;
 import org.apache.log4j.Logger;
 
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet(urlPatterns = "/dashboard")
 public class Dashboard extends HttpServlet {
@@ -27,6 +30,7 @@ public class Dashboard extends HttpServlet {
     private static final String ATTR_JOBSLIST = "jobsList";
     private static final String ATTR_REFRESH = "refresh";
     private static final String ATTR_ACTION = "action";
+    private static final String ATTR_IDLIST = "idlist";
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -86,6 +90,7 @@ public class Dashboard extends HttpServlet {
         //TODO: delete this line: ?
         //request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
         settings.setInSession(request);
+        jobRuns.setInSession(request);
 
         logger.info(this.getServletName()+"/doPost: going to "+PAGE_DASHBOARD);
         this.getServletContext().getRequestDispatcher(PAGE_DASHBOARD).forward(request, response);
@@ -95,6 +100,8 @@ public class Dashboard extends HttpServlet {
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int returnCode = 0;
+        String lastResult = "";
         HttpSession session = request.getSession();
         UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute(ATTR_UVMSCONN);
         List<String> selectedNodes = (List<String>) session.getAttribute(ATTR_CONTEXT);
@@ -114,28 +121,63 @@ public class Dashboard extends HttpServlet {
         logger.info(this.getServletName()+"/doGet: Entering... ");
 
         JobRuns jobRuns = new JobRuns();
-        if(request.getAttribute(ATTR_JOBSLIST) == null) {
+        if(session.getAttribute(ATTR_JOBSLIST) == null) {
+            logger.info(this.getServletName()+"/doGet: initialize jobs list");
             jobRuns.getJobsList().setInRequest(request);
+        } else {
+            jobRuns.getJobsList().setFromSession(request);
         }
-        if(request.getAttribute(ATTR_NODESLIST) == null) {
+        if(session.getAttribute(ATTR_NODESLIST) == null) {
+            logger.info(this.getServletName()+"/doGet: initialize nodes list");
             jobRuns.getNodesList().setInRequest(request);
+        } else {
+            jobRuns.getNodesList().setFromSession(request);
         }
         boolean ret;
 
         boolean refresh = settings.getItem(ATTR_REFRESH).equals("true");
         String action = request.getParameter(ATTR_ACTION);
         if(action != null) {
-/*
-            if(action.equals("udpate")) {
-                this.getServletContext().getRequestDispatcher(PAGE_UPDATE).forward(request, response);
-            }
-            if(action.equals("rerun")) {
-                this.getServletContext().getRequestDispatcher(PAGE_RERUN).forward(request, response);
-            }
-*/
-            ret = jobRuns.actionOnJob(request, uvmsConnection);
-            if(ret) {
-                refresh = true;
+            String idlist = request.getParameter(ATTR_IDLIST);
+
+            if(idlist != null) {
+                    boolean found;
+                    lastResult="Action "+action+" on "+idlist.split(",").length+" jobs : ";
+                    for(String id : idlist.split(",")) {
+                        found = false;
+                        int ii=0;
+                        for(Map<String, String> job : jobRuns.getJobsList().getItems()) {
+                            logger.info(this.getServletName()+"/doGet: "+ii+"/id="+id+"/ scanning job "+job.get("hashcode")+","+job.get("task")+","+job.get("session")+","+job.get("uproc")+","+job.get("mu")+","+job.get("status"));
+                            if(job.get("hashcode").equals(id)) {
+                                found = true;
+                                ret = jobRuns.actionOnJob(request, uvmsConnection, job);
+                                if (ret) {
+                                    refresh = true;
+                                } else {
+                                    returnCode += jobRuns.getLastResult();
+                                    lastResult = lastResult+"/"+jobRuns.getLastResponse();
+                                }
+                                break;
+                            }
+                            ii++;
+                        }
+                        if(!found) {
+                            logger.error(this.getServletName() + "/doGet: job with id=" + id + " not found in list");
+                        }
+                    }
+                    if(returnCode == 0) {
+                        lastResult += "Successful!";
+                    }
+            } else {
+                lastResult="Action "+action+" on 1 job : ";
+                ret = jobRuns.actionOnJob(request, uvmsConnection, null);
+                if (ret) {
+                    refresh = true;
+                    lastResult += "Successful!";
+                } else {
+                    returnCode = jobRuns.getLastResult();
+                    lastResult = lastResult + jobRuns.getLastResponse();
+                }
             }
         }
         String offset = request.getParameter("offset");
@@ -169,12 +211,16 @@ public class Dashboard extends HttpServlet {
         //TODO: re-store data in session if a refresh has been done
         //...
         settings.setInSession(request);
+        jobRuns.setInSession(request);
 
         logger.info(this.getServletName()+"/doGet: got from session="+ uvmsConnection.toString());
 
         //TODO: delete this line: ?
         //request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
-
+        if(action != null) {
+            request.setAttribute("returnCode", returnCode);
+            request.setAttribute("lastResult", lastResult);
+        }
         logger.info(this.getServletName()+"/doGet: going to "+PAGE_DASHBOARD);
         this.getServletContext().getRequestDispatcher(PAGE_DASHBOARD).forward(request, response);
     }
