@@ -7,6 +7,9 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +48,8 @@ public class JobsList extends ObjectsList {
         fields.add("user");
         fields.add("step");
         fields.add("priority");
+        fields.add("urlparams");
+        fields.add("hashcode");
 
         name = "jobsList";
 
@@ -134,6 +139,9 @@ public class JobsList extends ObjectsList {
         entry.put("priority",item.getPriority());
         entry.put("step", "");
 
+        entry.put("urlparams", encodeUrlParams(entry));
+        entry.put("hashcode", String.valueOf(entry.hashCode()));
+
         items.add(entry);
         setSize(getSize()+1);
 
@@ -167,8 +175,55 @@ public class JobsList extends ObjectsList {
         entry.put("priority",item.getPriority());
         entry.put("step", item.getStep());
 
+        entry.put("urlparams", encodeUrlParams(entry));
+        entry.put("hashcode", String.valueOf(entry.hashCode()));
         items.add(entry);
         setSize(getSize()+1);
+    }
+
+    private String encodeUrlParams(Map<String, String> entry) {
+        String output = "";
+        String encoded = "";
+        String buffer = "";
+        String value = "";
+        for(String key : entry.keySet()) {
+            value = entry.get(key);
+//            buffer = value.replaceAll("%","%25");
+//            value = buffer;
+            buffer = value.replaceAll(" ","%20");
+/*            value = buffer;
+            buffer = value.replaceAll(";","%3B");
+            value = buffer;
+            buffer = value.replaceAll("\\?","%3F");
+            value = buffer;
+            buffer = value.replaceAll("/","%2F");
+            value = buffer;
+            buffer = value.replaceAll(":","%3A");
+            value = buffer;
+            buffer = value.replaceAll("#","%23");
+            value = buffer;
+            buffer = value.replaceAll("&","%26");
+            value = buffer;
+            buffer = value.replaceAll("=","%3D");
+            value = buffer;
+            buffer = value.replaceAll("\\+","%2B");
+            value = buffer;
+            buffer = value.replaceAll("\\$","%24");
+            value = buffer;
+            buffer = value.replaceAll(",","%2C");
+            value = buffer;
+            buffer = value.replaceAll("<","%3C");
+            value = buffer;
+            buffer = value.replaceAll(">","%3E");
+            value = buffer;
+            buffer = value.replaceAll("~","%7E");
+ */
+            encoded = buffer;
+            if(!output.isEmpty()) { output = output+"&"; }
+            output=output+key+"="+encoded;
+        }
+
+        return output;
     }
 
     @Override

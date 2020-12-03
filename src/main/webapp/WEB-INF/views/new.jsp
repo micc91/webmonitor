@@ -6,7 +6,6 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<%--<jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>--%>
 <jsp:useBean id="nodesList" scope="request" type="java.util.List"/>
 <jsp:useBean id="taskList" scope="request" type="java.util.List"/>
 <jsp:useBean id="sessionList" scope="request" type="java.util.List"/>
@@ -41,7 +40,7 @@
     <!-- Custom styles for this template -->
     <link href="<c:url value='/styles/dashboard.css'/>" rel="stylesheet">
 </head>
-<body onload="updateDatesInNewRunForm();" class="bg-other">
+<body onload="updateDatesInNewRunForm(${sessionScope.settings.launchWindowSize});" class="bg-other">
 <c:set var="currentPage" value="new"/>
 <%@ include file="menu.jsp" %>
 <div class="container-fluid">
@@ -60,7 +59,7 @@
             <c:if test="${! empty returnCode && returnCode != '0'}">
                 <div class="alert alert-danger" role="alert">
                     Something went wrong!
-                    <p>${lastresult} (${returnCode})</p>
+                    <p>${lastResult} (${returnCode})</p>
                 </div>
             </c:if>
                 <form class="form-signin" action="./new" method="post" >
@@ -126,12 +125,12 @@
                     <div class="row mb-3" >
                         <div class="col-md-6 themed-grid-col">
                             <label for="inputQueue" >Batch Queue</label>
-                            <input type="text" id="inputQueue" name="inputQueue" value="SYS_BATCH" size="20" maxlength="64" class="form-control" placeholder="Batch Queue name" required>
+                            <input type="text" id="inputQueue" name="inputQueue" value="${sessionScope.settings.batchQueue}" size="20" maxlength="64" class="form-control" placeholder="Batch Queue name" required>
                             <span class="error-msg">${errors['inputQueue']}</span>
                         </div>
                         <div class="col-md-6 themed-grid-col">
                             <label for="inputUser" >Submission Account</label>
-                            <input type="text" id="inputUser" name="inputUser" value="administrator" size="20" maxlength="64" class="form-control" placeholder="User name" required>
+                            <input type="text" id="inputUser" name="inputUser" value="${sessionScope.settings.submissionAccount}" size="20" maxlength="64" class="form-control" placeholder="User name" required>
                             <span class="error-msg">${errors['inputUser']}</span>
                             <br>
                         </div>
@@ -184,7 +183,7 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
     <script src="<c:url value='/scripts/custom.js'/>"></script>
-    <script src="<c:url value='/scripts/dashboard.js'/>"></script></body>
+    <script src="<c:url value='/scripts/dashboard.js'/>"></script>
 
 <script>
     $(function () {

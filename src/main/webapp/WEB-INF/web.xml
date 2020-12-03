@@ -3,10 +3,17 @@
  "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 -->
+<!--
 <web-app   xmlns="http://java.sun.com/xml/ns/javaee"
 		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
-		   version="3.0">
+		   version="3.0">-->
+<!-- Update to integrate JSF with Apache MyFaces -->
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+			 version="3.1">
+
   <display-name>Archetype Created Web Application</display-name>
 	<session-config>
 		<session-timeout>60</session-timeout>
@@ -46,20 +53,6 @@
 	</filter-mapping>
 
 	<servlet>
-	<servlet-name>Info</servlet-name>
-	  <display-name>Info</display-name>
-	  <description>Information page</description>
-	  <servlet-class>com.webops.webui.Info</servlet-class>
-	</servlet>
-
-	<servlet>
-  	  <servlet-name>Login</servlet-name>
-	  <display-name>Login</display-name>
-	  <description>Authentication page</description>
-	  <servlet-class>com.webops.webui.Login</servlet-class>
-	</servlet>
-
-	<servlet>
 		<servlet-name>InitApp</servlet-name>
 		<servlet-class>com.webops.webui.log4j.InitApp</servlet-class>
 		<init-param>
@@ -72,8 +65,27 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
+	<servlet>
+		<servlet-name>Welcome</servlet-name>
+		<servlet-class>com.webops.webui.Welcome</servlet-class>
+	</servlet>
+<!--
+	<servlet>
+		<servlet-name>Preferences</servlet-name>
+		<servlet-class>com.webops.webui.Preferences</servlet-class>
+	</servlet>
+-->
+<!--
+	<servlet>
+	<servlet-name>Info</servlet-name>
+	  <servlet-class>com.webops.webui.Info</servlet-class>
+	</servlet>
 
-    <servlet>
+	<servlet>
+  	  <servlet-name>Login</servlet-name>
+	  <servlet-class>com.webops.webui.Login</servlet-class>
+	</servlet>
+	<servlet>
         <servlet-name>Dashboard</servlet-name>
         <servlet-class>com.webops.webui.Dashboard</servlet-class>
     </servlet>
@@ -83,14 +95,17 @@
 		<servlet-class>com.webops.webui.Logout</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>Welcome</servlet-name>
-		<servlet-class>com.webops.webui.Welcome</servlet-class>
-	</servlet>
-	<servlet>
 		<servlet-name>NewRun</servlet-name>
 		<servlet-class>com.webops.webui.NewRun</servlet-class>
-	</servlet>
+	</servlet>-->
 
+<!--
+	<servlet-mapping>
+		<servlet-name>Preferences</servlet-name>
+		<url-pattern>/preferences</url-pattern>
+	</servlet-mapping>
+-->
+<!--
 	<servlet-mapping>
 		<servlet-name>Dashboard</servlet-name>
 		<url-pattern>/dashboard</url-pattern>
@@ -108,11 +123,13 @@
 		<url-pattern>/info</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>Welcome</servlet-name>
-		<url-pattern>/index</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
 		<servlet-name>NewRun</servlet-name>
 		<url-pattern>/new</url-pattern>
 	</servlet-mapping>
+-->
+	<servlet-mapping>
+		<servlet-name>Welcome</servlet-name>
+		<url-pattern>/index</url-pattern>
+	</servlet-mapping>
+
 </web-app>

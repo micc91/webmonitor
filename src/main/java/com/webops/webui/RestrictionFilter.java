@@ -24,7 +24,7 @@ public class RestrictionFilter implements Filter {
         /* Non-filtrage des ressources statiques */
         String currentPath = hsRequest.getRequestURI().substring( hsRequest.getContextPath().length() );
         if ( currentPath.startsWith( "/media" ) || currentPath.startsWith( "/scripts" ) || currentPath.startsWith( "/styles" ) ||
-                currentPath.startsWith( "/login" ) || currentPath.startsWith( "/index" )) {
+                currentPath.startsWith( "/login" ) || currentPath.startsWith( "/index" ) || currentPath.startsWith( "/" ) || currentPath.isEmpty()) {
             chain.doFilter( hsRequest, hsResponse );
             return;
         }

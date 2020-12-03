@@ -21,7 +21,9 @@
             <div class="col-6 col-md-4 ">
                 <c:choose>
                     <c:when test="${sessionScope.uvmsConnection.token != 'disconnected'}">
-                        <img src="./media/person-fill.svg" class="bi" width="32" height="32" fill="currentColor" />
+                        <a class="btn btn-sm btn-outline-secondary" id="link-prefs" href="<c:url value='/preferences'/>">
+                            <img src="./media/person-fill.svg" class="bi" width="32" height="32" fill="currentColor" />
+                        </a>
                         ${sessionScope.uvmsConnection.login}
                     </c:when>
                     <c:otherwise>

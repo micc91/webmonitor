@@ -86,6 +86,14 @@
                                     <svg class="feather" data-toggle="tooltip" data-placement="top" title="New Run" class="bs-tooltip-top"><use xlink:href="./media/feather-sprite.svg#plus"/></svg>
                                 </a>
                             </button>
+                            <button class="btn btn-sm btn-outline-secondary" id="btn-action-rerun" onclick="actionOnJob('rerun')">
+                                <svg class="feather" data-toggle="tooltip" data-placement="top" title="Re-Run" class="bs-tooltip-top"><use xlink:href="./media/feather-sprite.svg#rotate-cw"/></svg>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" id="btn-action-update" onclick="actionOnJob('update')">
+                                <a href="./update">
+                                    <svg class="feather" data-toggle="tooltip" data-placement="top" title="Update" class="bs-tooltip-top"><use xlink:href="./media/feather-sprite.svg#edit"/></svg>
+                                </a>
+                            </button>
                         </div>
 
                         <div class="btn-group mr-2" > <%--role="group" aria-label="display group" >--%>
@@ -100,24 +108,26 @@
                             <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-dhb-refresh-manual" onclick="refreshJobRunsManually()">
                                 <svg class="feather" ><use xlink:href="./media/feather-sprite.svg#refresh-cw"/></svg>
                             </button>
+                            <c:set var="selectedValue" value="${fn:split(sessionScope.settings.timer, '#')[0]}"/>
                             <c:set var="refresh30" value=""/>
                             <c:set var="refresh60" value=""/>
                             <c:set var="refresh360" value=""/>
                             <c:set var="refreshNone" value="selected"/>
                             <c:choose>
-                                <c:when test="${settings.timer == '30000'}"  ><c:set var="refresh30"   value="selected"/></c:when>
-                                <c:when test="${settings.timer == '60000'}"  ><c:set var="refresh60"   value="selected"/></c:when>
-                                <c:when test="${settings.timer == '360000'}" ><c:set var="refresh360"  value="selected"/></c:when>
-                                <c:when test="${settings.timer == 'none'}"><c:set var="refreshNone" value="selected"/></c:when>
+                                <c:when test="${selectedValue == '30'}"  ><c:set var="refresh30"   value="selected"/></c:when>
+                                <c:when test="${selectedValue == '60'}"  ><c:set var="refresh60"   value="selected"/></c:when>
+                                <c:when test="${selectedValue == '300'}" ><c:set var="refresh300"  value="selected"/></c:when>
+                                <c:when test="${selectedValue == 'none'}"><c:set var="refreshNone" value="selected"/></c:when>
                                 <c:otherwise><c:set var="selectedNone" value="selected"/></c:otherwise>
                             </c:choose>
                             <select class="btn btn-sm btn-outline-secondary dropdown-toggle" id="select-refresh" onchange="setAutoRefreshJobRuns()">
-                                <option value="none" ${refreshNone} >Manual</option>
-                                <option value="30000"   ${refresh30}   >30 secs</option>
-                                <option value="60000"   ${refresh60}   >1 minute</option>
-                                <option value="360000"  ${refresh360}  >5 minutes</option>
+                                <option value="none"   ${refreshNone}>Manual</option>
+                                <option value="30000"  ${refresh30}  >30 secs</option>
+                                <option value="60000"  ${refresh60}  >1 minute</option>
+                                <option value="300000" ${refresh300} >5 minutes</option>
                             </select>
 
+                            <c:set var="selectedValue" value="${fn:split(sessionScope.settings.offset, '#')[0]}"/>
                             <c:set var="selected5" value=""/>
                             <c:set var="selected60" value=""/>
                             <c:set var="selected360" value=""/>
@@ -126,13 +136,13 @@
                             <c:set var="selected2880" value=""/>
                             <c:set var="selectedNone" value="selected"/>
                             <c:choose>
-                                <c:when test="${settings.offset == '5'}"   ><c:set var="selected5"    value="selected"/></c:when>
-                                <c:when test="${settings.offset == '60'}"  ><c:set var="selected60"   value="selected"/></c:when>
-                                <c:when test="${settings.offset == '360'}" ><c:set var="selected360"  value="selected"/></c:when>
-                                <c:when test="${settings.offset == '720'}" ><c:set var="selected720"  value="selected"/></c:when>
-                                <c:when test="${settings.offset == '1440'}"><c:set var="selected1440" value="selected"/></c:when>
-                                <c:when test="${settings.offset == '2880'}"><c:set var="selected2880" value="selected"/></c:when>
-                                <c:when test="${settings.offset == 'none'}"><c:set var="selectedNone" value="selected"/></c:when>
+                                <c:when test="${selectedValue == '5'}"   ><c:set var="selected5"    value="selected"/></c:when>
+                                <c:when test="${selectedValue == '60'}"  ><c:set var="selected60"   value="selected"/></c:when>
+                                <c:when test="${selectedValue == '360'}" ><c:set var="selected360"  value="selected"/></c:when>
+                                <c:when test="${selectedValue == '720'}" ><c:set var="selected720"  value="selected"/></c:when>
+                                <c:when test="${selectedValue == '1440'}"><c:set var="selected1440" value="selected"/></c:when>
+                                <c:when test="${selectedValue == '2880'}"><c:set var="selected2880" value="selected"/></c:when>
+                                <c:when test="${selectedValue == 'none'}"><c:set var="selectedNone" value="selected"/></c:when>
                                 <c:otherwise><c:set var="selectedNone" value="selected"/></c:otherwise>
                             </c:choose>
                             <select class="btn btn-sm btn-outline-secondary dropdown-toggle" id="select-offset" onchange="refreshJobRunsManually()">
@@ -193,60 +203,7 @@
                             <c:if test="${ !empty jobsList[0].get('company') }">
                                 <c:forEach var="item" items="${jobsList}" varStatus="status">
                                     <c:set var="idx" value="${status.index}" />
-                                    <c:choose>
-                                        <c:when test="${item.get('status') == 'COMPLETED'}"><c:set var="jobtype" value="ctl" /></c:when>
-                                        <c:when test="${item.get('status') == 'ABORTED'}"><c:set var="jobtype" value="ctl" /></c:when>
-                                        <c:when test="${item.get('status') == 'RUNNING'}"><c:set var="jobtype" value="ctl" /></c:when>
-                                        <c:otherwise><c:set var="jobtype" value="fla" /></c:otherwise>
-                                    </c:choose>
-                                    <c:choose>
-                                        <c:when test="${jobtype == 'ctl'}">
-                                            <c:url var="infolink" value="/info">
-                                                <c:param name="company" value="${item.get('company')}" />
-                                                <c:param name="node" value="${item.get('node')}" />
-                                                <c:param name="area" value="${item.get('area')}" />
-                                                <c:param name="task" value="${item.get('task')}" />
-                                                <c:param name="session" value="${item.get('session')}" />
-                                                <c:param name="uproc" value="${item.get('uproc')}" />
-                                                <c:param name="mu" value="${item.get('mu')}" />
-                                                <c:param name="numlanc" value="${item.get('numlanc')}" />
-                                                <c:param name="numsess" value="${item.get('numsess')}" />
-                                                <c:param name="numproc" value="${item.get('numproc')}" />
-                                                <c:param name="pdate" value="${item.get('pdate')}" />
-                                                <c:param name="queue" value="${item.get('queue')}" />
-                                                <c:param name="user" value="${item.get('user')}" />
-                                                <c:param name="priority" value="${item.get('priority')}" />
-                                                <c:param name="status" value="${item.get('status')}" />
-                                                <c:param name="step" value="${item.get('step')}" />
-                                                <c:param name="information" value="${item.get('information')}" />
-                                                <c:param name="begin" value="${item.get('begin_date')} ${item.get('begin_time')}" />
-                                                <c:param name="end" value="${item.get('end_date')} ${item.get('begin_time')}" />
-                                            </c:url>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:url var="infolink" value="/info">
-                                                <c:param name="company" value="${item.get('company')}" />
-                                                <c:param name="node" value="${item.get('node')}" />
-                                                <c:param name="area" value="${item.get('area')}" />
-                                                <c:param name="task" value="${item.get('task')}" />
-                                                <c:param name="session" value="${item.get('session')}" />
-                                                <c:param name="uproc" value="${item.get('uproc')}" />
-                                                <c:param name="mu" value="${item.get('mu')}" />
-                                                <c:param name="numlanc" value="${item.get('numlanc')}" />
-                                                <c:param name="numsess" value="${item.get('numsess')}" />
-                                                <c:param name="numproc" value="${item.get('numproc')}" />
-                                                <c:param name="pdate" value="${item.get('pdate')}" />
-                                                <c:param name="queue" value="${item.get('queue')}" />
-                                                <c:param name="user" value="${item.get('user')}" />
-                                                <c:param name="priority" value="${item.get('priority')}" />
-                                                <c:param name="status" value="${item.get('status')}" />
-                                                <c:param name="step" value="${item.get('step')}" />
-                                                <c:param name="information" value="${item.get('information')}" />
-                                                <c:param name="begin" value="${item.get('begin_date')} ${item.get('begin_time')}" />
-                                                <c:param name="end" value="${item.get('end_date')} ${item.get('begin_time')}" />
-                                            </c:url>
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <c:url var="infolink" value="/info?${item.get('urlparams')}"/>
                                     <tr>
                                         <td>${item.get("company")}|${item.get("node")}|${item.get("area")}</td>
                                         <td><a href="${infolink}">${item.get("task")}|${item.get("session")}|${item.get("uproc")}@${item.get("mu")}</a></td>
@@ -255,7 +212,6 @@
                                         <td>${item.get("end_date")} ${item.get("end_time")}</td>
                                         <td>${item.get("information")}</td>
                                     </tr>
-
                                 </c:forEach>
                             </c:if>
                         </tbody>

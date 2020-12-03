@@ -154,7 +154,7 @@ public class Client {
         for(Envir item : duEnvironmentList) {
             ret = ret & nodesList.addItem(item);
             idx++;
-            logger.info(this.getClass().getName()+" [Adding "+ idx +"] "+item.getNode()+":"+item.getCompany()+":"+item.getArea().getValue()+":"+item.getVersion().getValue()+":"+item.getStatus().getValue().toString()+".");
+            logger.debug(this.getClass().getName()+" [Adding "+ idx +"] "+item.getNode()+":"+item.getCompany()+":"+item.getArea().getValue()+":"+item.getVersion().getValue()+":"+item.getStatus().getValue().toString()+".");
         }
 
         return ret;
@@ -527,13 +527,13 @@ public class Client {
             service.deleteLaunch(ctxHolder, launchId);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/deleteLaunch failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/deleteLaunch timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -553,13 +553,13 @@ public class Client {
             service.releaseLaunch(ctxHolder, launchId);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/releaseLaunch failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/releaseLaunch timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -580,13 +580,13 @@ public class Client {
             service.holdLaunch(ctxHolder, launchId);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/holdLaunch failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/holdLaunch timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -607,13 +607,13 @@ public class Client {
             service.bypassLaunchConditionCheck(ctxHolder, launchId);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/bypassLaunchConditionCheck failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/bypassLaunchConditionCheck timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -634,13 +634,13 @@ public class Client {
             service.forceCompleteLaunch(ctxHolder, launchId);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/forceCompleteLaunch failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/forceCompleteLaunch timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -661,13 +661,13 @@ public class Client {
             service.skipExecution(ctxHolder, launchId);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/skipExecution failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/skipExecution timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -689,13 +689,13 @@ public class Client {
             service.stopExecution(ctxHolder, execId, delay);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/stopExecution failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/stopExecution timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -716,13 +716,13 @@ public class Client {
             service.purgeExecution(ctxHolder, execId);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/purgeExecution failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/purgeExecution timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -749,13 +749,13 @@ public class Client {
             responseList = service.getListTask(ctxHolder, filter);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/getListTask failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/getListTask timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -791,13 +791,13 @@ public class Client {
             responseList = service.getListSession(ctxHolder, filter);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/getListSession failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/getListSession timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -831,13 +831,13 @@ public class Client {
             responseList = service.getListUproc(ctxHolder, filter);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/getListUproc failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/getListUproc timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -871,13 +871,13 @@ public class Client {
             responseList = service.getListMU(ctxHolder, filter);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/getListMu failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 0;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/getListMu timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -914,13 +914,13 @@ public class Client {
             newLaunchId = service.addLaunchFromTask(ctxHolder, objId);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/addLaunchFromTask failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 255;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/addLaunchFromTask timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -950,7 +950,7 @@ public class Client {
 
         }
         Pattern p = Pattern.compile(separator);
-        logger.info("parseDate: input="+input+", separator="+separator+ ", pattern="+p.toString());
+        logger.info("parseDate: input="+input+" with format:"+format+", separator="+separator+ ", pattern="+p.toString());
         String[] fields = p.split(input);
         String[] fieldTypes = p.split(format);
         int ii = 0;
@@ -971,6 +971,8 @@ public class Client {
             }
             ii++;
         }
+        String output = year+month+day;
+        logger.info("parseDate: output="+output+"="+year+" "+month+" "+day);
         return year+month+day;
     }
 
@@ -991,7 +993,7 @@ public class Client {
         objId.setBeginHour(newRun.getEntry("start_time").replaceAll(":",""));
         objId.setEndDate(parseDate("dd/mm/yyyy", newRun.getEntry("end_date")));
         objId.setEndHour(newRun.getEntry("end_time").replaceAll(":",""));
-        objId.setProcessingDate(parseDate("dd/mm/yyyy", newRun.getEntry("pdate")));
+        objId.setProcessingDate(parseDate("yyyy/mm/dd", newRun.getEntry("pdate")));
         objId.setStep("0");
         objId.setQueue(newRun.getEntry("queue"));
         objId.setInformation("");
@@ -1006,13 +1008,13 @@ public class Client {
             newLaunchId = service.addLaunch(ctxHolder, objId);
         } catch (DuwsException_Exception e) {
             errorCode = e.getFaultInfo().getErrorCode();
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/addLaunchFromTask failed: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
         } catch (SessionTimedOutException_Exception e) {
             errorCode = 255;
-            errorMessage = e.getFaultInfo().getMessage();
+            errorMessage = e.getMessage();
             logger.error(this.getClass().getName()+"/addLaunchFromTask timeout reached: "+errorMessage+" ("+errorCode+")");
             e.printStackTrace();
             ret = false;
@@ -1026,10 +1028,59 @@ public class Client {
         return ret;
     }
 
-    //public addLaunchFromTask2() {}  ==> with variables....
+    public boolean updateLaunch(UvmsConnection connection, String company, String node, String area, JobInfo newRun) {
+        boolean ret = true;
+        errorCode = 0;
+        errorMessage = "Successful";
+        ContextHolder ctxHolder = setContext(connection, company, node, area);
 
-    //public void rerunExecution()
-    //public void updateLaunch()
+        logger.info(this.getClass().getName()+"/updateLaunch: entering...");
+        newRun.log();
+        LaunchId launchId = new LaunchId();
+        launchId.setTask(newRun.getEntry("task"));
+        launchId.setSession(newRun.getEntry("session"));
+        launchId.setUproc(newRun.getEntry("uproc"));
+        launchId.setMu(newRun.getEntry("mu"));
+        launchId.setNumLanc(newRun.getEntry("numlanc"));
+        launchId.setNumSess(newRun.getEntry("numsess"));
+        launchId.setNumProc(newRun.getEntry("numproc"));
+
+        Launch objId = new Launch();
+        objId.setBeginDate(parseDate("dd/mm/yyyy", newRun.getEntry("start_date")));
+        objId.setBeginHour(newRun.getEntry("start_time").replaceAll(":",""));
+        objId.setEndDate(parseDate("dd/mm/yyyy", newRun.getEntry("end_date")));
+        objId.setEndHour(newRun.getEntry("end_time").replaceAll(":",""));
+        objId.setProcessingDate(parseDate("dd/mm/yyyy", newRun.getEntry("pdate")));
+        objId.setStep("0");
+        objId.setQueue(newRun.getEntry("queue"));
+        objId.setInformation("");
+        objId.setPriority(newRun.getEntry("priority"));
+        objId.setSeverity(0);
+        objId.setUser(newRun.getEntry("user"));
+        objId.setIdent(launchId);
+
+        try {
+            service.updateLaunch(ctxHolder, objId);
+            ret = true;
+        } catch (DuwsException_Exception e) {
+            errorCode = e.getFaultInfo().getErrorCode();
+            errorMessage = e.getMessage();
+            logger.error(this.getClass().getName()+"/updateLaunch failed: "+errorMessage+" ("+errorCode+")");
+            logger.error(this.getClass().getName()+"/updateLaunch: id="+objId.getIdent().getTask()+","+objId.getIdent().getSession()+","+objId.getIdent().getUproc()+","+objId.getIdent().getMu()+",");
+            e.printStackTrace();
+            ret = false;
+        } catch (SessionTimedOutException_Exception e) {
+            errorCode = 255;
+            errorMessage = e.getMessage();
+            logger.error(this.getClass().getName()+"/updateLaunch timeout reached: "+errorMessage+" ("+errorCode+")");
+            e.printStackTrace();
+            ret = false;
+        }
+
+        return ret;
+    }
+
+    //public addLaunchFromTask2() {}  ==> with variables....
 
     //public stopEngine()
     //public restartEngine()

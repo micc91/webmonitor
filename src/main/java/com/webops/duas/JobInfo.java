@@ -33,6 +33,7 @@ public class JobInfo extends ObjectsList {
         fields.add("numproc");
         fields.add("numsess");
         fields.add("numlanc");
+        fields.add("numentry");
         fields.add("status");
         fields.add("begin_date");
         fields.add("begin_time");
@@ -57,14 +58,16 @@ public class JobInfo extends ObjectsList {
 
     public void log() {
         String value;
+        int ii=0;
         for (Map<String, String> item : items) {
             for (String entry : item.keySet()) {
                 value = item.get(entry);
                 if (value == null) {
                     value = "NULL";
                 }
-                logger.info(this.getClass().getName() + ": " + entry + "=" + value);
+                logger.info(this.getClass().getName() + ": "+ii+"/" + entry + "=" + value);
             }
+            ii++;
         }
     }
 
@@ -83,17 +86,33 @@ public class JobInfo extends ObjectsList {
         for (Map<String, String> item : items) {
             for (String entry : item.keySet()) {
                 if (entry.equals(key)) {
-                    item.put(entry, value);
+                    item.put(entry, decodeUrl(value));
                 }
             }
         }
     }
 
-    public void addEntry(String field, String value) {
-        Map<String, String> entry = new HashMap<>();
+    public String decodeUrl(String input) {
+        String output = "";
+        if(input == null || input.isEmpty()) {
+            output = "";
+        } else {
+            output = input.replaceAll("%20", " ");
+        }
+        return output;
+    }
 
-        entry.put(field,value);
-        items.add(entry);
+    // all entries (key,value) are inserted at index 0 in the items list.
+    // This way, all job info is found at index 0 in the list
+    // except variables that are appended in the items list (done in another method)
+    public void addEntry(String field, String value) {
+        Map<String, String> entry = items.get(0);
+        if(entry == null) {
+            entry = new HashMap<>();
+        }
+        entry.put(field,decodeUrl(value));
+        items.set(0,entry);
+//        items.add(entry);
         logger.info(this.getClass().getName()+"/addEntry "+field+"="+value+", total size="+items.size());
     }
 
@@ -203,11 +222,33 @@ public class JobInfo extends ObjectsList {
     }
 
     @Override
+    public void setFromRequest(HttpServletRequest request) {
+        logger.info(this.getClass().getName()+"/setFromRequest: entering....");
+        if (request.getAttribute(name) != null) {
+            logger.info(this.getClass().getName()+"/setFromRequest: get items from request attribute "+name);
+            items = (List<Map<String, String>>) request.getAttribute(name);
+        }else {
+            logger.info(this.getClass().getName()+"/setFromRequest: request attribute "+name+"=NULL");
+        }
+
+        for(String field : fields) {
+            if(request.getParameter(field) != null) {
+                logger.info(this.getClass().getName()+"/setFromRequest: get "+field+" from request parameters");
+                addEntry(field, request.getParameter(field));
+            } else {
+                logger.info(this.getClass().getName()+"/setFromRequest: parameter "+field+"=NULL");
+            }
+        }
+        logger.info(this.getClass().getName()+"/setFromRequest: end");
+    }
+
+    @Override
     public void setInRequest(HttpServletRequest request) {
+        logger.info(this.getClass().getName()+"/setInRequest: request attribute "+name+" assigned with "+items.size()+" items, "+items.get(0).size()+" entries at index 0");
 
         request.setAttribute(name, items);
 //        request.setAttribute("variables", getVariables());
-        request.setAttribute("numentry", getItem("numentry"));
+        //request.setAttribute("numentry", getItem("numentry"));
         request.setAttribute("varbegin", varbegin);
         request.setAttribute("varend", varend);
     }
@@ -217,7 +258,7 @@ public class JobInfo extends ObjectsList {
 
         session.setAttribute(name, items);
 //        session.setAttribute("variables", getVariables());
-        session.setAttribute("numentry", getItem("numentry"));
+        //session.setAttribute("numentry", getItem("numentry"));
         session.setAttribute("varbegin", varbegin);
         session.setAttribute("varend", varend);
     }

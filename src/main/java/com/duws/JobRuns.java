@@ -21,6 +21,8 @@ public class JobRuns {
     private ObjectsList sessionList;
     private ObjectsList uprocList;
     private ObjectsList muList;
+    private String errorMessage;
+    private int errorCode;
 
     public JobRuns() {
         nodesList = new NodesList();
@@ -73,12 +75,12 @@ public class JobRuns {
 
     public void setFromSession(HttpServletRequest request) {
         nodesList.setFromSession(request);
-        jobsList.setFromRequest(request);
-        jobInfo.setFromRequest(request);
-        taskList.setFromRequest(request);
-        sessionList.setFromRequest(request);
-        uprocList.setFromRequest(request);
-        muList.setFromRequest(request);
+        jobsList.setFromSession(request);
+        jobInfo.setFromSession(request);
+        taskList.setFromSession(request);
+        sessionList.setFromSession(request);
+        uprocList.setFromSession(request);
+        muList.setFromSession(request);
     }
 
     public void setInRequest(HttpServletRequest request) {
@@ -120,6 +122,15 @@ public class JobRuns {
     public MuList getMuList() {
         return (MuList) muList;
     }
+
+    public String getLastResponse() {
+        return errorMessage;
+    }
+
+    public int getLastResult() {
+        return errorCode;
+    }
+
 
     public boolean getDUEnvironmentList(HttpServletRequest request, UvmsConnection uvmsConnection) {
         boolean ret = false;
@@ -495,6 +506,8 @@ public class JobRuns {
             ret = false;
         }
 
+        errorCode = duwsClient.getLastResult();
+        errorMessage = duwsClient.getLastResponse();
         request.setAttribute("lastResult", duwsClient.getLastResponse());
         request.setAttribute("returnCode", duwsClient.getLastResult());
 
@@ -502,4 +515,52 @@ public class JobRuns {
 
     }
 
+    public boolean updateLaunch(HttpServletRequest request, UvmsConnection uvmsConnection, Map<String, String> node, JobInfo newRun) {
+        Client duwsClient = null;
+        try {
+            duwsClient = new Client();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        boolean ret = true;
+        boolean launchDone = false;
+
+        Pattern sep = Pattern.compile("\\|");
+//        JobInfo newRun = (JobInfo) jobInfo;
+
+        if(newRun.getEntry("session") != null) {
+            if (!newRun.getEntry("session").isEmpty() && !newRun.getEntry("session").equals("none")) {
+                String sessionname = sep.split(newRun.getEntry("session"))[0];
+                newRun.putEntry("session", sessionname);
+            } else {
+                newRun.putEntry("session", "");
+            }
+        }
+
+        if(newRun.getEntry("task") != null) {
+            if (!newRun.getEntry("task").isEmpty() && !newRun.getEntry("task").equals("none")) {
+                String taskname = sep.split(newRun.getEntry("task"))[0];
+                newRun.putEntry("task", taskname);
+            } else {
+                newRun.putEntry("task", "");
+            }
+        }
+
+        ret = duwsClient.updateLaunch(uvmsConnection, node.get("company"), node.get("node"), node.get("area"), newRun);
+
+        if(ret) {
+            logger.info(this.getClass().getName()+"/updateLaunch succeeded");
+            //TODO: set in session?
+            request.setAttribute("numlanc", newRun.getEntry("numlanc"));
+        } else {
+            logger.error(this.getClass().getName()+"/updateLaunch failed");
+            ret = false;
+        }
+
+        request.setAttribute("lastResult", duwsClient.getLastResponse());
+        request.setAttribute("returnCode", duwsClient.getLastResult());
+
+        return ret;
+    }
 }

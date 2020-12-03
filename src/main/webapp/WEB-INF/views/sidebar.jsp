@@ -30,15 +30,20 @@
                     <c:set var="classattr" value="font-weight-bold"/>
                     <c:set var="idx" value="${idx + 1}" />
                 </c:if>
+                <%-- on rerun and update pages, disable the selection of nodes in all cases --%>
+                <c:if test="${currentPage == 'rerun' || currentPage == 'update'}"><c:set var="activation" value="disabled"/></c:if>
                 <div class="${selectedContextType} ${activation}">
                     <label for="${current}" class="nav-item ${activation} ${classattr}">
-                        <input id="${current}" value="${current}" class="nav-item ${activation} ${classattr}" type="${selectedContextType}" name="selectedNodes" ${activation} ${checkedattr} >
+                        <input id="${current}" value="${current}" class="nav-item ${activation} ${classattr}" type="${selectedContextType}" name="selectedNodes" ${activation} ${checkedattr}>
                             ${item.get("company")}:${item.get("node")}:${item.get("area")}
                         </input>
                     </label>
                 </div>
             </c:forEach>
-            <button class="btn btn-sm btn-default btn-block btn-outline-secondary" id="btn-select-context" type="submit" onclick="animateLoading('btn-select-context')">Select</button>
+            <c:set var="btnActivaton" value="" />
+            <c:if test="${currentPage == 'rerun' || currentPage == 'update'}"><c:set var="btnActivation" value="disabled"/></c:if>
+            <button class="btn btn-sm btn-default btn-block btn-outline-secondary" id="btn-select-context" type="submit" onclick="animateLoading('btn-select-context')" ${btnActivation} >Select</button>
+
             <p></p>
         </form>
     </div>

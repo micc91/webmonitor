@@ -5,12 +5,20 @@ function animateLoading(eltId) {
         message = 'Creating launch...';
     } else if (eltId === 'btn-signin') {
         message = 'Signing in...';
+    } else if(eltId === 'btn-update-prefs') {
+        message = 'Saving...';
+    } else if(eltId === 'btn-update') {
+        message = 'Updating...';
     }
     elt.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> '+message;
 }
 
-function updateDatesInNewRunForm() {
-    var lwduration = 600000; // 10 minutes
+function updateDatesInNewRunForm(lwsize) {
+    var lwduration = 10 * 60000;
+
+    if(lwsize !== undefined) {
+        lwduration = lwsize * 60000;// from minutes to milliseconds
+    }
 
     var now = new Date();
     var beginD = now.getDate().toString().padStart(2,'0')+"/"+(now.getMonth()+1).toString().padStart(2,'0')+"/"+now.getFullYear();

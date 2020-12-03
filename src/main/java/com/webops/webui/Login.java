@@ -9,12 +9,13 @@ import com.duws.JobRuns;
 import com.webops.duas.UvmsConnection;
 import org.apache.log4j.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 
 /**
  * Servlet implementation class Login
  */
-//@WebServlet("/login")
+@WebServlet(urlPatterns = "/login")
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = Logger.getLogger(Login.class);
@@ -107,9 +108,9 @@ public class Login extends HttpServlet {
 		HttpSession session = request.getSession();
 		Client duwsClient = new Client();
 		String nextPage = PAGE_LOGIN;
-		SettingsMap settingsMap = new SettingsMap();
-		settingsMap.init();
-		settingsMap.setInSession(session);
+		SettingsMap settings = new SettingsMap();
+		settings.init();
+		settings.setInSession(request);
 		int returnCode = 0;
 
 		UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute(ATTR_UVMSCONN);
@@ -189,6 +190,8 @@ public class Login extends HttpServlet {
 		if(nextPage.equals(PAGE_LOGIN)) {
 			this.getServletContext().getRequestDispatcher(nextPage).forward(request, response);
 		} else {
+			settings.setFromCookies(request);
+			settings.setInSession(request);
 			response.sendRedirect(request.getContextPath()+nextPage);
 		}
 	}

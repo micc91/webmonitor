@@ -9,11 +9,60 @@ table.onclick = highlight;
 
 function actionOnJob(action){
   var paramList = this.table.getElementsByClassName("selected-row" )[0].getElementsByTagName("TD")[1].getElementsByTagName("a")[0].getAttribute("href");
-  for(var ii = 0; ii < paramList.length; ii++) {
-    var newParamList = paramList[ii].replace(/^.*info\?/, "");
-    console.log("oldParamList = " + paramList[ii]);
+//  var ii = 0;
+//  for(var ii = 0; ii < paramList.length; ii++) {
+
+    var newParamList = encodeURI(paramList.replace(/^.*info\?/, ""));
+    var status = paramList.replace(/^.*status=/,'').replace(/&step=.*$/,'');
+    console.log("oldParamList = " + paramList);
     console.log("newParamList = " + newParamList);
-    window.location.search = "?" + newParamList + "&" + "action=" + action;
-  }
+    //Possible actions:
+    // rerun: completed, aborted, refused
+    // update: launch_wait, event_wait, time_overrun, disabled
+    // delete: any status
+    // stop/cancel: running
+    // hold: event_wait, launch_wait
+    // release: disabled
+    // force completion: aborted, time_overrun, disabled, launch_wait
+    // bypass: event_wait, launch_wait
+    // skip exec: event_wait, launch_wait
+    if(action === 'rerun') {
+        if(status === 'COMPLETED' || status === 'ABORTED' || status === 'REFUSED') {
+          var newUrl = window.location.origin + window.location.pathname.replace("dashboard", action);
+          $('<a href="' + newUrl + '?' + newParamList + "&" + "action=" + action + '"/>')[0].click();
+        }
+    } else if(action === 'update') {
+      if(status === 'LAUNCH_WAIT' || status === 'EVENT_WAIT' || status === 'TIME_OVERRUN' || status === 'DISABLED') {
+        var newUrl = window.location.origin + window.location.pathname.replace("dashboard", action);
+        $('<a href="' + newUrl + '?' + newParamList + "&" + "action=" + action + '"/>')[0].click();
+      }
+    } else if(action === 'delete') {
+        window.location.search = "?" + newParamList + "&" + "action=" + action;
+    } else if(action === 'stop') {
+      if(status === 'RUNNING') {
+        window.location.search = "?" + newParamList + "&" + "action=" + action;
+      }
+    } else if(action === 'hold') {
+      if(status === 'LAUNCH_WAIT' || status === 'EVENT_WAIT') {
+        window.location.search = "?" + newParamList + "&" + "action=" + action;
+      }
+    } else if(action === 'release') {
+      if(status === 'DISABLED') {
+        window.location.search = "?" + newParamList + "&" + "action=" + action;
+      }
+    } else if(action === 'force') {
+      if(status === 'ABORTED' || status === 'TIME_OVERRUN' || status === 'DISABLED' || status === 'LAUNCH_WAIT') {
+        window.location.search = "?" + newParamList + "&" + "action=" + action;
+      }
+    } else if(action === 'bypass') {
+      if(status === 'LAUNCH_WAIT' || status === 'EVENT_WAIT') {
+        window.location.search = "?" + newParamList + "&" + "action=" + action;
+      }
+    } else if(action === 'skip') {
+      if(status === 'LAUNCH_WAIT' || status === 'EVENT_WAIT') {
+        window.location.search = "?" + newParamList + "&" + "action=" + action;
+      }
+    }
+//  }
 }
 

@@ -1,5 +1,4 @@
 <%@ page pageEncoding="UTF-8" isELIgnored ="false" %>
-<%--<jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>--%>
 <jsp:useBean id="historyTrace" scope="request" type="java.util.List"/>
 <jsp:useBean id="jobLog" scope="request" type="java.util.List"/>
 <jsp:useBean id="resLog" scope="request" type="java.util.List"/>
@@ -102,7 +101,7 @@
                                         <div class="col-md-6 themed-grid-col font-weight-bold">Num Proc</div>
                                         <div class="col-md-6 themed-grid-col">${param.numproc}</div>
                                         <div class="col-md-6 themed-grid-col font-weight-bold">Num Entry</div>
-                                        <div class="col-md-6 themed-grid-col">${numentry}</div>
+                                        <div class="col-md-6 themed-grid-col">${param.numentry}</div>
                                     </div>
                                 </div>
                             </div>

@@ -31,8 +31,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns com.webops.duws.proxy.Execution
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "execution", targetNamespace = "http://duws.orsyp.com")
@@ -52,8 +52,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns com.webops.duws.proxy.Event
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "event", targetNamespace = "http://duws.orsyp.com")
@@ -71,8 +71,8 @@ public interface DuWebService {
      * 
      * @param outage
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "createOutageWindow", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.CreateOutageWindow")
@@ -92,8 +92,8 @@ public interface DuWebService {
      * @param taskId
      * @return
      *     returns com.webops.duws.proxy.LaunchId
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "launchId", targetNamespace = "http://duws.orsyp.com")
@@ -113,8 +113,8 @@ public interface DuWebService {
      * 
      * @param launchId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "deleteLaunch", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.DeleteLaunch")
@@ -131,8 +131,8 @@ public interface DuWebService {
      * 
      * @param launchId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "releaseLaunch", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.ReleaseLaunch")
@@ -151,8 +151,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns java.util.List<com.webops.duws.proxy.ExecutionItem>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "executionList", targetNamespace = "http://duws.orsyp.com")
@@ -184,8 +184,8 @@ public interface DuWebService {
      * 
      * @param context
      * @param event
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "addEvent", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.AddEvent")
@@ -208,8 +208,8 @@ public interface DuWebService {
      * @param step
      * @param uvmsConnection
      * @param startDate
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "rerunExecution", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.RerunExecution")
@@ -238,8 +238,8 @@ public interface DuWebService {
      * 
      * @param eventId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "deleteEvent", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.DeleteEvent")
@@ -258,8 +258,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns java.util.List<com.webops.duws.proxy.OutageWindow>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(targetNamespace = "")
@@ -277,8 +277,8 @@ public interface DuWebService {
      * 
      * @param launchId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "acknowledgeExecution", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.AcknowledgeExecution")
@@ -295,8 +295,8 @@ public interface DuWebService {
      * 
      * @param launchId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "unacknowledgeExecution", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.UnacknowledgeExecution")
@@ -314,8 +314,8 @@ public interface DuWebService {
      * @param executionId
      * @param delay
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "stopExecution", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.StopExecution")
@@ -334,8 +334,8 @@ public interface DuWebService {
      * 
      * @param context
      * @param launch
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "updateLaunch", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.UpdateLaunch")
@@ -354,8 +354,8 @@ public interface DuWebService {
      * @param launch
      * @return
      *     returns com.webops.duws.proxy.LaunchId
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "launchId", targetNamespace = "http://duws.orsyp.com")
@@ -375,8 +375,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns java.util.List<com.webops.duws.proxy.SessionItem>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "sessionList", targetNamespace = "http://duws.orsyp.com")
@@ -394,8 +394,8 @@ public interface DuWebService {
      * 
      * @param launchId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "skipExecution", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.SkipExecution")
@@ -414,8 +414,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns java.util.List<com.webops.duws.proxy.TaskItem>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "taskList", targetNamespace = "http://duws.orsyp.com")
@@ -447,8 +447,8 @@ public interface DuWebService {
      * 
      * @param outage
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "deleteOutageWindow", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.DeleteOutageWindow")
@@ -467,8 +467,8 @@ public interface DuWebService {
      * @param context
      * @param step
      * @param status
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "updateEvent", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.UpdateEvent")
@@ -491,8 +491,8 @@ public interface DuWebService {
      * @param runBookFilter
      * @return
      *     returns java.util.List<com.webops.duws.proxy.RunBook>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "runbooks", targetNamespace = "http://duws.orsyp.com")
@@ -512,8 +512,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns com.webops.duws.proxy.ResourceLog
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "resourceLog", targetNamespace = "http://duws.orsyp.com")
@@ -533,8 +533,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns java.util.List<com.webops.duws.proxy.PreviousLaunch>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "previousLaunches", targetNamespace = "http://duws.orsyp.com")
@@ -552,8 +552,8 @@ public interface DuWebService {
      * 
      * @param engine
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "stopEngine", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.StopEngine")
@@ -572,8 +572,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns java.util.List<com.webops.duws.proxy.NodeItem>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "nodeList", targetNamespace = "http://duws.orsyp.com")
@@ -593,8 +593,8 @@ public interface DuWebService {
      * @param taskId
      * @return
      *     returns com.webops.duws.proxy.Launch
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "launch", targetNamespace = "http://duws.orsyp.com")
@@ -612,8 +612,8 @@ public interface DuWebService {
      * 
      * @param context
      * @param queue
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "startQueue", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.StartQueue")
@@ -630,8 +630,8 @@ public interface DuWebService {
      * 
      * @param engine
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "restartEngine", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.RestartEngine")
@@ -648,8 +648,8 @@ public interface DuWebService {
      * 
      * @param executionId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "purgeExecution", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.PurgeExecution")
@@ -666,8 +666,8 @@ public interface DuWebService {
      * 
      * @param engine
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "startEngine", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.StartEngine")
@@ -684,8 +684,8 @@ public interface DuWebService {
      * 
      * @param launchId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "bypassLaunchConditionCheck", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.BypassLaunchConditionCheck")
@@ -719,8 +719,8 @@ public interface DuWebService {
      * 
      * @param context
      * @param queue
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "resetQueue", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.ResetQueue")
@@ -737,8 +737,8 @@ public interface DuWebService {
      * 
      * @param context
      * @param queue
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "stopQueue", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.StopQueue")
@@ -757,8 +757,8 @@ public interface DuWebService {
      * @param token
      * @return
      *     returns java.util.List<com.webops.duws.proxy.Envir>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "envList", targetNamespace = "http://duws.orsyp.com")
@@ -778,8 +778,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns java.util.List<com.webops.duws.proxy.MuItem>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "muList", targetNamespace = "http://duws.orsyp.com")
@@ -797,8 +797,8 @@ public interface DuWebService {
      * 
      * @param launchId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "disableLaunch", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.DisableLaunch")
@@ -817,8 +817,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns byte[]
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "dataHandler", targetNamespace = "http://duws.orsyp.com")
@@ -838,8 +838,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns com.webops.duws.proxy.Launch
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "launch", targetNamespace = "http://duws.orsyp.com")
@@ -859,8 +859,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns com.webops.duws.proxy.ExecutionLog
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "executionLog", targetNamespace = "http://duws.orsyp.com")
@@ -880,8 +880,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns com.webops.duws.proxy.HistoryTrace
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "historyTrace", targetNamespace = "http://duws.orsyp.com")
@@ -899,8 +899,8 @@ public interface DuWebService {
      * 
      * @param launchId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "enableLaunch", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.EnableLaunch")
@@ -919,8 +919,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns java.util.List<com.webops.duws.proxy.LaunchItem>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "launchList", targetNamespace = "http://duws.orsyp.com")
@@ -940,8 +940,8 @@ public interface DuWebService {
      * @param noteFilter
      * @return
      *     returns java.util.List<com.webops.duws.proxy.RunNote>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "runNotes", targetNamespace = "http://duws.orsyp.com")
@@ -961,8 +961,8 @@ public interface DuWebService {
      * @param sessionItem
      * @return
      *     returns com.webops.duws.proxy.SessionTree
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "sessionTree", targetNamespace = "http://duws.orsyp.com")
@@ -982,8 +982,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns java.util.List<com.webops.duws.proxy.EventItem>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "eventList", targetNamespace = "http://duws.orsyp.com")
@@ -1003,8 +1003,8 @@ public interface DuWebService {
      * @param runBook
      * @return
      *     returns byte[]
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "fileDataHandler", targetNamespace = "http://duws.orsyp.com")
@@ -1022,8 +1022,8 @@ public interface DuWebService {
      * 
      * @param launchId
      * @param context
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "forceCompleteLaunch", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.ForceCompleteLaunch")
@@ -1042,8 +1042,8 @@ public interface DuWebService {
      * @param context
      * @return
      *     returns java.util.List<com.webops.duws.proxy.UprocItem>
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "uprocList", targetNamespace = "http://duws.orsyp.com")
@@ -1061,8 +1061,8 @@ public interface DuWebService {
      * 
      * @param context
      * @param launch
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @RequestWrapper(localName = "holdLaunch", targetNamespace = "http://duws.orsyp.com", className = "com.webops.duws.proxy.HoldLaunch")
@@ -1081,8 +1081,8 @@ public interface DuWebService {
      * @param taskId
      * @return
      *     returns com.webops.duws.proxy.LaunchId
-     * @throws DuwsException_Exception
      * @throws SessionTimedOutException_Exception
+     * @throws DuwsException_Exception
      */
     @WebMethod
     @WebResult(name = "launchId", targetNamespace = "http://duws.orsyp.com")

@@ -14,12 +14,12 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(urlPatterns = "/new")
-public class NewRun extends HttpServlet {
+@WebServlet(urlPatterns = "/rerun")
+public class Rerun extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(NewRun.class);
     private static final String PAGE_LOGIN = "/WEB-INF/views/login.jsp";
-    private static final String PAGE_NEW = "/WEB-INF/views/new.jsp";
+    private static final String PAGE_RERUN = "/WEB-INF/views/rerun.jsp";
     private static final String ATTR_UVMSCONN = "uvmsConnection";
     private static final String ATTR_CONTEXT = "selectedContext";
     private static final String ATTR_SELECTEDNODES = "selectedNodes";
@@ -34,13 +34,19 @@ public class NewRun extends HttpServlet {
     private static final String ATTR_INPUTENDDATE = "inputEndD";
     private static final String ATTR_INPUTENDTIME = "inputEndT";
     private static final String ATTR_INPUTPROCESSINGDATE = "inputPdate";
-    private static final String VALUE_NONE = "none";
+    //private static final String VALUE_NONE = "none";
     private static final String ATTR_LASTRESULT = "lastResult";
+    private static final String ATTR_INPUTPRIORITY = "inputPriority";
+    private static final String ATTR_INPUTNUMLANC = "inputNumlanc";
+    private static final String ATTR_INPUTNUMSESS = "inputNumsess";
+    private static final String ATTR_INPUTNUMPROC = "inputNumproc";
+    private static final String ATTR_INPUTNUMENTRY = "inputNumentry";
+
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NewRun() {
+    public Rerun() {
         super();
         // TODO Auto-generated constructor stub
 
@@ -52,7 +58,6 @@ public class NewRun extends HttpServlet {
         SettingsMap settings = new SettingsMap();
 
         settings.setFromSession(request);
-        settings.setFromRequest(request);
 
         if(uvmsConnection == null || uvmsConnection.isDisconnected()) {
             logger.info(this.getServletName()+"/doPost: No user stored in session");
@@ -61,11 +66,13 @@ public class NewRun extends HttpServlet {
             this.getServletContext().getRequestDispatcher(PAGE_LOGIN).forward(request, response);
         }
 
+        logger.info(this.getServletName()+"/doPost: Entering...");
+
         JobRuns jobRuns = new JobRuns();
         jobRuns.setFromSession(request);
         boolean ret;
 
-        JobInfo newRun = new JobInfo();
+        JobInfo newRun = jobRuns.getJobInfo();
 
         newRun.addEntry("task", request.getParameter(ATTR_INPUTTASK));
         newRun.addEntry("session", request.getParameter(ATTR_INPUTSESSION));
@@ -78,47 +85,43 @@ public class NewRun extends HttpServlet {
         newRun.addEntry("end_date", request.getParameter(ATTR_INPUTENDDATE));
         newRun.addEntry("end_time", request.getParameter(ATTR_INPUTENDTIME));
         newRun.addEntry("pDate", request.getParameter(ATTR_INPUTPROCESSINGDATE));
+        newRun.addEntry("priority", request.getParameter(ATTR_INPUTPRIORITY));
+        newRun.addEntry("numlanc", request.getParameter(ATTR_INPUTNUMLANC));
+        newRun.addEntry("numsess", request.getParameter(ATTR_INPUTNUMSESS));
+        newRun.addEntry("numproc", request.getParameter(ATTR_INPUTNUMPROC));
+        newRun.addEntry("numentry", request.getParameter(ATTR_INPUTNUMENTRY));
+        if(newRun.getEntry("task").equals("-")) {
+            newRun.putEntry("task", "");
+        }
+        if(newRun.getEntry("session").equals("-")) {
+            newRun.putEntry("session", "");
+        }
         newRun.log();
 
         ret = jobRuns.getDUEnvironmentList(request, uvmsConnection);
         if(!ret) {
             logger.error(this.getServletName()+"/doPost: Failed to get list of nodes");
-            request.setAttribute(ATTR_LASTRESULT, "Failed to get list of nodes");
         }
 
         if(request.getParameterValues(ATTR_SELECTEDNODES) != null) {
             settings.setSelectedContext(request.getParameterValues(ATTR_SELECTEDNODES));
         }
 
-        if(request.getParameter(ATTR_INPUTUPROC) != null) {
-            if(!request.getParameter(ATTR_INPUTUPROC).isEmpty() && !request.getParameter(ATTR_INPUTUPROC).equals(VALUE_NONE)) {
-                ret = jobRuns.addLaunch(request, uvmsConnection, jobRuns.getNodesList().getItems().get(Integer.parseInt(settings.getSelectedContext().get(0))), newRun);
-                if(!ret) {
-                    logger.error(this.getServletName()+"/doPost: Failed to create launch");
-                    request.setAttribute(ATTR_LASTRESULT, "Failed to create launch");
-                }
-            }
-            else {
-                logger.info(this.getServletName()+"/doPost: parameter "+ATTR_INPUTUPROC+" EMPTY: nothing to launch");
-            }
+        ret = jobRuns.addLaunch(request, uvmsConnection, jobRuns.getNodesList().getItems().get(Integer.parseInt(settings.getSelectedContext().get(0))), newRun);
+        if(!ret) {
+            logger.error(this.getServletName()+"/doPost: Failed to create launch");
         }
-
         if(request.getParameterValues(ATTR_SELECTEDNODES) != null) {
             settings.setSelectedContext(request.getParameterValues(ATTR_SELECTEDNODES));
-
-            ret = jobRuns.getObjectsForNewRun(request, uvmsConnection, jobRuns.getNodesList().getItems().get(Integer.parseInt(settings.getSelectedContext().get(0))));
-            if(!ret) {
-                logger.error(this.getServletName()+"/doPost: Failed to get list of objects for new run form");
-                request.setAttribute(ATTR_LASTRESULT, "Failed to get list of objects for new run form");
-            }
         }
 
         settings.setInSession(request);
         jobRuns.setInRequest(request);
         jobRuns.setInSession(request);
-        request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+        //request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
 
-        this.getServletContext().getRequestDispatcher(PAGE_NEW).forward(request, response);
+        logger.info(this.getServletName()+"/doPost: going to "+PAGE_RERUN);
+        this.getServletContext().getRequestDispatcher(PAGE_RERUN).forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -126,14 +129,12 @@ public class NewRun extends HttpServlet {
         HttpSession session = request.getSession();
         UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute(ATTR_UVMSCONN);
         List<String> selectedNodes;
-        boolean contextSelected = false;
 
         //TODO: Add get from session: Audit
         SettingsMap settings = new SettingsMap();
 
         //get from session: SettingsMap
         settings.setFromSession(request);
-        settings.setFromRequest(request);
 
         if(uvmsConnection == null || uvmsConnection.isDisconnected()) {
             logger.info(this.getServletName()+"/doGet: No user stored in session");
@@ -141,44 +142,34 @@ public class NewRun extends HttpServlet {
             request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
             this.getServletContext().getRequestDispatcher(PAGE_LOGIN).forward(request, response);
         }
+        logger.info(this.getServletName()+"/doGet: Entering...");
 
         JobRuns jobRuns = new JobRuns();
         jobRuns.getFromRequest(request);
+
+        logger.info(this.getServletName()+"/doGet: job info=");
+        jobRuns.getJobInfo().log();
 
         if(jobRuns.getNodesList().getSize() == 0) {
             ret = jobRuns.getDUEnvironmentList(request, uvmsConnection);
             if (!ret) {
                 logger.error(this.getServletName() + "/doGet: Failed to get list of nodes");
-                request.setAttribute(ATTR_LASTRESULT, "Failed to get list of nodes");
             }
         }
         if(request.getParameterValues(ATTR_SELECTEDNODES) != null) {
             settings.setSelectedContext(request.getParameterValues(ATTR_SELECTEDNODES));
-            contextSelected = true;
         } else {
             if(session.getAttribute(ATTR_CONTEXT) != null) {
                 selectedNodes = (List<String>) session.getAttribute(ATTR_CONTEXT);
                 settings.setSelectedContext(selectedNodes);
-                contextSelected = true;
-            }
-        }
-        if(contextSelected) {
-            if (jobRuns.getTaskList().getSize() == 0 || jobRuns.getMuList().getSize() == 0 || jobRuns.getSessionList().getSize() == 0 || jobRuns.getUprocList().getSize() == 0) {
-                ret = false;
-                if(!settings.getSelectedContext().isEmpty()) {
-                    ret = jobRuns.getObjectsForNewRun(request, uvmsConnection, jobRuns.getNodesList().getItems().get(Integer.parseInt(settings.getSelectedContext().get(0))));
-                }
-                if (!ret) {
-                    logger.error(this.getServletName() + "/doPost: Failed to get list of objects for new run form");
-                    request.setAttribute(ATTR_LASTRESULT, "Failed to get list of objects for new run form");
-                }
             }
         }
 
         jobRuns.setInRequest(request);
         jobRuns.setInSession(request);
-        request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+        //request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
 
-        this.getServletContext().getRequestDispatcher(PAGE_NEW).forward(request, response);
+        logger.info(this.getServletName()+"/doGet: going to "+PAGE_RERUN);
+        this.getServletContext().getRequestDispatcher(PAGE_RERUN).forward(request, response);
     }
 }

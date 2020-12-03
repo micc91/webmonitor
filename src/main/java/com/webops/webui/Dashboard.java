@@ -5,6 +5,7 @@ import com.webops.duas.UvmsConnection;
 import org.apache.log4j.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+@WebServlet(urlPatterns = "/dashboard")
 public class Dashboard extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final Logger logger = Logger.getLogger(Dashboard.class);
@@ -51,6 +53,7 @@ public class Dashboard extends HttpServlet {
             request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
             this.getServletContext().getRequestDispatcher(PAGE_LOGIN).forward(request, response);
         }
+        logger.info(this.getServletName()+"/doPost: Entering... ");
 
         JobRuns jobRuns = new JobRuns();
         boolean ret;
@@ -67,7 +70,13 @@ public class Dashboard extends HttpServlet {
             settings.setSelectedContext(request.getParameterValues(ATTR_SELECTEDNODES));
         }
 
-        ret = jobRuns.getListExecution(request, uvmsConnection, settings.getSelectedContext(), settings.getItem("offset"));
+
+        String offset = "none";
+        if(settings.getItem("offset") != null) {
+            offset = settings.getItem("offset").split("#")[0];
+        }
+
+        ret = jobRuns.getListExecution(request, uvmsConnection, settings.getSelectedContext(), offset);
         if(!ret) {
             logger.error(this.getServletName()+"/doPost: Failed to get list of runs");
             request.setAttribute("error", "Failed to get list of job runs");
@@ -75,9 +84,10 @@ public class Dashboard extends HttpServlet {
         logger.info(this.getServletName()+"/doPost: got from session="+ uvmsConnection.toString());
 
         //TODO: delete this line: ?
-        request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
-        settings.setInSession(session);
+        //request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+        settings.setInSession(request);
 
+        logger.info(this.getServletName()+"/doPost: going to "+PAGE_DASHBOARD);
         this.getServletContext().getRequestDispatcher(PAGE_DASHBOARD).forward(request, response);
     }
 
@@ -101,6 +111,7 @@ public class Dashboard extends HttpServlet {
             request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
             this.getServletContext().getRequestDispatcher(PAGE_LOGIN).forward(request, response);
         }
+        logger.info(this.getServletName()+"/doGet: Entering... ");
 
         JobRuns jobRuns = new JobRuns();
         if(request.getAttribute(ATTR_JOBSLIST) == null) {
@@ -114,10 +125,30 @@ public class Dashboard extends HttpServlet {
         boolean refresh = settings.getItem(ATTR_REFRESH).equals("true");
         String action = request.getParameter(ATTR_ACTION);
         if(action != null) {
+/*
+            if(action.equals("udpate")) {
+                this.getServletContext().getRequestDispatcher(PAGE_UPDATE).forward(request, response);
+            }
+            if(action.equals("rerun")) {
+                this.getServletContext().getRequestDispatcher(PAGE_RERUN).forward(request, response);
+            }
+*/
             ret = jobRuns.actionOnJob(request, uvmsConnection);
             if(ret) {
                 refresh = true;
             }
+        }
+        String offset = request.getParameter("offset");
+        String timer = request.getParameter("timer");
+        String chart = request.getParameter("chart");
+        if(offset != null) {
+            settings.setItemFromSelectValue("offset",offset);
+        }
+        if(timer != null) {
+            settings.setItemFromSelectValue("timer",timer);
+        }
+        if(chart != null) {
+            settings.setItemFromSelectValue("chart",chart);
         }
 
         // do not request data if already present in session - unless SettingsMap.refresh=true:
@@ -129,7 +160,7 @@ public class Dashboard extends HttpServlet {
             }
         }
 
-        ret = jobRuns.getListExecution(request, uvmsConnection, selectedNodes, settings.getItem("offset"));
+        ret = jobRuns.getListExecution(request, uvmsConnection, selectedNodes, offset);
         if(!ret) {
             logger.error(this.getServletName()+"/doGet: Failed to get list of runs");
             request.setAttribute("error", "Failed to get list of job runs");
@@ -137,13 +168,14 @@ public class Dashboard extends HttpServlet {
 
         //TODO: re-store data in session if a refresh has been done
         //...
-        settings.setInSession(session);
+        settings.setInSession(request);
 
         logger.info(this.getServletName()+"/doGet: got from session="+ uvmsConnection.toString());
 
         //TODO: delete this line: ?
-        request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
+        //request.setAttribute(ATTR_UVMSCONN, uvmsConnection);
 
+        logger.info(this.getServletName()+"/doGet: going to "+PAGE_DASHBOARD);
         this.getServletContext().getRequestDispatcher(PAGE_DASHBOARD).forward(request, response);
     }
 }
