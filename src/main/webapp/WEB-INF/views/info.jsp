@@ -179,9 +179,9 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6 themed-grid-col font-weight-bold">Begin date/time</div>
-                                        <div class="col-md-6 themed-grid-col">${param.begin}</div>
+                                        <div class="col-md-6 themed-grid-col">${param.begin_date} ${param.begin_time}</div>
                                         <div class="col-md-6 themed-grid-col font-weight-bold">End date/time</div>
-                                        <div class="col-md-6 themed-grid-col">${param.end}</div>
+                                        <div class="col-md-6 themed-grid-col">${param.end_date} ${param.end_time}</div>
                                         <div class="col-md-6 themed-grid-col font-weight-bold">Processing date</div>
                                         <div class="col-md-6 themed-grid-col">${param.pdate}</div>
                                     </div>

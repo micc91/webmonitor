@@ -162,7 +162,7 @@ public class Client {
 
     public boolean setExecutionAndLaunchFilters(String offset) {
 
-        int iOffset = 1440; // D - 1 day by default
+        int iOffset = 1440*365; // D - 1 year by default
         if(offset != null) {
             if (!offset.equals("none") && !offset.isEmpty()) {
                 iOffset = Integer.parseInt(offset);
@@ -173,7 +173,7 @@ public class Client {
         org.joda.time.DateTime beginDT = nowDT.minusMinutes(iOffset);
         String sBegin = String.format("%04d",beginDT.getYear()) + String.format("%02d",beginDT.getMonthOfYear()) + String.format("%02d",beginDT.getDayOfMonth());
         String sBeginT = String.format("%02d",beginDT.getHourOfDay()) + String.format("%02d",beginDT.getMinuteOfHour()) + String.format("%02d",beginDT.getSecondOfMinute());
-        org.joda.time.DateTime endDT = nowDT.plusSeconds(86400 - nowDT.getSecondOfDay());
+        org.joda.time.DateTime endDT = nowDT.plusSeconds(86400*365 - nowDT.getSecondOfDay());
         String sEnd = String.format("%04d",endDT.getYear()) + String.format("%02d",endDT.getMonthOfYear()) + String.format("%02d",endDT.getDayOfMonth());
         String sEndT = String.format("%02d",endDT.getHourOfDay()) + String.format("%02d",endDT.getMinuteOfHour()) + String.format("%02d",endDT.getSecondOfMinute());
         logger.info(this.getClass().getName()+"/setExecutionFilter: currentFilter set with begin="+sBegin+" "+sBeginT+", end="+sEnd + " "+sEndT+ "(offset="+iOffset+")");

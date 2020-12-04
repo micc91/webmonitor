@@ -345,9 +345,9 @@ public class JobRuns {
             session = request.getParameter("session");
             uproc = request.getParameter("uproc");
             mu = request.getParameter("mu");
-            numJob = request.getParameter("numproc");
-            numSess = request.getParameter("numsess");
-            numLanc = request.getParameter("numlanc");
+            numJob = String.format("%07d",request.getParameter("numproc"));
+            numSess = String.format("%07d",request.getParameter("numsess"));
+            numLanc = String.format("%07d",request.getParameter("numlanc"));
             status = request.getParameter("status");
         } else {
             company = job.get("company");
@@ -357,9 +357,9 @@ public class JobRuns {
             session = job.get("session");
             uproc = job.get("uproc");
             mu = job.get("mu");
-            numJob = job.get("numproc");
-            numSess = job.get("numsess");
-            numLanc = job.get("numlanc");
+            numJob = String.format("%07d",job.get("numproc"));
+            numSess = String.format("%07d",job.get("numsess"));
+            numLanc = String.format("%07d",job.get("numlanc"));
             status = job.get("status");
         }
 

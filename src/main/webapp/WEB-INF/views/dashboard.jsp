@@ -67,7 +67,8 @@
                     <div class="btn-toolbar mb-2 mb-md-0" > <%--role="toolbar" aria-label="toolbar with buttons">--%>
                         <div class="btn-group mr-2" > <%--role="group" aria-label="action group" > --%>
                             <%-- delete, cancel, hold, release, bypass, force, skip --%>
-                                <button class="btn btn-sm btn-outline-secondary" id="btn-action-delete" onclick="actionOnJob('delete')"><svg class="feather" data-toggle="tooltip" data-placement="top" title="Delete" class="bs-tooltip-top"><use xlink:href="./media/feather-sprite.svg#trash-2"/></svg>
+                                <button class="btn btn-sm btn-outline-secondary" id="btn-action-delete" onclick="actionOnJob('delete')">
+                                    <svg class="feather" data-toggle="tooltip" data-placement="top" title="Delete" class="bs-tooltip-top"><use xlink:href="./media/feather-sprite.svg#trash-2"/></svg>
                                 </button>
                                 <button class="btn btn-sm btn-outline-secondary" id="btn-action-stop" onclick="actionOnJob('stop')">
                                     <svg class="feather" data-toggle="tooltip" data-placement="top" title="Cancel" class="bs-tooltip-top"><use xlink:href="./media/feather-sprite.svg#stop-circle"/></svg>

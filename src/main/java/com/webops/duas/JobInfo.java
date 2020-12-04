@@ -106,13 +106,16 @@ public class JobInfo extends ObjectsList {
     // This way, all job info is found at index 0 in the list
     // except variables that are appended in the items list (done in another method)
     public void addEntry(String field, String value) {
-        Map<String, String> entry = items.get(0);
-        if(entry == null) {
+        Map<String, String> entry = null;
+        if(items.size() == 0) {
             entry = new HashMap<>();
+            entry.put(field,decodeUrl(value));
+            items.add(entry);
+        } else {
+            entry = items.get(0);
+            entry.put(field,decodeUrl(value));
+            items.set(0,entry);
         }
-        entry.put(field,decodeUrl(value));
-        items.set(0,entry);
-//        items.add(entry);
         logger.info(this.getClass().getName()+"/addEntry "+field+"="+value+", total size="+items.size());
     }
 

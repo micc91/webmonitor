@@ -1,5 +1,7 @@
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-  <a class="navbar-brand" href="<c:url value='/index'/>">Web Ops</a>
+  <a class="navbar-brand" href="<c:url value='/index'/>">
+    <img src="<c:url value='/media/UV.png'/>" />
+  </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -25,10 +27,21 @@
 <!--    <form class="form-inline mt-2 mt-md-0">-->
     <div class="form-inline mt-2 mt-md-0">
       <c:set var="disabled" value="disabled"/>
+      <c:set var="selectDisabled" value="disabled"/>
       <c:if test="${currentPage == 'dashboard' || currentPage == 'info'}"><c:set var="disabled" value=""/></c:if>
+      <c:if test="${currentPage == 'dashboard'}"><c:set var="selectDisabled" value=""/></c:if>
       <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" id="searchtext" ${disabled} >
-      <button class="btn btn-outline-success my-2 my-sm-0" onclick="searchInPage()"  ${disabled} >Search</button>
-<%--      <button class="btn btn-outline-success my-2 my-sm-0" onclick="clearSearchInPage()"  ${disabled} >Clear</button>--%>
+      <div class="btn-group mr-2" > <%--role="group" aria-label="action group" > --%>
+        <button class="btn btn-outline-success my-2 my-sm-0" onclick="searchInPage('filtered')"  ${disabled} >
+          <svg class="feather" data-toggle="tooltip" data-placement="top" title="Search" class="bs-tooltip-top"><use xlink:href="./media/feather-sprite.svg#search"/></svg>
+        </button>
+        <button class="btn btn-outline-success my-2 my-sm-0" onclick="searchInPage('selected-row')"  ${selectDisabled} >
+          <svg class="feather" data-toggle="tooltip" data-placement="top" title="Select" class="bs-tooltip-top"><use xlink:href="./media/feather-sprite.svg#crosshair"/></svg>
+        </button>
+        <button class="btn btn-outline-success my-2 my-sm-0" onclick="clearSearchInPage()"  ${disabled} >
+          <svg class="feather" data-toggle="tooltip" data-placement="top" title="Clear" class="bs-tooltip-top"><use xlink:href="./media/feather-sprite.svg#x"/></svg>
+        </button>
+      </div>
     </div>
 <!--    </form>-->
   </div>

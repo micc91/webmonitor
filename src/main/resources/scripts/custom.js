@@ -152,32 +152,36 @@ function setAutoRefreshJobRuns() {
     }
 }
 
-function searchInPage() {
+function searchInPage(styleToApply) {
     var table, rows;
     var cell;
     var eltList;
     var found = 0;
+    var ii;
+    var result;
     tosearch = document.getElementById('searchtext');
 
     table = document.getElementById('jobrunsTable');
     if(table !== null) {
         rows = table.rows;
 
-        for (ii = 1; ii < (rows.length - 1); ii++) {
+        for (ii = 1; ii < rows.length; ii++) {
             for (ij = 1; ij < 7; ij++) {
                 //cell = rows[ii].getElementsByTagName("TD")[ij];
                 cell = rows[ii];
-                if (cell.innerText.search(tosearch.value) > 0) {
-                    rows[ii].setAttribute("class", "filtered");
+                result = cell.innerText.search(tosearch.value);
+                if (result >= 0) {
+                    rows[ii].setAttribute("class", styleToApply);
                     found++;
                 }
             }
         }
     } else {
+        // we are in another page than dashboard: info (select not possible, only highlight search results, means fileterd style)
         eltList = document.getElementsByClassName('themed-grid-col');
-        for(ii = 1; ii < (eltList.length - 1); ii++) {
+        for(ii = 0; ii < eltList.length; ii++) {
             cell = eltList[ii];
-            if(cell.innerText.search(tosearch.value) > 0) {
+            if(cell.innerText.search(tosearch.value) >= 0) {
                 var currentStyle = cell.getAttribute("class");
                 cell.setAttribute("class", currentStyle+" filtered");
                 found++;
@@ -186,7 +190,6 @@ function searchInPage() {
         var idList = ["htrace-", "joblog-", "reslog-"];
         var elt;
         var eltexist;
-        var ii;
         for(ij = 0; ij < idList.length; ij++) {
             eltexist = true;
             ii = 0;
@@ -196,7 +199,7 @@ function searchInPage() {
                     eltexist = false;
                 } else {
                     cell = elt;
-                    if (cell.innerText.search(tosearch.value) > 0) {
+                    if (cell.innerText.search(tosearch.value) >= 0) {
                         var currentStyle = cell.getAttribute("class");
                         cell.setAttribute("class", currentStyle + " filtered2");
                         found++;
@@ -215,17 +218,24 @@ function clearSearchInPage() {
     var eltList;
     var found = 0;
     var currentStyle;
+    var newStyle;
     var tosearch = document.getElementById('searchtext');
 
     table = document.getElementById('jobrunsTable');
     if (table !== null) {
         rows = table.rows;
 
-        for (ii = 1; ii < (rows.length - 1); ii++) {
+        for (ii = 1; ii < rows.length; ii++) {
             currentStyle = rows[ii].getAttribute("class");
-            if(currentStyle.search("filtered") > 0) {
-                currentStyle.replace("filtered", "");
-                rows[ii].setAttribute("class",currentStyle);
+            if(currentStyle !== null) {
+                if (currentStyle.search("filtered") >= 0) {
+                    newStyle = currentStyle.replace("filtered", "");
+                    rows[ii].setAttribute("class", newStyle);
+                }
+                if (currentStyle.search("selected-row") >= 0) {
+                    newStyle = currentStyle.replace("selected-row", "");
+                    rows[ii].setAttribute("class", newStyle);
+                }
             }
         }
     } else {
@@ -233,7 +243,7 @@ function clearSearchInPage() {
         var elt;
         var eltexist;
         var ii;
-        for(ij = 1; ij < idList.length; ij++) {
+        for(ij = 0; ij < idList.length; ij++) {
             eltexist = true;
             ii = 0;
             while (eltexist) {
@@ -242,23 +252,27 @@ function clearSearchInPage() {
                     eltexist = false;
                 } else {
                     currentStyle = elt.getAttribute("class");
-                    if (currentStyle.search("filtered2") > 0) {
-                        currentStyle.replace("filtered2","");
-                        elt.setAttribute("class", currentStyle);
-                        found++;
+                    if(currentStyle !== null) {
+                        if (currentStyle.search("filtered2") >= 0) {
+                            newStyle = currentStyle.replace("filtered2", "");
+                            elt.setAttribute("class", newStyle);
+                            found++;
+                        }
                     }
                 }
                 ii++;
             }
         }
         eltList = document.getElementsByClassName('themed-grid-col');
-        for(ii = 1; ii < (eltList.length - 1); ii++) {
+        for(ii = 0; ii < eltList.length; ii++) {
             cell = eltList[ii];
             currentStyle = cell.getAttribute("class");
-            if(currentStyle.search("filtered") > 0) {
-                currentStyle.replace("filtered","");
-                cell.setAttribute("class", currentStyle);
-                found++;
+            if(currentStyle !== null) {
+                if (currentStyle.search("filtered") >= 0) {
+                    newStyle = currentStyle.replace("filtered", "");
+                    cell.setAttribute("class", newStyle);
+                    found++;
+                }
             }
         }
 

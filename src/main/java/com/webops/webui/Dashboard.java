@@ -185,6 +185,9 @@ public class Dashboard extends HttpServlet {
         String chart = request.getParameter("chart");
         if(offset != null) {
             settings.setItemFromSelectValue("offset",offset);
+            logger.info(this.getServletName()+"/doGet: offset got from parameter="+offset+" => "+settings.getItem("offset"));
+        } else {
+            offset = settings.getItem("offset").split("#")[0];
         }
         if(timer != null) {
             settings.setItemFromSelectValue("timer",timer);
