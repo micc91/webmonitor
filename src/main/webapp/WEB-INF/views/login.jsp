@@ -39,15 +39,36 @@
                 <form class="form-signin" action="./login" method="post" >
                         <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
                         <label for="inputLogin" class="sr-only">Login</label>
-                        <input type="text" id="inputLogin" name="inputLogin" value="<c:out value="${sessionScope.uvmsConnection.login}"/>" size="20" maxlength="20" class="form-control" placeholder="User name" required autofocus>
+<%--                        <input type="text" id="inputLogin" name="inputLogin" value="<c:out value="${sessionScope.uvmsConnection.login}"/>" size="20" maxlength="20" class="form-control" placeholder="User name" required autofocus>--%>
+                        <input list="logins" name="inputLogin" id="inputLogin" size="20" maxlength="64" class="form-control" placeholder="User name" required autofocus>
+                        <datalist id="logins">
+                            <option value="<c:out value='${sessionScope.uvmsConnection.login}'/>"><c:out value="${sessionScope.uvmsConnection.login}"/></option>
+                            <c:forTokens delims=":" var="item" items="${sessionScope.loginList}">
+                                <option value="<c:out value='${item}'/>"><c:out value="${item}"/></option>
+                            </c:forTokens>
+                        </datalist>
                         <span class="error-msg">${errors['inputLogin']}</span>
                         <label for="inputPassword" class="sr-only">Password</label>
-                        <input type="password" id="inputPassword" name="inputPassword" value="<c:out value="${sessionScope.uvmsConnection.password}"/>" size="20" maxlength="20" class="form-control" placeholder="Password" required>
+                        <input type="password" id="inputPassword" name="inputPassword" value="<c:out value="${sessionScope.uvmsConnection.password}"/>" size="20" maxlength="64" class="form-control" placeholder="Password" required>
                         <label for="inputUvms" class="sr-only">UVMS Hostname</label>
-                        <input type="text" id="inputUvms" name="inputUvms" value="<c:out value="${sessionScope.uvmsConnection.uvmsHost}"/>" size="20" maxlength="60" class="form-control" placeholder="UVMS Hostname" required>
+<%--                        <input type="text" id="inputUvms" name="inputUvms" value="<c:out value="${sessionScope.uvmsConnection.uvmsHost}"/>" size="20" maxlength="60" class="form-control" placeholder="UVMS Hostname" required>--%>
+                        <input list="uvms" name="inputUvms" id="inputUvms" size="20" maxlength="64" class="form-control" placeholder="Univiewer Management Server Hostname" required>
+                        <datalist id="uvms">
+                            <option value="<c:out value='${sessionScope.uvmsConnection.uvmsHost}'/>"><c:out value="${sessionScope.uvmsConnection.uvmsHost}"/></option>
+                            <c:forTokens delims=":" var="item" items="${sessionScope.uvmsList}">
+                            <option value="<c:out value='${item}'/>"><c:out value="${item}"/></option>
+                            </c:forTokens>
+                        </datalist>
                         <span class="error-msg">${errors['inputUvms']}</span>
                         <label for="inputPort" class="sr-only">UVMS Port</label>
-                        <input type="text" id="inputPort" name="inputPort" value="<c:out value="${sessionScope.uvmsConnection.uvmsPort}"/>" size="20" maxlength="6" class="form-control" placeholder="UVMS Port Number" required>
+<%--                        <input type="text" id="inputPort" name="inputPort" value="<c:out value="${sessionScope.uvmsConnection.uvmsPort}"/>" size="20" maxlength="6" class="form-control" placeholder="UVMS Port Number" required>--%>
+                            <input list="ports" name="inputPort" id="inputPort" size="10" maxlength="10" class="form-control" placeholder="TCP Port Number" required>
+                            <datalist id="ports">
+                                <option value="<c:out value='${sessionScope.uvmsConnection.uvmsPort}'/>"><c:out value="${sessionScope.uvmsConnection.uvmsPort}"/></option>
+                                <c:forTokens delims=":" var="item" items="${sessionScope.portList}">
+                                <option value="<c:out value='${item}'/>"><c:out value="${item}"/></option>
+                                </c:forTokens>
+                            </datalist>
                         <span class="error-msg">${errors['inputPort']}</span>
                         <div class="checkbox mb-3">
                             <label>

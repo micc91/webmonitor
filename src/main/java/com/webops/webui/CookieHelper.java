@@ -51,4 +51,12 @@ public class CookieHelper {
 
         return null;
     }
+
+    public static String getCookieValue( HttpServletRequest request, String name ) {
+        Cookie cookie = getCookie(request, name);
+        if(cookie != null) {
+            return cookie.getValue();
+        }
+        return null;
+    }
 }

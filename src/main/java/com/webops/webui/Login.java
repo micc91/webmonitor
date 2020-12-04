@@ -36,6 +36,12 @@ public class Login extends HttpServlet {
 	private static final String CK_LASTPORT = "lastPort";
 	private static final int COOKIE_DURATION = 365 * 86400;
 	private static final String ATTR_REMEMBER_CONN = "remember-conn";
+	private static final String CK_LOGINLIST = "listlogin";
+	private static final String CK_UVMSLIST = "listuvms";
+	private static final String CK_PORTLIST = "listport";
+	private static final String ATTR_LOGINLIST = "loginList";
+	private static final String ATTR_UVMSLIST = "uvmsList";
+	private static final String ATTR_PORTLIST = "portList";
 
 	/**
      * @see HttpServlet#HttpServlet()
@@ -47,42 +53,18 @@ public class Login extends HttpServlet {
 	}
 
 	/**
-	 * Method retrieving the value of a cookie given its name
-	 * from the HTTP request
-	 */
-	private static String getCookieValue( HttpServletRequest request, String name ) {
-		Cookie[] cookies = request.getCookies();
-		if ( cookies != null ) {
-			for ( Cookie cookie : cookies ) {
-				if ( cookie != null && name.equals( cookie.getName() ) ) {
-					logger.info("Get cookie "+name+"="+cookie.getValue());
-					return cookie.getValue();
-				}
-			}
-		}
-		return null;
-	}
-
-	/*
-	 * Method handling the creation of a cookie and its adding to HTTP response
-	 */
-	private static void setCookie( HttpServletResponse response, String name, String value, int maxAge ) {
-		Cookie cookie = new Cookie( name, value );
-		cookie.setMaxAge( maxAge );
-		response.addCookie( cookie );
-		logger.info("Set cookie "+cookie.getName()+"="+cookie.getValue());
-	}
-
-	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.setContentType("text/html");
 
-		String lastLogin = getCookieValue(request, CK_LASTLOGIN);
-		String lastUvms = getCookieValue(request, CK_LASTUVMS);;
-		String lastPort = getCookieValue(request, CK_LASTPORT);
+		String lastLogin = CookieHelper.getCookieValue(request, CK_LASTLOGIN);
+		String lastUvms  = CookieHelper.getCookieValue(request, CK_LASTUVMS);;
+		String lastPort  = CookieHelper.getCookieValue(request, CK_LASTPORT);
+		String loginList = CookieHelper.getCookieValue(request, CK_LOGINLIST);
+		String uvmsList  = CookieHelper.getCookieValue(request, CK_UVMSLIST);
+		String portList  = CookieHelper.getCookieValue(request, CK_PORTLIST);
 
 		HttpSession session = request.getSession();
 		UvmsConnection uvmsConnection = (UvmsConnection) session.getAttribute(ATTR_UVMSCONN);
@@ -94,7 +76,9 @@ public class Login extends HttpServlet {
 			logger.info(this.getServletName() + "/doGet: got from session=" + uvmsConnection.toString());
 		}
 		session.setAttribute(ATTR_UVMSCONN, uvmsConnection);
-
+		session.setAttribute(ATTR_LOGINLIST,loginList);
+		session.setAttribute(ATTR_UVMSLIST,uvmsList);
+		session.setAttribute(ATTR_PORTLIST,portList);
 		this.getServletContext().getRequestDispatcher(PAGE_LOGIN).forward(request, response);
 	}
 
@@ -146,11 +130,50 @@ public class Login extends HttpServlet {
 				nextPage = PAGE_LOGIN;
 				returnCode = duwsClient.getLastResult();
 			} else {
+				String loginList = (String) session.getAttribute(ATTR_LOGINLIST);
+				String uvmsList = (String) session.getAttribute(ATTR_UVMSLIST);
+				String portList = (String) session.getAttribute(ATTR_PORTLIST);
+				if(loginList != null) {
+					if(!loginList.isEmpty()) {
+						if (!loginList.contains(uvmsConnection.getLogin())) {
+							loginList += ":"+uvmsConnection.getLogin();
+						}
+					} else {
+						loginList = uvmsConnection.getLogin();
+					}
+				} else {
+					loginList = uvmsConnection.getLogin();
+				}
+				if(uvmsList != null) {
+					if(!uvmsList.isEmpty()) {
+						if (!uvmsList.contains(uvmsConnection.getUvmsHost())) {
+							uvmsList += ":"+uvmsConnection.getUvmsHost();
+						}
+					} else {
+						uvmsList = uvmsConnection.getUvmsHost();
+					}
+				} else {
+					uvmsList = uvmsConnection.getUvmsHost();
+				}
+				if(portList != null) {
+					if(!portList.isEmpty()) {
+						if (!portList.contains(uvmsConnection.getUvmsPort())) {
+							portList += ":"+uvmsConnection.getUvmsPort();
+						}
+					} else {
+						portList = uvmsConnection.getUvmsPort();
+					}
+				} else {
+					portList = uvmsConnection.getUvmsPort();
+				}
+				CookieHelper.setCookie(request, response, CK_LOGINLIST, loginList, COOKIE_DURATION);
+				CookieHelper.setCookie(request, response, CK_UVMSLIST, uvmsList, COOKIE_DURATION);
+				CookieHelper.setCookie(request, response, CK_PORTLIST, portList, COOKIE_DURATION);
 				if(request.getParameter(ATTR_REMEMBER_CONN) != null) {
 					//store fields in cookies
-					setCookie( response, CK_LASTLOGIN, uvmsConnection.getLogin(), COOKIE_DURATION );
-					setCookie( response, CK_LASTUVMS, uvmsConnection.getUvmsHost(), COOKIE_DURATION );
-					setCookie( response, CK_LASTPORT, uvmsConnection.getUvmsPort(), COOKIE_DURATION );
+					CookieHelper.setCookie(request, response, CK_LASTLOGIN, uvmsConnection.getLogin(), COOKIE_DURATION );
+					CookieHelper.setCookie(request, response, CK_LASTUVMS, uvmsConnection.getUvmsHost(), COOKIE_DURATION );
+					CookieHelper.setCookie(request, response, CK_LASTPORT, uvmsConnection.getUvmsPort(), COOKIE_DURATION );
 				}
 			}
 		} else {

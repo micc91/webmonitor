@@ -414,6 +414,10 @@ public class Client {
             logsMap.put("jobLog", execLog.getLog());
         }
 
+        // reset error attributes as errors are stored in each log object (logsMap)
+        errorCode = 0;
+        errorMessage = "";
+
         return logsMap;
     }
 
@@ -443,6 +447,8 @@ public class Client {
         Execution exec = null;
         try {
             exec = service.getExecution(ctxHolder, execId);
+            errorCode = 0;
+            errorMessage = "Successful";
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
             errorMessage = duwse.getMessage();
@@ -467,6 +473,8 @@ public class Client {
         Launch launch = null;
         try {
             launch = service.getLaunch(ctxHolder, launchId);
+            errorCode = 0;
+            errorMessage = "Successful";
         } catch (DuwsException_Exception duwse) {
             errorCode = duwse.getFaultInfo().getErrorCode();
             errorMessage = duwse.getMessage();

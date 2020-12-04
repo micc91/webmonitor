@@ -73,20 +73,20 @@
                                         <h3>Identification</h3>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 themed-grid-col font-weight-bold">Task</div>
-                                        <div class="col-md-6 themed-grid-col">${param.task}</div>
+                                        <div class="col-md-4 themed-grid-col font-weight-bold">Task</div>
+                                        <div class="col-md-8 themed-grid-col">${param.task}</div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 themed-grid-col font-weight-bold">Session</div>
-                                        <div class="col-md-6 themed-grid-col">${param.session}</div>
+                                        <div class="col-md-4 themed-grid-col font-weight-bold">Session</div>
+                                        <div class="col-md-8 themed-grid-col">${param.session}</div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 themed-grid-col font-weight-bold">Uproc</div>
-                                        <div class="col-md-6 themed-grid-col">${param.uproc}</div>
+                                        <div class="col-md-4 themed-grid-col font-weight-bold">Uproc</div>
+                                        <div class="col-md-8 themed-grid-col">${param.uproc}</div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-6 themed-grid-col font-weight-bold">MU</div>
-                                        <div class="col-md-6 themed-grid-col">${param.mu}</div>
+                                        <div class="col-md-4 themed-grid-col font-weight-bold">MU</div>
+                                        <div class="col-md-8 themed-grid-col">${param.mu}</div>
                                     </div>
                                 </div>
                                 <div class="col-md-4 themed-grid-col">
