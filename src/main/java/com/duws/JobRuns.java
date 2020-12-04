@@ -345,9 +345,9 @@ public class JobRuns {
             session = request.getParameter("session");
             uproc = request.getParameter("uproc");
             mu = request.getParameter("mu");
-            numJob = String.format("%07d",request.getParameter("numproc"));
-            numSess = String.format("%07d",request.getParameter("numsess"));
-            numLanc = String.format("%07d",request.getParameter("numlanc"));
+            numJob  = String.format("%7s",request.getParameter("numproc")).replace(' ','0');
+            numSess = String.format("%7s",request.getParameter("numsess")).replace(' ','0');
+            numLanc = String.format("%7s",request.getParameter("numlanc")).replace(' ','0');
             status = request.getParameter("status");
         } else {
             company = job.get("company");
@@ -357,10 +357,14 @@ public class JobRuns {
             session = job.get("session");
             uproc = job.get("uproc");
             mu = job.get("mu");
-            numJob = String.format("%07d",job.get("numproc"));
-            numSess = String.format("%07d",job.get("numsess"));
-            numLanc = String.format("%07d",job.get("numlanc"));
+            numJob  = String.format("%7s",job.get("numproc")).replace(' ','0');
+            numSess = String.format("%7s",job.get("numsess")).replace(' ','0');
+            numLanc = String.format("%7s",job.get("numlanc")).replace(' ','0');
             status = job.get("status");
+        }
+
+        if(numJob.equals("0000000")) {
+            numJob="";
         }
 
         if(company == null || company.isEmpty()) {

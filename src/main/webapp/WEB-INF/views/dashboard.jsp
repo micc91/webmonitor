@@ -6,9 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-<%--<jsp:useBean id="uvmsConnection" scope="request" type="com.webops.duas.UvmsConnection"/>--%>
 <jsp:useBean id="nodesList" scope="request" type="java.util.List"/>
-<jsp:useBean id="jobsList" scope="request" type="java.util.List"/>
 <%-- TODO: add useBean audit --%>
 <jsp:useBean id="settings" scope="session" type="java.util.Map"/>
 <jsp:useBean id="selectedContext" scope="session" type="java.util.List"/>
@@ -210,8 +208,8 @@
                         </tr>
                         </thead>
                         <tbody id="jobRunsTableBody">
-                            <c:if test="${ !empty jobsList[0].get('company') }">
-                                <c:forEach var="item" items="${jobsList}" varStatus="status">
+                            <c:if test="${ !empty requestScope.jobsList[0].get('company') }">
+                                <c:forEach var="item" items="${requestScope.jobsList}" varStatus="status">
                                     <c:set var="idx" value="${status.index}" />
                                     <c:url var="infolink" value="/info?${item.get('urlparams')}"/>
                                     <tr>
